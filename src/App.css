@@ -1,0 +1,7 @@
+/* This css document is used for styles related to the overall app layout and structure. Ex. containers, page spacing, layout rules that affect multiple pages.*/
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}

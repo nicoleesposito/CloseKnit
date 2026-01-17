@@ -1,0 +1,3 @@
+A spot for any note taking or comments about the overall development.
+
+For CSS styling: App.css contains layout and structure styles for the site itself (wrappers, spacing, shared layout), while main.css is reserved for true global styles like fonts, resets, and base elements. -Nicole
