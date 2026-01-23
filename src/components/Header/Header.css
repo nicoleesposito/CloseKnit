@@ -1,4 +1,8 @@
-/* Desktop view for responsive design */
+/*
+Desktop styling
+Some of the svgs and images weren't showing as interactive so I use cursor pointer to make the mouse pointer change when hovered over the elements.
+*/
+
 body {
     margin: 0;
 }
@@ -52,7 +56,7 @@ body {
     cursor: pointer;
 }
 
-/* mobile view for responsive design*/
+/* mobile styling*/
 @media (max-width: 600px) {
     .header {
         border-bottom: 2px solid #C3C3C3;
@@ -79,4 +83,31 @@ body {
     .brand-text {
         font-family: 'Rosebud', sans-serif;
     }
+
+    .hamburger {
+        display: block;
+        cursor: pointer;
+    }
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 2000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.close-menu {
+    border: none;
+    background: #ffffff;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    display: block;
 }

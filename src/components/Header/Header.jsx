@@ -1,10 +1,11 @@
 import './Header.css'
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Navbar from '../Navbar/Navbar';
 
 /*
 React props docs: https://www.w3schools.com/react/react_props.asp
-React Router Navigation docs: https://reactrouter.com/api/hooks/useNavigate
+React Router useNavigate docs: https://reactrouter.com/api/hooks/useNavigate
 - Worked on by Nicole
 
 * Attempted to use Link and ahref to move from page to page but the state wasn't updating properly across each page (it returned undefined). It works using react router navigation though!
@@ -54,16 +55,17 @@ function Header(props) {
 
 
             {/* These handle the sidebar and the activity feed with the boolean. So if the menu is opened to "true" when clicking the svg, the mobile view of those componenets will be displayed. If it's clicked again it will close.  */}
-            {/* Conditional overlays */}
+            {/* onHamburgerClick connects with the navbar since the hamburger menu is located in the nav */}
             {menuOpen && (
                 <div className="mobile-menu">
-                    {/*  sidebar component goes here once we make it. right now the buttons don't do anything but I tested they worked when clicked. */}
+                    <button className="close-menu" onClick={toggleMenu} type="button"><img src='/images/ui/remove-button.svg' /></button>
+                    <Navbar activePage={props.activePage} onHamburgerClick={toggleMenu} />
                 </div>
             )}
 
             {activityOpen && (
                 <div className="activity-feed">
-                    {/*  sidebar component goes here once we make it */}
+                    {/*  sidebar component goes here once we make it. will function the same as the hamburger menu */}
                 </div>
             )}
         </header>
