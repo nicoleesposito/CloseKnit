@@ -1,6 +1,7 @@
 import './ManageCircles.css'
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
+import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 
 /*
 React props docs: https://www.w3schools.com/react/react_props.asp
@@ -25,9 +26,9 @@ function ManageCircles(props) {
             <div className="manage-layout">
                 <Navbar activePage="managecircles" />
                 <main className='manage-main'>
-                    <input type="text" value={props.circleName} onChange={circleNameChange}
-                    />
+                    <input type="text" value={props.circleName} onChange={circleNameChange} />
                 </main>
+                <ActivityFeed />
             </div>
         </div>
     );

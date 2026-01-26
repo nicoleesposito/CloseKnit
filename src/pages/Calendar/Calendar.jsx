@@ -1,6 +1,7 @@
 import './Calendar.css'
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
+import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 
 function Calendar(props) {
     // any states, hooks, or JS needed would go in this area here
@@ -14,6 +15,7 @@ function Calendar(props) {
                 <main className='manage-main'>
                     <h1>Calendar is working!</h1>
                 </main>
+                <ActivityFeed />
             </div>
         </div>
     );
