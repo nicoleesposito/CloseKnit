@@ -1,8 +1,0 @@
-A spot for any note taking or comments about the overall development.
-
-For CSS styling: App.css contains layout and structure styles for the site itself (wrappers, spacing, shared layout), while main.css is reserved for true global styles like fonts, resets, and base elements. -Nicole
-
---------
-React props docs: https://www.w3schools.com/react/react_props.asp
-React Router Navigation docs: https://reactrouter.com/api/hooks/useNavigate
-

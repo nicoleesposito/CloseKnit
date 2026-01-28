@@ -1,8 +1,0 @@
-/* This css document is used for styles related to the overall app layout and structure. Ex. containers, page spacing, layout rules that affect multiple pages.*/
-#root,
-html,
-body {
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
