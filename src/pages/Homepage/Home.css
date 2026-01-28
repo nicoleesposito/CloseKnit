@@ -1,0 +1,14 @@
+h2 {
+    cursor: pointer;
+}
+
+.manage-layout {
+    display: flex;
+}
+
+.manage-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}

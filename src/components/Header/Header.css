@@ -1,0 +1,107 @@
+/*
+Desktop styling
+Some of the svgs and images weren't showing as interactive so I use cursor pointer to make the mouse pointer change when hovered over the elements.
+*/
+
+body {
+    margin: 0;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 14px 40px;
+    background: white;
+}
+
+.header-left,
+.header-center,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-center {
+    justify-content: center;
+}
+
+.logo,
+.circle-name,
+.notifications,
+.profile-pic {
+    display: block;
+}
+
+.hamburger,
+.brand-text,
+.activity-icon {
+    display: none;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    padding: 0 20px;
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+}
+
+.notifications {
+    height: 35px;
+    cursor: pointer;
+}
+
+.logo {
+    cursor: pointer;
+}
+
+/* mobile styling*/
+@media (max-width: 600px) {
+    .header {
+        border-bottom: 2px solid #C3C3C3;
+        padding: 14px 20px;
+    }
+
+    .logo,
+    .circle-name,
+    .notifications,
+    .profile-pic {
+        display: none;
+    }
+
+    .hamburger,
+    .brand-text,
+    .activity-icon {
+        display: block;
+    }
+
+    .brand-text {
+        font-family: 'Rosebud', sans-serif;
+    }
+
+    .hamburger,
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        display: block;
+        object-fit: contain;
+        cursor: pointer;
+    }
+
+    .hamburger-open,
+    .activity-open {
+        margin-top: 20px;
+    }
+
+    .mobile-menu,
+    .activity-feed {
+        position: fixed;
+        top: 72px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+}
