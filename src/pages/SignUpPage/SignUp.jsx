@@ -3,7 +3,7 @@ import './SignUp.css'
 function SignUp() {
     return (
         <div className="signup-container">
-            {/* Left Side - Features */}
+            {/* Left Side - Featuress */}
             <div className="left-section">
                 <div className="logo">
                     <img src="/images/branding/logo.svg" alt="CloseKnit Logo" className="logo-image" />

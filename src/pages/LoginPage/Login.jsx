@@ -45,7 +45,7 @@ function Login() {
                 </div>
             </div>
 
-            {/* Right Side - Login Form */}
+            {/* Right Side - Login Formm */}
             <div className="right-section">
                 <div className="login-form">
                     <h1 className="login-title">Sign in to keep the moments going.</h1>
@@ -112,3 +112,4 @@ function Login() {
 }
 
 export default Login
+
