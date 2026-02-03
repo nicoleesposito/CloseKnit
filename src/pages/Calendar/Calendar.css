@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin: 0px 50px 0 0;
+    margin: 0;
 }
 
 .calendar-panel {
@@ -41,7 +41,7 @@
     padding: 22px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     justify-self: end;
-    width: 92%;
+    width: 100%;
     margin-right: -14px;
     position: relative;
     z-index: 1;

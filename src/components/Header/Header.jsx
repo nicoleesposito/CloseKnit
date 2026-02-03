@@ -66,7 +66,7 @@ function Header(props) {
     return (
         <header className="header">
             <div className="header-left">
-                <img src="/images/branding/logo.svg" alt="CloseKnit logo" className="logo" onClick={logoHome} />
+                <img src="/images/branding/logo.svg" alt="CloseKnit logo" className="logo-header" onClick={logoHome} />
 
                 {/* hides the hamburger icon when the activity feed is open */}
                 {activityOpen === false && (

@@ -5,5 +5,272 @@
 }
 
 .manage-main {
-    padding-top: 10px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.manage-panel {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.circle-card,
+.invites-card {
+    width: 100%;
+    min-width: 0;
+    border-radius: 22px;
+    border: 3px solid transparent;
+    background: linear-gradient(white, white) padding-box, linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.circle-card {
+    padding: 36px 38px;
+}
+
+.invites-card {
+    padding: 26px 28px;
+}
+
+.circle-card-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 10px;
+    margin-right: 10px;
+}
+
+.circle-title {
+    font-size: 30px;
+    font-weight: 600;
+    margin: 0;
+    text-align: left;
+}
+
+.circle-form {
+    margin-top: 18px;
+}
+
+.field-label {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0 10px 0;
+    text-align: left;
+}
+
+.section-space {
+    margin-top: 22px;
+}
+
+.text-input {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #1a1a1a;
+    padding: 0 14px;
+    font-size: 16px;
+}
+
+.text-input:disabled {
+    background: #ffffff;
+    color: #1a1a1a;
+    opacity: 1;
+}
+
+.circle-name-row,
+.invite-row {
+    display: grid;
+    grid-template-columns: minmax(0, 420px) 1fr auto;
+    align-items: center;
+    column-gap: 10px;
+    padding-left: 30px;
+    width: 100%;
+    min-width: 0;
+}
+
+.icon-btn,
+.invite-row .primary-btn {
+    justify-self: end;
+}
+
+.icon-btn {
+    width: 56px;
+    height: 56px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.circle-name-icon {
+    width: 56px;
+    height: 56px;
+}
+
+.members-header {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.member-count {
+    margin: 0;
+    color: #6f6f6f;
+    font-weight: 600;
+}
+
+.members-empty {
+    min-height: 160px;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 16px;
+    margin-top: 8px;
+
+    width: 100%;
+    max-width: 760px;
+    min-width: 0;
+}
+
+.member-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #b8b3a2;
+    min-width: 0;
+}
+
+.member-name {
+    margin: 0;
+    font-size: 18px;
+    min-width: 0;
+}
+
+.member-remove {
+    height: 36px;
+    padding: 0 20px;
+    border-radius: 10px;
+    border: 2px solid #7d70d6;
+    background: #ffffff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.bottom-actions {
+    margin-top: 34px;
+}
+
+.bottom-actions-manage {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.leave-link {
+    color: #b40000;
+    font-weight: 600;
+    text-decoration: underline;
+    width: fit-content;
+}
+
+.bottom-actions-create {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: end;
+    column-gap: 16px;
+}
+
+.primary-btn {
+    width: 140px;
+    height: 44px;
+    border: none;
+    border-radius: 12px;
+    background: #5245b5;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.secondary-btn {
+    width: 140px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid #1a1a1a;
+    background: #ffffff;
+    color: #1a1a1a;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn {
+    width: 140px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.save-text {
+    width: 140px;
+    height: 44px;
+    background: #5245b5;
+    color: #ffffff;
+    border-radius: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.invites-title {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.invites-empty {
+    min-height: 120px;
+}
+
+@media (max-width: 720px) {
+
+    .circle-name-row,
+    .invite-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 16px;
+    }
+
+    .text-input {
+        width: 100%;
+    }
+}
+
+button {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
 }
