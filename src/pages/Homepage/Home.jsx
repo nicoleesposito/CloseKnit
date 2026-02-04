@@ -1,6 +1,7 @@
 import './Home.css'
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
+import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useNavigate } from "react-router-dom";
 
 function Home(props) {
@@ -21,6 +22,7 @@ function Home(props) {
                 <main className='manage-main'>
                     <h2 onClick={landingLink}>Home works! Click to go to Landing Page (start area)</h2>
                 </main>
+                <ActivityFeed />
             </div>
         </div>
     );

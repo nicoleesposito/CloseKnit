@@ -1,0 +1,9 @@
+# Set default behavior for all files
+* text=auto
+
+# Treat images and other binary files as binary (no conversion)
+*.svg binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary

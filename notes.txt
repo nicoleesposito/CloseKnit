@@ -6,3 +6,10 @@ For CSS styling: App.css contains layout and structure styles for the site itsel
 React props docs: https://www.w3schools.com/react/react_props.asp
 React Router Navigation docs: https://reactrouter.com/api/hooks/useNavigate
 
+TODO:
+
+notification bell functionality
+search functionality
+add help icons to pages
+leave circle pop up
+circle invitation acceptance pop up (after backend)
