@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 
 function MemoryBoard(props) {
-    // any states, hooks, or JS needed would go in this area here
+    //any states, hooks, or JS needed would go in this area here
 
     return (
         <div>
