@@ -3,7 +3,7 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 
 function Journal(props) {
-    // any states, hooks, or JS needed would go in this area here
+    //any states, hooks, or JS needed would go in this area here
 
     return (
         <div>
