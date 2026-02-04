@@ -8,3 +8,261 @@
     justify-content: center;
     align-items: flex-start;
 }
+
+.memoryboard-panel {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 40px;
+
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    background: transparent;
+}
+
+.memoryboard-list-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.memoryboard-new-button {
+    background: transparent;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.memoryboard-new-button:hover {
+    opacity: 0.9;
+}
+
+.memoryboard-new-icon {
+    display: flex;
+    align-items: center;
+}
+
+.memoryboard-new-icon img {
+    height: 50px;
+    display: block;
+    margin: 0 50px 0px 0;
+}
+
+.memoryboard-heading {
+    text-align: center;
+    font-size: 20px;
+    margin: 0;
+}
+
+.memoryboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 280px);
+    gap: 20px;
+}
+
+.memoryboard-card {
+    text-align: left;
+    padding: 18px;
+    border-radius: 20px;
+    border: 2px solid #BCD8EC;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.memoryboard-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.memoryboard-card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.memoryboard-card-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+.memoryboard-card-menu-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 10px;
+}
+
+.memoryboard-card-menu-button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.memoryboard-card-menu {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.memoryboard-card-description {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.memoryboard-card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 13px;
+    color: #777;
+}
+
+.memoryboard-card-author {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.memoryboard-card-avatar img {
+    height: 20px;
+    width: 20px;
+    border-radius: 50px;
+    display: block;
+}
+
+.memoryboard-empty-state {
+    text-align: center;
+    padding: 150px 0 80px 0;
+    color: #777;
+}
+
+.memoryboard-empty-title {
+    font-size: 24px;
+    margin: 0 0 8px 0;
+}
+
+.memoryboard-empty-subtitle {
+    font-size: 18px;
+    margin: 0;
+}
+
+.memoryboard-panel-relative {
+    position: relative;
+    overflow: hidden;
+}
+
+.memoryboard-gray-arrow {
+    position: absolute;
+    top: 100px;
+    right: 80px;
+    width: 220px;
+    height: clamp(45px, 12vw, 160px);
+    object-fit: contain;
+    object-position: top;
+    pointer-events: none;
+}
+
+.memoryboard-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.memoryboard-card {
+    width: 520px;
+    max-width: calc(100vw - 40px);
+    background: white;
+    border-radius: 22px;
+    padding: 34px 34px;
+    text-align: center;
+}
+
+.memoryboard-icon-wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #ECEAF8;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 16px auto;
+}
+
+.memoryboard-icon {
+    width: 34px;
+    height: 34px;
+}
+
+.memoryboard-title {
+    margin: 0 0 10px 0;
+    font-size: 26px;
+}
+
+.memoryboard-text {
+    margin: 0;
+    color: #444;
+    font-size: 15px;
+}
+
+.memoryboard-subtext {
+    margin: 8px 0 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.memoryboard-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.memoryboard-cancel {
+    background: white;
+    color: #111;
+    border: 1px solid #111;
+    border-radius: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+}
+
+.memoryboard-delete {
+    background: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+}
+
+.memoryboard-delete:hover,
+.memoryboard-cancel:hover {
+    opacity: 0.92;
+}
+
+@media (max-width: 768px) {
+    .memoryboard-gray-arrow {
+        display: none;
+    }
+}

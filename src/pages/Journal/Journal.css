@@ -8,3 +8,571 @@
     justify-content: center;
     align-items: flex-start;
 }
+
+.journal-panel {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 40px;
+
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.journal-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.journal-list-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.journal-search-input {
+    width: 320px;
+    padding: 10px 16px;
+
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+
+    font-size: 14px;
+}
+
+.journal-new-entry-button,
+.journal-save-button {
+    background: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.journal-new-entry-button:hover,
+.journal-save-button:hover {
+    opacity: 0.9;
+}
+
+.journal-save-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.journal-back-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.journal-back-icon {
+    width: 26px;
+}
+
+.journal-new-entry-icon {
+    display: flex;
+    align-items: center;
+}
+
+.journal-new-entry-icon img {
+    height: 20px;
+    display: block;
+
+}
+
+.journal-edit-button {
+    background: #5245B5;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.journal-empty-state {
+    text-align: center;
+    padding: 150px 0 80px 0;
+    color: #777;
+}
+
+.journal-empty-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.journal-empty-subtitle {
+    font-size: 18px;
+}
+
+.journal-entries-heading {
+    text-align: center;
+    font-size: 20px;
+}
+
+.journal-entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 280px);
+    gap: 20px;
+}
+
+.journal-entry-card {
+    text-align: left;
+    padding: 18px;
+    border-radius: 20px;
+    border: 2px solid #9be19b;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.journal-entry-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.journal-card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.journal-card-title {
+    font-size: 18px;
+}
+
+.journal-card-description {
+    font-size: 14px;
+    color: #666;
+}
+
+.journal-card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 13px;
+    color: #777;
+}
+
+.journal-title-input {
+    font-size: 28px;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.journal-description-input {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background-color: transparent;
+    padding-bottom: 8px;
+    font-size: 16px;
+}
+
+.journal-suggested-dropdown {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+}
+
+.journal-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    width: 500px;
+}
+
+.journal-tool-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 6px 8px;
+}
+
+.journal-toolbar-divider {
+    width: 1px;
+    height: 22px;
+    background: #ddd;
+}
+
+.journal-align-icon {
+    width: 16px;
+}
+
+.journal-editor-area {
+    border-top: 1px solid #ddd;
+    padding-top: 14px;
+}
+
+.journal-editor {
+    min-height: 280px;
+    outline: none;
+
+    font-size: 16px;
+}
+
+.journal-editor:empty:before {
+    content: attr(data-placeholder);
+    color: #999;
+}
+
+.journal-view-title {
+    font-size: 28px;
+}
+
+.journal-view-prompt {
+    color: #666;
+    font-size: 16px;
+}
+
+.journal-divider {
+    border-top: 1px solid #ddd;
+}
+
+.journal-view-body {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.journal-comments-bar {
+    margin-top: 60px;
+    border-radius: 18px;
+    background: #f6f6f6;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.journal-textarea {
+    width: 100%;
+    min-height: 280px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 16px;
+    background: transparent;
+}
+
+.journal-suggested-header {
+    display: flex;
+    justify-content: center;
+}
+
+.journal-suggested-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #222;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.journal-suggested-arrow {
+    font-size: 16px;
+}
+
+.journal-suggested-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 6px;
+}
+
+.journal-suggested-card {
+    background: white;
+    border: 2px solid #5245B5;
+    border-radius: 22px;
+    padding: 18px 18px;
+    cursor: pointer;
+    text-align: left;
+    min-height: 110px;
+}
+
+.journal-suggested-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.journal-suggested-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 8px 0;
+}
+
+.journal-suggested-text {
+    font-size: 13px;
+    color: #333;
+    margin: 0;
+}
+
+.journal-comments-panel {
+    margin-top: 60px;
+    border-radius: 22px;
+    background: #f6f6f6;
+    padding: 0;
+}
+
+.journal-comments-header {
+    width: 100%;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 400px;
+}
+
+.journal-comments-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.journal-comments-body {
+    padding: 14px 20px 20px 20px;
+    background-color: white;
+    border-radius: 0 0 30px 30px;
+}
+
+.journal-comments-empty {
+    text-align: center;
+    color: #666;
+    padding: 18px 0 22px 0;
+}
+
+.journal-comments-input-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.journal-comments-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    font-size: 14px;
+    background: #F6F6F6;
+}
+
+.journal-comments-send {
+    background: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.journal-comments-send:hover {
+    opacity: 0.9;
+}
+
+.journal-panel-relative {
+    position: relative;
+    overflow: hidden;
+}
+
+.journal-gray-arrow {
+    position: absolute;
+    top: 100px;
+    right: 80px;
+    width: 220px;
+    height: clamp(45px, 12vw, 160px);
+    object-fit: contain;
+    object-position: top;
+    pointer-events: none;
+
+}
+
+.journal-list-top-row {
+    position: relative;
+}
+
+.journal-empty-state {
+    position: relative;
+}
+
+.journal-panel-with-comments {
+    position: relative;
+    min-height: calc(100vh - 160px);
+    padding-bottom: 120px;
+}
+
+.journal-comments-panel {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: 30px;
+    border-radius: 30px;
+    background: transparent;
+    overflow: hidden;
+}
+
+.journal-comments-header {
+    width: 100%;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 30px 30px 0 0;
+}
+
+.journal-comments-body {
+    height: 0px;
+    overflow: hidden;
+    background-color: white;
+    transition: height 0.25s ease;
+}
+
+.journal-comments-panel-open .journal-comments-body {
+    height: 220px;
+}
+
+.journal-comments-panel-open {
+    border-radius: 30px 30px 0 0;
+}
+
+.journal-comments-panel-open .journal-comments-body {
+    border-radius: 0 0 30px 30px;
+    padding: 14px 20px 20px 20px;
+}
+
+.journal-modal-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.journal-modal-card {
+    width: 520px;
+    max-width: calc(100vw - 40px);
+    background: white;
+    border-radius: 22px;
+    padding: 34px 34px;
+    text-align: center;
+}
+
+.journal-modal-icon-wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #ECEAF8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.journal-modal-icon {
+    width: 34px;
+    height: 34px;
+}
+
+.journal-modal-title {
+    margin: 0 0 10px 0;
+    font-size: 26px;
+}
+
+.journal-modal-text {
+    margin: 0;
+    color: #444;
+    font-size: 15px;
+}
+
+.journal-modal-subtext {
+    margin: 8px 0 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.journal-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.journal-modal-cancel {
+    background: white;
+    color: #111;
+    border: 1px solid #111;
+    border-radius: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+}
+
+.journal-modal-delete {
+    background: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+}
+
+.journal-modal-delete:hover,
+.journal-modal-cancel:hover {
+    opacity: 0.92;
+}
+
+.journal-card-menu-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 10px;
+}
+
+.journal-card-menu-button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.journal-card-avatar img {
+    height: 20px;
+    width: 20px;
+    border-radius: 50px;
+    margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+    .memoryboard-gray-arrow {
+        display: none;
+    }
+}
