@@ -8,6 +8,8 @@ import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 useEffect docs: https://react.dev/reference/react/useEffect
 JSON: https://www.w3schools.com/js/js_json_parse.asp
 Jeremy McPeak CH.12 of Javascript Book
+unshift: https://www.geeksforgeeks.org/javascript/javascript-array-unshift-method/
+https://www.w3schools.com/jsref/jsref_unshift.asp
 */
 
 function Journal(props) {
