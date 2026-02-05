@@ -5,10 +5,10 @@ import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useNavigate } from "react-router-dom";
 
 function Home(props) {
-    // any states, hooks, or JS needed would go in this area here
+    //any states, hooks, or JS needed would go in this area here
     let navigate = useNavigate();
 
-    // temporary function to navigate back to the landing page.
+    //temporary function to navigate back to the landing page.
     function landingLink() {
         navigate("/");
     }

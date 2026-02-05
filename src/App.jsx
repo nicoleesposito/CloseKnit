@@ -15,12 +15,12 @@ import Settings from './pages/Settings/Settings';
 
 
 function App() {
-  // any javascript needed would go in this area here
-  // The current state for the circle name is saved to this jsx file so that it's saved across the pages with the header. This will likely have to be edited to incorporate the backend later on.
+  //any javascript needed would go in this area here
+  //The current state for the circle name is saved to this jsx file so that it's saved across the pages with the header. This will likely have to be edited to incorporate the backend later on.
   const [circleName, setCircleName] = useState("Capstone 2025!");
 
   return (
-    // pages will load based on the URL. So a user on the landing page's URL will be routed to that jsx file's output. We don't need to edit these unless we're adding more pages which could be done for some areas, but for most components the useState hook would be a good choice.
+    //pages will load based on the URL. So a user on the landing page's URL will be routed to that jsx file's output. We don't need to edit these unless we're adding more pages which could be done for some areas, but for most components the useState hook would be a good choice.
     <Routes>
       {/* These routes are for a user who is logged out. */}
       <Route path="/" element={<LandingPage />} />
