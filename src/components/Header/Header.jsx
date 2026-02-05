@@ -68,48 +68,69 @@ function Header(props) {
             <div className="header-left">
                 <img src="/images/branding/logo.svg" alt="CloseKnit logo" className="logo-header" onClick={logoHome} />
 
-                {/* hides the hamburger icon when the activity feed is open */}
-                {activityOpen === false && (
-                    <img src={hamburgerIcon} alt="Menu" className={hamburgerClassName} onClick={toggleMenu} />
-                )}
-            </div>
+          {/* hides the hamburger icon when the activity feed is open */}
+          {activityOpen === false && (
+            <img
+              src={hamburgerIcon}
+              alt="Menu"
+              className={hamburgerClassName}
+              onClick={toggleMenu}
+            />
+          )}
+        </div>
 
-            {/* used a template literal to pass the properties of the current circle into the header */}
-            <div className="header-center">
-                <h2 className='circle-name'>{`Current Circle: ${props.currentCircle}`}</h2>
+        {/* used a template literal to pass the properties of the current circle into the header */}
+        <div className="header-center">
+          <h2 className="header-circle-name">{`Current Circle: ${props.currentCircle}`}</h2>
 
-                {/* hide title on mobile when either overlay is open. if they're not open, the title stays on the header */}
-                {menuOpen === false && activityOpen === false && (
-                    <h1 className="brand-text">CloseKnit</h1>
-                )}
-            </div>
+          {/* hide title on mobile when either overlay is open. if they're not open, the title stays on the header */}
+          {menuOpen === false && activityOpen === false && (
+            <h1 className="brand-text">CloseKnit</h1>
+          )}
+        </div>
 
-            {/* depending on how we approach the notification bell with the rest of the project, this could be a component itself that is imported in like the header but this is still TBD. For now, we can use a button & image combo to bring in the svg
+        {/* depending on how we approach the notification bell with the rest of the project, this could be a component itself that is imported in like the header but this is still TBD. For now, we can use a button & image combo to bring in the svg
 
             for the profile photo, I'm using a placeholder image until we set up the database and figure out the user profiles*/}
-            <div className="header-right">
-                <img src="/images/ui/notification-bell-false.svg" alt="notification bell" className="notifications" />
-                <img src="/images/ui/user-pfp.svg" alt="Profile" className="profile-pic" />
+        <div className="header-right">
+          <img
+            src="/images/ui/notification-bell-false.svg"
+            alt="notification bell"
+            className="notifications"
+          />
+          <img
+            src="/images/ui/user-pfp.svg"
+            alt="Profile"
+            className="profile-pic"
+          />
 
-                {/* hide the activity icon when the hamburger menu is open */}
-                {menuOpen === false && (
-                    <img src={activityIcon} alt="Activity Feed" className={activityClassName} onClick={toggleActivity} />
-                )}
-            </div>
+          {/* hide the activity icon when the hamburger menu is open */}
+          {menuOpen === false && (
+            <img
+              src={activityIcon}
+              alt="Activity Feed"
+              className={activityClassName}
+              onClick={toggleActivity}
+            />
+          )}
+        </div>
 
-            {/* these handle the sidebar and the activity feed with the boolean. So if the menu is opened to "true" when clicking the svg, the mobile view of those componenets will be displayed. If it's clicked again it will close.  */}
-            {menuOpen && (
-                <div className="mobile-menu">
-                    <Navbar activePage={props.activePage} onHamburgerClick={toggleMenu} />
-                </div>
-            )}
+        {/* these handle the sidebar and the activity feed with the boolean. So if the menu is opened to "true" when clicking the svg, the mobile view of those componenets will be displayed. If it's clicked again it will close.  */}
+        {menuOpen && (
+          <div className="mobile-menu">
+            <Navbar
+              activePage={props.activePage}
+              onHamburgerClick={toggleMenu}
+            />
+          </div>
+        )}
 
-            {activityOpen && (
-                <div className="activity-feed">
-                    <ActivityFeed />
-                </div>
-            )}
-        </header>
+        {activityOpen && (
+          <div className="activity-feed">
+            <ActivityFeed />
+          </div>
+        )}
+      </header>
     );
 }
 

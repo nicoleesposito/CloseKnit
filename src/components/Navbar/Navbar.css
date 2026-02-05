@@ -133,3 +133,153 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
         margin-top: 0;
     }
 }
+
+.dark-mode .navbar,
+.dark-mode nav,
+.dark-mode .sidebar {
+  background-color: #1a1a1a !important;
+  border-right: 1px solid #2d2d30;
+}
+
+/* Logo section */
+.dark-mode .navbar-brand,
+.dark-mode .navbar-logo,
+.dark-mode .logo {
+  color: #ffffff;
+}
+
+/* Search bar styling - ALWAYS WHITE IN DARK MODE */
+.dark-mode .navbar-search,
+.dark-mode .search-input,
+.dark-mode input[type="search"],
+.dark-mode .nav-search {
+  background-color: #FFFFFF !important;
+  border: 1px solid #dddddd !important;
+  color: #333333 !important;
+  border-radius: 12px;
+}
+
+.dark-mode .navbar-search::placeholder,
+.dark-mode .search-input::placeholder {
+  color: #999999 !important;
+}
+
+.dark-mode .navbar-search:focus,
+.dark-mode .search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Navigation menu items - default state */
+.dark-mode .nav-link,
+.dark-mode .navbar a,
+.dark-mode .sidebar a,
+.dark-mode .menu-item,
+.dark-mode .nav-item {
+  color: #ffffff;
+  background-color: transparent;
+  padding: 12px 20px;
+  margin: 4px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+/* Navigation icons - white */
+.dark-mode .nav-icon,
+.dark-mode .navbar svg,
+.dark-mode .sidebar svg,
+.dark-mode .menu-icon {
+  color: #ffffff;
+  fill: #ffffff;
+  stroke: #ffffff;
+}
+
+/* Hover state - subtle dark gray */
+.dark-mode .nav-link:hover,
+.dark-mode .navbar a:hover,
+.dark-mode .sidebar a:hover,
+.dark-mode .menu-item:hover,
+.dark-mode .nav-item:hover {
+  background-color: #2d2d30;
+  color: #ffffff;
+}
+
+/* Active/selected link - light blue/cyan background (matching your design) */
+.dark-mode .nav-link.active,
+.dark-mode .navbar a.active,
+.dark-mode .sidebar a.active,
+.dark-mode .menu-item.active,
+.dark-mode .nav-item.active,
+.dark-mode [data-active="true"],
+.dark-mode .active {
+  background-color: #BCD8EC !important;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+/* Active link icons should be dark */
+.dark-mode .nav-link.active .nav-icon,
+.dark-mode .navbar a.active svg,
+.dark-mode .sidebar a.active svg,
+.dark-mode .menu-item.active .menu-icon,
+.dark-mode .nav-item.active svg {
+  color: #000000;
+  fill: #000000;
+  stroke: #000000;
+}
+
+/* Notification bell icon */
+.dark-mode .notification-icon,
+.dark-mode .bell-icon {
+  color: #ffffff;
+  fill: #ffffff;
+}
+
+
+.dark-mode .navbar-user,
+.dark-mode .user-section {
+  border-top: 1px solid #2d2d30;
+  background-color: transparent;
+  padding: 16px;
+}
+
+.dark-mode .navbar-user .user-name {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.dark-mode .navbar-user .user-email {
+  color: #999999;
+}
+
+/* Dividers */
+.dark-mode .navbar-divider,
+.dark-mode .nav-separator {
+  background-color: #2d2d30;
+  border-color: #2d2d30;
+  height: 1px;
+  margin: 8px 0;
+}
+
+
+.navbar,
+nav,
+.sidebar,
+.nav-link,
+.menu-item,
+.nav-item {
+  transition: background-color 0.2s ease,
+              color 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.dark-mode .navbar,
+.dark-mode nav,
+.dark-mode .sidebar {
+  background-color: #1a1a1a !important;
+}
