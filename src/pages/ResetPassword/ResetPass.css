@@ -1,0 +1,187 @@
+.reset-password-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #FAF9F6;
+    position: relative;
+}
+
+.reset-password-container .logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2rem 3rem;
+}
+
+.reset-password-container .logo-image {
+    height: 40px;
+}
+
+.reset-password-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.reset-password-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.reset-password-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.reset-password-content form {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.reset-password-content .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.reset-password-content .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.reset-password-content .form-group input {
+    width: 100%;
+    padding: 1rem;
+    padding-right: 3rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.reset-password-content .form-group input:focus {
+    outline: none;
+    border-color: #5245B5;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password:hover {
+    color: #1a1a1a;
+}
+
+.reset-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    margin-top: 1rem;
+}
+/* darker hover */
+.reset-button:hover {
+    background-color: #453a99;
+}
+
+.back-to-login {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s;
+}
+
+.back-to-login:hover {
+    color: #1a1a1a;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .reset-password-container .logo {
+        padding: 1.5rem 2rem;
+    }
+
+    .reset-password-container .logo-image {
+        height: 32px;
+    }
+
+    .reset-password-content {
+        padding: 1.5rem;
+    }
+
+    .reset-password-title {
+        font-size: 2rem;
+    }
+
+    .reset-password-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .reset-password-container .logo {
+        padding: 1rem 1.5rem;
+    }
+
+    .reset-password-container .logo-image {
+        height: 28px;
+    }
+
+    .reset-password-content {
+        padding: 1rem;
+    }
+
+    .reset-password-title {
+        font-size: 1.75rem;
+    }
+
+    .reset-password-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .reset-button {
+        font-size: 1rem;
+    }
+}

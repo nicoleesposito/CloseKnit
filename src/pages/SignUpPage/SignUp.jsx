@@ -1,9 +1,20 @@
+import { useNavigate } from 'react-router-dom'
 import './SignUp.css'
 
 function SignUp() {
+    const navigate = useNavigate()
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        // Add your signup logic here
+        console.log('Signing up...')
+        // Navigate to new user home page
+        navigate('/newhome')
+    }
+    
     return (
         <div className="signup-container">
-            {/* Left Side - Featuress */}
+            {/* Left Side - Features */}
             <div className="left-section">
                 <div className="logo">
                     <img src="/images/branding/logo.svg" alt="CloseKnit Logo" className="logo-image" />
@@ -34,7 +45,7 @@ function SignUp() {
 
                     <div className="feature-card">
                         <div className="feature-icon">
-                            <img src="/images/ui/wedding-1.svg" alt="Calendar" />
+                            <img src="/images/ui/wedding-1.svg" alt="Wedding" />
                         </div>
                         <div className="feature-text">
                             <p>Celebrate life together. Track</p>
@@ -50,7 +61,7 @@ function SignUp() {
                 <div className="signup-form">
                     <h1 className="signup-title">Sign up and make every connection count.</h1>
 
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="form-row">
                             <div className="form-group">
                                 <label htmlFor="firstName">First Name</label>
@@ -141,7 +152,15 @@ function SignUp() {
                     </div>
 
                     <p className="login-link">
-                        Already have an account? <a href="#">Log in!</a>
+                        Already have an account? <a 
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                navigate('/login')
+                            }}
+                        >
+                            Log in!
+                        </a> 
                     </p>
                 </div>
             </div>

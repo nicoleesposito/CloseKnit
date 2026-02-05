@@ -1,6 +1,14 @@
 import './Login.css'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
+    const navigate = useNavigate()
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        navigate('/home')
+    }
+
     return (
         <div className="login-container">
             {/* Left Side - Features */}
@@ -45,12 +53,12 @@ function Login() {
                 </div>
             </div>
 
-            {/* Right Side - Login Formm */}
+            {/* Right Side - Login Form */} 
             <div className="right-section">
                 <div className="login-form">
                     <h1 className="login-title">Sign in to keep the moments going.</h1>
 
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="email">Email</label>
                             <input 
@@ -75,7 +83,16 @@ function Login() {
                                     </svg>
                                 </button>
                             </div>
-                            <a href="#" className="forgot-password">Forgot password?</a>
+                            <a 
+                                href="#" 
+                                className="forgot-password"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    navigate('/forgot-password')
+                                }}
+                            >
+                                Forgot password?
+                            </a>
                         </div>
 
                         <button type="submit" className="login-button">Log In</button>
@@ -103,7 +120,15 @@ function Login() {
                     </div>
 
                     <p className="signup-link">
-                        Don't have an account? <a href="#">Sign up!</a>
+                        Don't have an account? <a 
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                navigate('/signup')
+                            }}
+                        >
+                            Sign up!
+                        </a>
                     </p>
                 </div>
             </div>
@@ -112,4 +137,3 @@ function Login() {
 }
 
 export default Login
-
