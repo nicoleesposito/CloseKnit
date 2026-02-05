@@ -6,7 +6,6 @@ function SignUp() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        // Add your signup logic here
         console.log('Signing up...')
         // Navigate to new user home page
         navigate('/newhome')

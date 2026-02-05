@@ -1,206 +1,211 @@
-          body {
-            margin: 0;
-            background: white;
-            color: #333;
-          }
+.landing-page body {
+  margin: 0;
+  background: white;
+  color: #333;
+}
 
-          .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 2rem;
-            font-size: x-large;
-          }
+.landing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: x-large;
+}
 
-          .header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-          }
+.landing-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-          .header-center {
-            display: flex;
-            text-align: center;
-            gap: 1.5rem;
-            color: #333;
-          }
-          .header-center a {
-            text-decoration: none;
-            font-weight: 500;
-          }
+.landing-header-center {
+  display: flex;
+  text-align: center;
+  gap: 1.5rem;
+  color: #333;
+}
 
-          .header-right {
-            display: flex;
-            text-align: right;
-            gap: 0.75rem;
-          }
+.landing-header-center a {
+  text-decoration: none;
+  font-weight: 500;
+}
 
-          section {
-            padding: 12px 12px;
-            max-width: 800px;
-            margin: auto;
-            
-          }
+.landing-header-right {
+  display: flex;
+  text-align: right;
+  gap: 0.75rem;
+}
 
-          button {
-            background-color: #5245B5;
-            padding: 15px;
-            color: white;
-            box-shadow: 0 10px 25px #00000026;
-            border: none;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
+.landing-section {
+  padding: 12px 12px;
+  max-width: 800px;
+  margin: auto;
+}
 
-          .cta {
-            display: center;
-            margin-top: 20px;
-            padding: 12px 12px;
-            background: #5245b5;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            align-items: center;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px #00000026;
-          }
+.landing-button {
+  background-color: #5245B5;
+  padding: 15px;
+  color: white;
+  box-shadow: 0 10px 25px #00000026;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-          h1 {
-            text-align: center;
-            padding-top: 5px;
-          }
+.landing-cta {
+  display: center;
+  margin-top: 20px;
+  padding: 12px 12px;
+  background: #5245b5;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  align-items: center;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px #00000026;
+}
 
-          .container {
-            border: none;
-            background-color: #F5F5F5;
-            padding: 10px;
-          }
+.landing-h1 {
+  text-align: center;
+  padding-top: 5px;
+}
 
-          .centered-box {
-            max-width: 900px; 
-            max-height: 1000px;
-            margin: 0 auto; 
-            padding: 5px;
-            text-align: center;
-            border-radius: 8px;
-            border-style: solid;
-            border: 10px solid transparent; /* Set a transparent border to reserve space */
-            border-image: linear-gradient(to bottom, #BCD8EC, #5245B5) 1;
-            border-image-slice: 1; /* Specifies that the image should be sliced into a single piece */
-            /* border-radius: 10px; will not work with border-image */
-            box-shadow: 0 10px 25px #00000026;
-          }
+.landing-container {
+  border: none;
+  background-color: #F5F5F5;
+  padding: 10px;
+}
 
-          .info-content svg {
-              fill: #5245B5;
-          }
+.landing-centered-box {
+  max-width: 900px; 
+  max-height: 1000px;
+  margin: 0 auto; 
+  padding: 5px;
+  text-align: center;
+  border-radius: 8px;
+  border-style: solid;
+  border: 10px solid transparent;
+  border-image: linear-gradient(to bottom, #BCD8EC, #5245B5) 1;
+  border-image-slice: 1;
+  box-shadow: 0 10px 25px #00000026;
+}
 
-         .footer {
-          display: grid;
-          grid-template-columns: 1fr auto 1fr;
-          align-items: center;
-          padding: 40px;
-          background-color: #F5F5F5;
-        }
+.landing-info-content svg {
+  fill: #5245B5;
+}
 
-        .footer-left {
-          justify-self: start;
-          max-width: 250px;
-        }
+.landing-footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 40px;
+  background-color: #F5F5F5;
+}
 
-        .footer-center {
-          justify-self: center;
-          font-size: 14px;
-          padding-top: 150px;
-          color: #333;
-        }
+.landing-footer-left {
+  justify-self: start;
+  max-width: 250px;
+}
 
-        .footer-right {
-          justify-self: end;
-          display: flex;
-          gap: 40px;
-        }
+.landing-footer-center {
+  justify-self: center;
+  font-size: 14px;
+  padding-top: 150px;
+  color: #333;
+}
 
-        .footer a {
-          text-decoration: none;
-          color: #333;
-          font-size: 14px;
-        }
+.landing-footer-right {
+  justify-self: end;
+  display: flex;
+  gap: 40px;
+}
 
-        p {
-          text-align: center;
-        }
+.landing-footer a,
+.landing-a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
 
-        .center-img {
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          height: 350px;
-        }
+.landing-p {
+  text-align: center;
+}
 
-        h3 {
-          text-align: center;
-          padding-top: 5px;
-          text-decoration: underline #8CD294 6.5px;
-        }
+.landing-center-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 350px;
+}
 
-        a {
-          color: #333;
-        }
+.landing-h2 {
+  text-align: center;
+}
 
-        summary {
-          text-decoration: underline;
-        }
+.landing-h3 {
+  text-align: center;
+  padding-top: 5px;
+  text-decoration: underline #8CD294 6.5px;
+}
 
-        .hero {
-          position: relative;
-          display: flex;
-          align-items: center;
-          padding: 4rem;
-          background-color: #F5F5F5;
-        }
+.landing-header-center a,
+.landing-footer a,
+.landing-a {
+  color: #333;
+}
 
-        .content-card {
-          position: initial;
-          right: 400px;
-          max-width: 650px;
-          margin: 10px right; 
-          border: 10px solid transparent; /* Set a transparent border to reserve space */
-          border-image: linear-gradient(to bottom, #BCD8EC, #5245B5) 1;
-          border-image-slice: 1; /* Specifies that the image should be sliced into a single piece */
-          /* border-radius: 10px; will not work with border-image */
-          padding: 5px;
-          padding-bottom: 5px;
-          text-align: center;
-          border-radius: 8px;
-          box-shadow: 0 10px 25px #00000026;
-          background-color: #F5F5F5;
-        }
+.landing-summary {
+  text-decoration: underline;
+}
 
-        .image-card img {
-          width: 520px;
-          height: 520px;
-          border-radius: 8px;
-          display: initial;
-          padding-left: 250px;
-        }
+.landing-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 4rem;
+  background-color: #F5F5F5;
+}
 
-        .ol {
-          text-align: center;
-        }
+.landing-content-card {
+  position: initial;
+  right: 400px;
+  max-width: 650px;
+  margin: 10px right; 
+  border: 10px solid transparent;
+  border-image: linear-gradient(to bottom, #BCD8EC, #5245B5) 1;
+  border-image-slice: 1;
+  padding: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px #00000026;
+  background-color: #F5F5F5;
+}
 
-        .info-content {
-          color: #5245B5;
-          font-size: large;
-        }
+.landing-image-card img {
+  width: 520px;
+  height: 520px;
+  border-radius: 8px;
+  display: initial;
+  padding-left: 250px;
+}
 
-        .gradient-top {
-          border-left: 0;
-          border-right: 0;
-          border-bottom: 0;
-          border-top: 10px solid transparent; /* Set a transparent border to reserve space */
-          border-image: linear-gradient(to left, #BCD8EC, #5245B5) 1;
-        }
+.landing-ol {
+  text-align: center;
+}
+
+.landing-info-content {
+  color: #5245B5;
+  font-size: large;
+}
+
+.landing-gradient-top {
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-top: 10px solid transparent;
+  border-image: linear-gradient(to left, #BCD8EC, #5245B5) 1;
+}
