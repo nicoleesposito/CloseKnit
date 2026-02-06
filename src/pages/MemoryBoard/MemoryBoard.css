@@ -266,3 +266,773 @@
         display: none;
     }
 }
+
+/* Claude. 2/5. " the slots arent resizing according to screen size. What solution is there to have them shrink without interfering with the activity feed? I already tried adjusting height, width, and different flex settings."*/
+:root {
+    --memory-slot-size: clamp(120px, 16vw, 220px);
+
+}
+
+.memoryboard-templates-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.memoryboard-back-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memoryboard-back-button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.memoryboard-back-button img {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+
+.memoryboard-templates-heading {
+    margin: 0;
+    font-size: 22px;
+    text-align: center;
+}
+
+.memoryboard-templates-right-spacer {
+    width: 38px;
+}
+
+.memoryboard-templates-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    justify-items: center;
+}
+
+.memoryboard-template-card {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.memoryboard-template-preview {
+    width: 260px;
+    height: 260px;
+    border-radius: 26px;
+    padding: 3px;
+    background: linear-gradient(to bottom, #BCD8EC, #5245B5);
+}
+
+.memoryboard-preview-grid {
+    width: 100%;
+    height: 100%;
+    border-radius: 23px;
+    background: white;
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.10);
+
+    display: grid;
+    place-items: center;
+}
+
+.memoryboard-preview-cell {
+    border: 2px solid #111;
+    border-radius: 10px;
+    width: 44px;
+    height: 44px;
+}
+
+.memoryboard-layout-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.memoryboard-layout-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 1px solid #dcdcdc;
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 20px 0 0 40px;
+}
+
+.memoryboard-tool-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.memoryboard-tool-button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.memoryboard-tool-button img {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.memoryboard-tool-divider {
+    width: 1px;
+    height: 22px;
+    background: #dcdcdc;
+}
+
+.memoryboard-save-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.memoryboard-save-button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.memoryboard-save-button img {
+    width: 55px;
+    height: 55px;
+    display: block;
+}
+
+.memoryboard-layout-heading {
+    text-align: center;
+    margin: 0;
+    font-size: 22px;
+}
+
+.memoryboard-layout-heading-input {
+    background-color: transparent;
+    text-align: center;
+    width: 400px;
+    margin: 0 auto;
+    font-size: 22px;
+    border: solid 1px rgb(220, 220, 220);
+    background-color: white;
+    padding: 5px 15px;
+    border-radius: 30px;
+}
+
+.memoryboard-layout-grid {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 34px;
+    justify-items: center;
+}
+
+.memoryboard-layout-slot {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: var(--memory-slot-size);
+    height: var(--memory-slot-size);
+    border-radius: 18px;
+    border: 3px solid #5245B5;
+    position: relative;
+    box-shadow: 0 10px 14px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.memoryboard-layout-slot.square {
+    width: var(--memory-slot-size);
+    height: var(--memory-slot-size);
+}
+
+.memoryboard-layout-slot.tall {
+    width: var(--memory-slot-size);
+    height: calc(var(--memory-slot-size) * 1.18);
+}
+
+.memoryboard-layout-slot.wide {
+    width: calc(var(--memory-slot-size) * 1.18);
+    height: calc(var(--memory-slot-size) * 0.64);
+    margin-top: 0;
+}
+
+.memoryboard-slot-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.memoryboard-slot-upload {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    cursor: pointer;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border-radius: 50px;
+    background: white;
+    border: 2px solid #5245B5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memoryboard-slot-upload img {
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+
+.memoryboard-floating-plus {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memoryboard-floating-plus:hover {
+    opacity: 0.92;
+}
+
+.memoryboard-floating-plus img {
+    width: 55px;
+    height: 55px;
+    display: block;
+}
+
+.memoryboard-panel {
+    position: relative;
+}
+
+.memoryboard-layout-grid.template-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.memoryboard-layout-grid.template-3 {
+    max-width: 760px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.memoryboard-layout-grid.template-4 {
+    max-width: 980px;
+    grid-template-columns: 1fr var(--memory-slot-size) 1fr;
+    column-gap: 90px;
+    row-gap: 34px;
+    justify-items: center;
+    align-content: start;
+}
+
+.memoryboard-layout-grid.template-4 .slot-a {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.memoryboard-layout-grid.template-4 .slot-b {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.memoryboard-layout-grid.template-4 .slot-c {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.memoryboard-layout-grid.template-4 .slot-d {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    transform: translateY(55px);
+}
+
+.memoryboard-layout-grid.template-4 .slot-e {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    transform: translateY(55px);
+}
+
+.memoryboard-layout-grid.template-4 .slot-f {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    transform: translateY(55px);
+}
+
+.memoryboard-layout-grid.template-4 .slot-g {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
+    transform: translateY(55px);
+}
+
+.memoryboard-layout-grid.template-5 {
+    max-width: 980px;
+    grid-template-columns: 1fr var(--memory-slot-size) 1fr;
+    column-gap: 90px;
+    row-gap: 16px;
+    justify-items: center;
+    align-content: start;
+}
+
+.memoryboard-layout-grid.template-5 .slot-a {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+}
+
+.memoryboard-layout-grid.template-5 .slot-b {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+
+}
+
+.memoryboard-layout-grid.template-5 .slot-c {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+
+}
+
+.memoryboard-layout-grid.template-5 .slot-d {
+    grid-column: 2;
+    grid-row: 1;
+    transform: translateY(80px);
+}
+
+.memoryboard-layout-grid.template-5 .slot-e {
+    grid-column: 2;
+    grid-row: 2;
+    transform: translateY(180px);
+}
+
+.memoryboard-layout-grid.template-5 .slot-f {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+
+}
+
+.memoryboard-layout-grid.template-5 .slot-g {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
+
+}
+
+.memoryboard-layout-grid.template-5 .slot-h {
+    grid-column: 3;
+    grid-row: 3;
+    justify-self: end;
+
+}
+
+.memoryboard-layout-grid.template-6 {
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 1100px) {
+    .memoryboard-templates-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .memoryboard-templates-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .memoryboard-floating-plus {
+        right: 16px;
+    }
+
+    .memoryboard-layout-grid {
+        max-width: 520px;
+        grid-template-columns: 1fr;
+    }
+}
+
+.memoryboard-template-card {
+    width: 260px;
+    height: 260px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memoryboard-template-image {
+    width: 260px;
+    height: 260px;
+    padding: 30px 20px;
+    border-radius: 26px;
+
+    border: 3px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+        linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
+
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.10);
+}
+
+.manage-main {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.memoryboard-panel {
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.memoryboard-layout-grid {
+    box-sizing: border-box;
+    padding-left: 90px;
+    padding-right: 90px;
+    max-width: 100%;
+}
+
+.memoryboard-page-right,
+.memoryboard-floating-plus {
+    right: 20px;
+}
+
+.memoryboard-page-left {
+    left: 20px;
+}
+
+.memoryboard-layout-grid.template-4,
+.memoryboard-layout-grid.template-5 {
+    column-gap: clamp(18px, 4vw, 90px);
+    grid-template-columns: minmax(0, 1fr) var(--memory-slot-size) minmax(0, 1fr);
+}
+
+@media (max-width: 900px) {
+    .memoryboard-layout-grid {
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+
+    .memoryboard-page-right,
+    .memoryboard-page-left,
+    .memoryboard-floating-plus {
+        left: 12px;
+        right: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .memoryboard-layout-grid {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+.manage-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.memoryboard-panel {
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.memoryboard-layout-grid {
+    box-sizing: border-box;
+    padding-left: 90px;
+    padding-right: 90px;
+
+    max-width: 100%;
+}
+
+.memoryboard-page-right,
+.memoryboard-floating-plus {
+    right: 20px;
+}
+
+.memoryboard-page-left {
+    left: 20px;
+}
+
+.memoryboard-layout-grid.template-4,
+.memoryboard-layout-grid.template-5 {
+    column-gap: clamp(18px, 4vw, 90px);
+    grid-template-columns: minmax(0, 1fr) var(--memory-slot-size) minmax(0, 1fr);
+}
+
+@media (max-width: 900px) {
+    .memoryboard-layout-grid {
+        padding-left: 70px;
+        padding-right: 70px;
+    }
+
+    .memoryboard-page-right,
+    .memoryboard-page-left,
+    .memoryboard-floating-plus {
+        left: 12px;
+        right: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .memoryboard-layout-grid {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+.memoryboard-floating-left {
+    left: 40px;
+    right: auto;
+}
+
+.memoryboard-floating-right {
+    right: 40px;
+    left: auto;
+}
+
+.memoryboard-cover-card {
+    text-align: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.memoryboard-cover-image-wrap {
+    width: 240px;
+    height: 240px;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 3px solid #5245B5;
+    box-shadow: 0 10px 14px rgba(0, 0, 0, 0.12);
+    margin: 0 auto;
+    position: relative;
+}
+
+.memoryboard-cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.memoryboard-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.memoryboard-cover-title {
+    margin: 12px 0 0 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.memoryboard-cover-meta {
+    margin: 6px 0 0 0;
+    font-size: 13px;
+    color: #777;
+}
+
+.memoryboard-cover-menu-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memoryboard-cover-menu-button:hover {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.memoryboard-cover-menu-dots {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.memoryboard-card-menu-popover {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    width: 190px;
+    background: white;
+    border: 2px solid #5245B5;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 14px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+}
+
+.memoryboard-card-menu-item {
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
+
+.memoryboard-card-menu-item:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.memoryboard-card-menu-divider {
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.memoryboard-card-menu-icon {
+    width: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memoryboard-card-menu-icon img {
+    height: 15px;
+}
+
+.memoryboard-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.memoryboard-card {
+    width: 520px;
+    max-width: calc(100vw - 40px);
+    background: white;
+    border-radius: 22px;
+    padding: 34px 34px;
+    text-align: center;
+}
+
+.memoryboard-icon-wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #ECEAF8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.memoryboard-icon {
+    width: 34px;
+    height: 34px;
+}
+
+.memoryboard-title {
+    margin: 0 0 10px 0;
+    font-size: 26px;
+}
+
+.memoryboard-text {
+    margin: 0;
+    color: #444;
+    font-size: 15px;
+}
+
+.memoryboard-subtext {
+    margin: 8px 0 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.memoryboard-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.memoryboard-cancel {
+    background: white;
+    color: #111;
+    border: 1px solid #111;
+    border-radius: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+}
+
+.memoryboard-delete {
+    background: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 22px;
+    cursor: pointer;
+}
+
+.memoryboard-delete:hover,
+.memoryboard-cancel:hover {
+    opacity: 0.92;
+}
