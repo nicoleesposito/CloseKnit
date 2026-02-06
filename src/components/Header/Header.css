@@ -75,7 +75,7 @@ body {
     }
 
     .logo-header,
-    .circle-name,
+    .header-circle-name,
     .notifications,
     .profile-pic {
         display: none;
@@ -117,8 +117,10 @@ body {
         padding: 20px;
         box-sizing: border-box;
         overflow-y: auto;
+        z-index: 9999;
     }
 }
+
 .activity {
     width: 260px;
     min-height: calc(100vh - 90px);
@@ -386,6 +388,6 @@ body {
 .activity-text,
 .activity-time {
     transition: background-color 0.3s ease,
-                color 0.3s ease,
-                border-color 0.3s ease;
+        color 0.3s ease,
+        border-color 0.3s ease;
 }
