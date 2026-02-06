@@ -125,3 +125,15 @@
   font-weight: bold;
   margin-right: 8px;
 }
+
+.memoryboard-panel-relative {
+  position: relative;
+  overflow: visible;
+}
+
+.memoryboard-help-button-container {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 9999;
+}

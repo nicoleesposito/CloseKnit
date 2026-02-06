@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
+import HelpButton from '../../components/HelpButton/HelpButton';
 
 /*
 References:
@@ -946,6 +947,10 @@ function MemoryBoard(props) {
             return (
                 <main className='manage-main'>
                     <div className="memoryboard-panel memoryboard-panel-relative">
+                        <div className="memoryboard-help-button-container">
+                            <HelpButton page="memoryBoard" />
+                        </div>
+
                         <div className="memoryboard-list-top-row">
                             <button className="memoryboard-new-button" onClick={newMemoryClick} type="button">
                                 <span className="memoryboard-new-icon">
@@ -953,6 +958,7 @@ function MemoryBoard(props) {
                                 </span>
                             </button>
                         </div>
+
                         <img className="memoryboard-gray-arrow" src="/images/ui/gray-arrow.svg" alt="" />
                         <div className="memoryboard-empty-state">
                             <p className="memoryboard-empty-title">No memories yet.</p>
