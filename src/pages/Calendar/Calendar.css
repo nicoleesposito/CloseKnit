@@ -399,3 +399,108 @@
 .calendar-timeline-click:hover {
     opacity: 0.85;
 }
+/* ================= DARK MODE ================= */
+
+.dark-mode .calendar-timeline-card {
+    background: #2d2d30;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .calendar-card {
+    background: linear-gradient(#2d2d30, #2d2d30) padding-box, 
+                linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
+}
+
+.dark-mode .calendar-edit-card {
+    background: linear-gradient(#2d2d30, #2d2d30) padding-box, 
+                linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
+}
+
+.dark-mode .calendar-timeline-title,
+.dark-mode .calendar-timeline-section-title,
+.dark-mode .calendar-month-name,
+.dark-mode .calendar-edit-title {
+    color: #ffffff;
+}
+
+.dark-mode .calendar-timeline-text,
+.dark-mode .calendar-day-text {
+    color: #ffffff;
+}
+
+.dark-mode .calendar-timeline-empty {
+    color: #999999;
+}
+
+.dark-mode .calendar-year-name {
+    color: #b3b3b3;
+}
+
+.dark-mode .calendar-dow-cell {
+    color: #b3b3b3;
+}
+
+.dark-mode .calendar-other-month {
+    color: #666666;
+}
+
+.dark-mode .calendar-nav-btn {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .calendar-nav-btn:hover {
+    background: #333333;
+}
+
+.dark-mode .calendar-text-input,
+.dark-mode .calendar-text-area,
+.dark-mode .calendar-time-input {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .calendar-text-input::placeholder,
+.dark-mode .calendar-text-area::placeholder,
+.dark-mode .calendar-time-input::placeholder {
+    color: #666666;
+}
+
+.dark-mode .calendar-label {
+    color: #ffffff;
+}
+
+.dark-mode .calendar-label::after {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .calendar-type-btn,
+.dark-mode .calendar-secondary-btn {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .calendar-type-btn:hover,
+.dark-mode .calendar-secondary-btn:hover {
+    background: #333333;
+}
+
+.dark-mode .calendar-type-active {
+    background: #404040;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .calendar-time-arrow {
+    color: #ffffff;
+}
+
+.dark-mode .calendar-color-square {
+    border-color: #404040;
+}
+
+.dark-mode .calendar-timeline-click:hover {
+    opacity: 0.7;
+}

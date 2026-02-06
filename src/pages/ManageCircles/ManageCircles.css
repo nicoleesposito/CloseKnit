@@ -274,3 +274,85 @@ button {
     font-family: "Poppins", sans-serif;
     font-weight: 500;
 }
+/* ================= DARK MODE ================= */
+
+.dark-mode .circle-card,
+.dark-mode .invites-card {
+    background: linear-gradient(#2d2d30, #2d2d30) padding-box, 
+                linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .circle-title,
+.dark-mode .invites-title {
+    color: #ffffff;
+}
+
+.dark-mode .field-label {
+    color: #ffffff;
+}
+
+.dark-mode .member-name {
+    color: #ffffff;
+}
+
+.dark-mode .member-count {
+    color: #b3b3b3;
+}
+
+.dark-mode .text-input {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .text-input::placeholder {
+    color: #666666;
+}
+
+.dark-mode .text-input:disabled {
+    background: #2d2d30;
+    color: #ffffff;
+    opacity: 0.6;
+}
+
+.dark-mode .member-row {
+    border-bottom-color: #404040;
+}
+
+.dark-mode .member-remove {
+    background: #1a1a1a;
+    border-color: #7d70d6;
+    color: #ffffff;
+}
+
+.dark-mode .member-remove:hover {
+    background: #333333;
+}
+
+.dark-mode .secondary-btn {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .secondary-btn:hover {
+    background: #333333;
+}
+
+.dark-mode .primary-btn:hover {
+    background: #6366F1;
+}
+
+.dark-mode .leave-link {
+    color: #ff6b6b;
+}
+
+.dark-mode .leave-link:hover {
+    color: #ff8787;
+}
+
+.dark-mode .save-text {
+    background: #5245b5;
+    color: #ffffff;
+}

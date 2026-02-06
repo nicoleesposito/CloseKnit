@@ -31,6 +31,7 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
     padding: 10px 12px;
     margin-top: 60px;
     background-color: #F3F3F3;
+    box-shadow: none !important;
 }
 
 .nav-search img {
@@ -39,11 +40,32 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
 }
 
 .search-input {
-    border: none;
-    outline: none;
+    border: none !important;
+    outline: none !important;
     width: 100%;
     font-size: 14px;
-    background-color: #F3F3F3;
+    background-color: transparent !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove ALL webkit search styling */
+.search-input::-webkit-search-decoration,
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-results-button,
+.search-input::-webkit-search-results-decoration {
+    -webkit-appearance: none !important;
+    display: none !important;
+}
+
+/* Force remove any focus states that might add borders */
+.search-input:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
 }
 
 .links {
@@ -148,29 +170,6 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
   color: #ffffff;
 }
 
-/* Search bar styling - ALWAYS WHITE IN DARK MODE */
-.dark-mode .navbar-search,
-.dark-mode .search-input,
-.dark-mode input[type="search"],
-.dark-mode .nav-search {
-  background-color: #FFFFFF !important;
-  border: 1px solid #dddddd !important;
-  color: #333333 !important;
-  border-radius: 12px;
-}
-
-.dark-mode .navbar-search::placeholder,
-.dark-mode .search-input::placeholder {
-  color: #999999 !important;
-}
-
-.dark-mode .navbar-search:focus,
-.dark-mode .search-input:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-}
-
 /* Navigation menu items - default state */
 .dark-mode .nav-link,
 .dark-mode .navbar a,
@@ -240,7 +239,6 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
   fill: #ffffff;
 }
 
-
 .dark-mode .navbar-user,
 .dark-mode .user-section {
   border-top: 1px solid #2d2d30;
@@ -257,7 +255,40 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
   color: #999999;
 }
 
+/* Navigation buttons - default state */
+.dark-mode .navrow,
+.dark-mode .navitem {
+  color: #ffffff !important;
+  background-color: transparent;
+}
+
+/* Navigation button text */
+.dark-mode .navrow,
+.dark-mode .navitem,
+.dark-mode .links button {
+  color: #ffffff !important;
+}
+
+/* Hover state */
+.dark-mode .navrow:hover,
+.dark-mode .navitem:hover {
+  background-color: #2d2d30;
+  color: #ffffff !important;
+}
+
+/* Active state - keep your light blue background */
+.dark-mode .navrow-active {
+  background-color: #BCD8EC !important;
+  color: #000000 !important;
+}
+
+/* Icons in active state should be dark */
+.dark-mode .navrow-active img {
+  filter: none;
+}
+
 /* Dividers */
+.dark-mode .nav-divider,
 .dark-mode .navbar-divider,
 .dark-mode .nav-separator {
   background-color: #2d2d30;
@@ -266,7 +297,7 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
   margin: 8px 0;
 }
 
-
+/* Smooth transitions */
 .navbar,
 nav,
 .sidebar,
@@ -277,9 +308,27 @@ nav,
               color 0.2s ease,
               border-color 0.2s ease;
 }
+/* Search bar styling - WHITE BACKGROUND IN DARK MODE */
+.dark-mode .nav-search {
+  background-color: #FFFFFF !important;
+  border: 1px solid #dddddd !important;
+  box-shadow: none !important;
+}
 
-.dark-mode .navbar,
-.dark-mode nav,
-.dark-mode .sidebar {
-  background-color: #1a1a1a !important;
+.dark-mode .search-input {
+  background-color: transparent !important; /* transparent so parent's white shows through */
+  border: none !important;
+  color: #333333 !important; /* dark text on white background */
+  box-shadow: none !important;
+}
+
+.dark-mode .search-input::placeholder {
+  color: #999999 !important; /* gray placeholder on white background */
+}
+
+.dark-mode .search-input:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
 }

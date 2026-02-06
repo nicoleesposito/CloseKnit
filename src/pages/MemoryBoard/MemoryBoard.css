@@ -1036,3 +1036,52 @@
 .memoryboard-cancel:hover {
     opacity: 0.92;
 }
+/* ================= DARK MODE ================= */
+
+.dark-mode .memoryboard-panel {
+    background: transparent;
+}
+
+.dark-mode .memoryboard-card {
+    background: #2d2d30;
+    border-color: #404040;
+}
+
+.dark-mode .memoryboard-card-title,
+.dark-mode .memoryboard-heading {
+    color: #ffffff;
+}
+
+.dark-mode .memoryboard-card-description {
+    color: #b3b3b3;
+}
+
+.dark-mode .memoryboard-card-bottom-row,
+.dark-mode .memoryboard-card-date {
+    color: #808080;
+}
+
+.dark-mode .memoryboard-empty-state {
+    color: #999999;
+}
+
+.dark-mode .memoryboard-empty-title {
+    color: #ffffff;
+}
+
+.dark-mode .memoryboard-overlay {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .memoryboard-card {
+    background: #2d2d30;
+}
+
+.dark-mode .memoryboard-title {
+    color: #ffffff;
+}
+
+.dark-mode .memoryboard-text,
+.dark-mode .memoryboard-subtext {
+    color: #b3b3b3;
+}

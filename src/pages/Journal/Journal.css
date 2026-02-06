@@ -576,3 +576,80 @@
         display: none;
     }
 }
+/* ================= DARK MODE ================= */
+
+.dark-mode .journal-panel {
+    background: #2d2d30;
+}
+
+.dark-mode .journal-entry-card,
+.dark-mode .journal-suggested-card,
+.dark-mode .journal-toolbar,
+.dark-mode .journal-comments-header,
+.dark-mode .journal-comments-body,
+.dark-mode .journal-modal-card {
+    background: #2d2d30;
+    border-color: #404040;
+}
+
+.dark-mode .journal-title-input,
+.dark-mode .journal-description-input,
+.dark-mode .journal-textarea {
+    color: #ffffff;
+    background: transparent;
+    border-color: #404040;
+}
+
+.dark-mode .journal-card-title,
+.dark-mode .journal-view-title,
+.dark-mode .journal-view-body,
+.dark-mode .journal-suggested-title,
+.dark-mode .journal-entries-heading {
+    color: #ffffff;
+}
+
+.dark-mode .journal-card-description,
+.dark-mode .journal-view-prompt,
+.dark-mode .journal-suggested-text {
+    color: #b3b3b3;
+}
+
+.dark-mode .journal-search-input,
+.dark-mode .journal-comments-input {
+    background: #1a1a1a;
+    border-color: #404040;
+    color: #ffffff;
+}
+
+.dark-mode .journal-search-input::placeholder,
+.dark-mode .journal-comments-input::placeholder {
+    color: #666666;
+}
+
+.dark-mode .journal-empty-state,
+.dark-mode .journal-comments-empty {
+    color: #999999;
+}
+
+.dark-mode .journal-card-bottom-row,
+.dark-mode .journal-card-date,
+.dark-mode .journal-comment-meta {
+    color: #808080;
+}
+
+.dark-mode .journal-divider {
+    border-color: #404040;
+}
+
+.dark-mode .journal-modal-title {
+    color: #ffffff;
+}
+
+.dark-mode .journal-modal-text,
+.dark-mode .journal-modal-subtext {
+    color: #b3b3b3;
+}
+
+.dark-mode .journal-comment-text {
+    color: #e5e7eb;
+}
