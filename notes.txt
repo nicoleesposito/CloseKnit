@@ -8,8 +8,6 @@ React Router Navigation docs: https://reactrouter.com/api/hooks/useNavigate
 
 TODO:
 
-notification bell functionality
-search functionality
-add help icons to pages
-leave circle pop up
+
+leave circle pop up (after backend)
 circle invitation acceptance pop up (after backend)

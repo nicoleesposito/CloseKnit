@@ -28,7 +28,7 @@ const LandingPage = () => {
 
 {/* mission statement */}
             <section className="landing-section">
-                <h1 className="landing-h1">Your Circle. Your Stories. One Place.</h1>
+                <h1 className="landing-h1">Your Circle. Your Stories. One Place.</h1><br></br>
                 <p className="landing-p">
                     CloseKnit helps you share life's moments, memories and goals with the people who matter most.
                     <br /><br />
@@ -58,11 +58,13 @@ const LandingPage = () => {
 
                         <p className="landing-p">CloseKnit is a platform designed to connect users no matter where they are, whether just minutes apart or across the globe.</p>
 
-                        <p className="landing-p">Join CloseKnit today and start sharing memories, planning moments, and connecting with your favorite people.</p>
-
-                        <button className="landing-button" onClick={() => (window.location.href = "/signup")}>
+                        <p className="landing-p">Join CloseKnit today and start sharing memories, planning moments, and connecting with your favorite people.
+                            <br></br>
+                            <button className="landing-button" onClick={() => (window.location.href = "/signup")}>
                             Get Started
-                        </button>
+                        </button></p>
+
+                        
                     </section>
                 </div>
             </div>
