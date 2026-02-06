@@ -6,7 +6,10 @@ import './App.css'
 import LandingPage from './pages/LandingPage/LandingPage';
 import SignUp from './pages/SignUpPage/SignUp';
 import Login from './pages/LoginPage/Login';
+import ForgotPass from './pages/ForgotPassword/ForgotPass';
+import ResetPass from './pages/ResetPassword/ResetPass';
 import Home from './pages/Homepage/Home';
+import NewHome from './pages/NewUserHomePage/NewHome';
 import ManageCircles from './pages/ManageCircles/ManageCircles';
 import Calendar from './pages/Calendar/Calendar';
 import Journal from './pages/Journal/Journal';
@@ -26,9 +29,13 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot-password" element={<ForgotPass />} />
+      <Route path="/reset-password" element={<ResetPass />} />
+      
 
       {/* These routes are for a user who is logged in */}
       <Route path="/home" element={<Home circleName={circleName} setCircleName={setCircleName} />} />
+      <Route path="/newhome" element={<NewHome circleName={circleName} setCircleName={setCircleName} />} />
       <Route path="/managecircles" element={<ManageCircles circleName={circleName} setCircleName={setCircleName} />} />
       <Route path="/calendar" element={<Calendar circleName={circleName} setCircleName={setCircleName} />} />
       <Route path="/journal" element={<Journal circleName={circleName} setCircleName={setCircleName} />} />

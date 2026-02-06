@@ -29,7 +29,7 @@ body {
 }
 
 .logo,
-.circle-name,
+.header-circle-name,
 .notifications,
 .profile-pic {
     display: block;
@@ -118,4 +118,274 @@ body {
         box-sizing: border-box;
         overflow-y: auto;
     }
+}
+.activity {
+    width: 260px;
+    min-height: calc(100vh - 90px);
+    margin-top: 5px;
+    text-align: left;
+    background-color: #ffffff;
+    border-radius: 18px 0 0 0;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.activity-top {
+    margin-top: 60px;
+}
+
+.activity-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.activity-title img {
+    height: 35px;
+    width: 35px;
+    margin: 0 0 10px 0;
+}
+
+.activity-list {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.activity-group {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    column-gap: 12px;
+    align-items: start;
+}
+
+.activity-pfp {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.activity-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.activity-name {
+    margin: 0;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.activity-dropdown {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.activity-newest {
+    margin-top: 6px;
+}
+
+.activity-text {
+    margin: 0;
+    font-size: 13px;
+    font-family: inherit;
+    line-height: 1.25;
+}
+
+.activity-time {
+    margin: 6px 0 0 0;
+    font-size: 12px;
+    opacity: 0.65;
+    font-family: inherit;
+}
+
+.activity-expanded {
+    position: relative;
+    margin-top: 10px;
+    padding-left: 16px;
+}
+
+.activity-timeline {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 12px;
+    height: 100%;
+}
+
+.activity-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #000000;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.activity-line {
+    width: 2px;
+    height: calc(100% - 16px);
+    background-color: #CFCFCF;
+    margin: 6px auto 0 auto;
+}
+
+.activity-item {
+    margin-bottom: 14px;
+}
+
+
+@media (max-width: 600px) {
+    .activity {
+        display: none;
+    }
+
+    .activity-feed .activity {
+        display: block;
+        width: 100%;
+        min-height: auto;
+        margin-top: 0;
+        border-radius: 18px;
+    }
+
+    .activity-feed .activity-top {
+        margin-top: 0;
+    }
+
+}
+
+.activity-dropdown {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.activity-arrow {
+    width: 14px;
+    height: 14px;
+    display: block;
+}
+
+/* =====================================================
+   DARK MODE STYLES
+   ===================================================== */
+
+/* Header Dark Mode */
+.dark-mode .header {
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #2d2d30;
+}
+
+.dark-mode .header-left,
+.dark-mode .header-center,
+.dark-mode .header-right {
+    color: #ffffff;
+}
+
+/* Logo and text in dark mode */
+.dark-mode .logo,
+.dark-mode .brand-text,
+.dark-mode .header-circle-name {
+    filter: brightness(0) invert(1);
+}
+
+/* Notification icon - keep white */
+.dark-mode .notifications {
+    filter: brightness(0) invert(1);
+}
+
+/* Profile pic border in dark mode */
+.dark-mode .profile-pic {
+    border: 2px solid #404040;
+}
+
+/* Mobile header dark mode */
+@media (max-width: 600px) {
+    .dark-mode .header {
+        border-bottom-color: #2d2d30;
+    }
+
+    .dark-mode .hamburger,
+    .dark-mode .activity-icon {
+        filter: brightness(0) invert(1);
+    }
+
+    .dark-mode .mobile-menu,
+    .dark-mode .activity-feed {
+        background-color: #1a1a1a;
+    }
+}
+
+/* Activity Feed Dark Mode */
+.dark-mode .activity {
+    background-color: #1a1a1a;
+    border-left: 1px solid #2d2d30;
+}
+
+.dark-mode .activity-title {
+    color: #ffffff;
+}
+
+.dark-mode .activity-title img {
+    filter: brightness(0) invert(1);
+}
+
+.dark-mode .activity-name {
+    color: #ffffff;
+}
+
+.dark-mode .activity-text {
+    color: #b3b3b3;
+}
+
+.dark-mode .activity-time {
+    color: #808080;
+}
+
+.dark-mode .activity-dropdown {
+    color: #b3b3b3;
+}
+
+.dark-mode .activity-arrow {
+    filter: brightness(0) invert(1);
+}
+
+/* Activity timeline in dark mode */
+.dark-mode .activity-dot {
+    background-color: #ffffff;
+}
+
+.dark-mode .activity-line {
+    background-color: #404040;
+}
+
+/* Activity profile pictures - keep border */
+.dark-mode .activity-pfp {
+    border: 1px solid #404040;
+}
+
+/* Smooth transitions */
+.header,
+.activity,
+.activity-title,
+.activity-name,
+.activity-text,
+.activity-time {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease;
 }

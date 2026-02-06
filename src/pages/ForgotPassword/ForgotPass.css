@@ -1,0 +1,177 @@
+.forgot-pass-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #FAF9F6;
+    position: relative;
+}
+
+.forgot-pass-container .logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2rem 3rem;
+}
+
+.forgot-pass-container .logo-image {
+    height: 40px;
+}
+
+.forgot-pass-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.forgot-pass-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+.forgot-pass-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.forgot-pass-content form {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.forgot-pass-content .form-group {
+    margin-bottom: 2rem;
+}
+
+.forgot-pass-content .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.forgot-pass-content .form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.forgot-pass-content .form-group input:focus {
+    outline: none;
+    border-color: #5245B5;
+}
+
+.continue-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #5245B5;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.continue-button:hover {
+    background-color: #453a99;
+}
+
+.back-to-login {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s;
+}
+
+.back-to-login:hover {
+    color: #1a1a1a;
+}
+
+.forgot-pass-content .signup-link {
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.forgot-pass-content .signup-link a {
+    color: #5245B5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-pass-content .signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .forgot-pass-container .logo {
+        padding: 1.5rem 2rem;
+    }
+
+    .forgot-pass-container .logo-image {
+        height: 32px;
+    }
+
+    .forgot-pass-content {
+        padding: 1.5rem;
+    }
+
+    .forgot-pass-title {
+        font-size: 2rem;
+    }
+
+    .forgot-pass-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .forgot-pass-container .logo {
+        padding: 1rem 1.5rem;
+    }
+
+    .forgot-pass-container .logo-image {
+        height: 28px;
+    }
+
+    .forgot-pass-content {
+        padding: 1rem;
+    }
+
+    .forgot-pass-title {
+        font-size: 1.75rem;
+    }
+
+    .forgot-pass-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .continue-button {
+        font-size: 1rem;
+    }
+}
