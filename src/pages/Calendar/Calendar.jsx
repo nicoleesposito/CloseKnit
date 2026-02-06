@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
+import HelpButton from '../../components/HelpButton/HelpButton';
 
 /*
 RESOURCES:
@@ -384,15 +385,19 @@ function Calendar(props) {
                         <TimelineSection title="Goals" items={timeline.goals} onPickEvent={openEditEventById} />
                         <TimelineSection title="Custom Dates" items={timeline.custom} onPickEvent={openEditEventById} />
                     </div>
-                    <div className="calendar-card">
-                        <div className="calendar-topbar">
-                            <button className="calendar-nav-btn" onClick={goPrevMonth}>{"<"}</button>
-                            <div className="calendar-month-block">
-                                <div className="calendar-month-name">{monthLabel}</div>
-                                <div className="calendar-year-name">{yearLabel}</div>
-                            </div>
-                            <button className="calendar-nav-btn" onClick={goNextMonth}>{">"}</button>
+                    <div className="calendar-card-with-help">
+                        <div className="calendar-help-button-container">
+                            <HelpButton page="calendar" />
                         </div>
+                        <div className="calendar-card">
+                            <div className="calendar-topbar">
+                                <button className="calendar-nav-btn" onClick={goPrevMonth}>{"<"}</button>
+                                <div className="calendar-month-block">
+                                    <div className="calendar-month-name">{monthLabel}</div>
+                                    <div className="calendar-year-name">{yearLabel}</div>
+                                </div>
+                                <button className="calendar-nav-btn" onClick={goNextMonth}>{">"}</button>
+                            </div>
                         <div className="calendar-dow-row">
                             <div className="calendar-dow-cell">Mon</div>
                             <div className="calendar-dow-cell">Tue</div>
@@ -437,6 +442,7 @@ function Calendar(props) {
                         <div className="calendar-bottombar">
                             <button className="calendar-primary-btn" onClick={openAddEvent}>Add Event</button>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

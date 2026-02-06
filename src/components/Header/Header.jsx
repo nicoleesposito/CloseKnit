@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from '../Navbar/Navbar';
 import ActivityFeed from '../Activity Feed/ActivityFeed';
+import NotifBell from '../Notification/NotifBell';
 
 /*
 React props docs: https://www.w3schools.com/react/react_props.asp
@@ -93,11 +94,7 @@ function Header(props) {
 
             for the profile photo, I'm using a placeholder image until we set up the database and figure out the user profiles*/}
         <div className="header-right">
-          <img
-            src="/images/ui/notification-bell-false.svg"
-            alt="notification bell"
-            className="notifications"
-          />
+          <NotifBell />
           <img
             src="/images/ui/user-pfp.svg"
             alt="Profile"
