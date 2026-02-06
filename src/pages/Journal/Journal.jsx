@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
+import HelpButton from '../../components/HelpButton/HelpButton';
 
 /*
 useEffect docs: https://react.dev/reference/react/useEffect
@@ -252,7 +253,7 @@ function Journal(props) {
     }
 
 
-    // the following functions reads the current input’s value and updates the state. when an event (the user input) is available, it's stored in the variable and passed through to the state.
+    // the following functions reads the current input's value and updates the state. when an event (the user input) is available, it's stored in the variable and passed through to the state.
     function searchTextChange(changeEvent) {
         const inputValue = changeEvent.currentTarget.value;
         setSearchText(inputValue);
@@ -648,6 +649,7 @@ function Journal(props) {
                 <main className='manage-main'>
                     <div className="journal-panel journal-panel-relative">
                         <div className="journal-list-top-row">
+                            <HelpButton page="journal" />
                             <input className="journal-search-input" placeholder="Search for ..." value={searchText} onChange={searchTextChange} type="text" />
                             <button className="journal-new-entry-button" onClick={newEntryClick} type="button">
                                 <span className="journal-new-entry-icon"><img src="/images/ui/add-entry-white.svg" alt="" /></span>
@@ -669,6 +671,7 @@ function Journal(props) {
             <main className='manage-main'>
                 <div className="journal-panel">
                     <div className="journal-list-top-row">
+                        <HelpButton page="journal" />
                         <input className="journal-search-input" placeholder="Search for ..." value={searchText} onChange={searchTextChange} type="text" />
                         <button className="journal-new-entry-button" onClick={newEntryClick} type="button">
                             <span className="journal-new-entry-icon"><img src="/images/ui/add-entry-white.svg" alt="" /></span>

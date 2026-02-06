@@ -1,0 +1,171 @@
+/* I didnt follow design from figma bcuz our figma design is kind of ugly */
+.notif-bell-container {
+  position: relative;
+}
+
+.notif-bell-icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.notif-bell-icon:hover {
+  opacity: 0.8;
+}
+
+/* overlay behind popup */
+.notif-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 999;
+}
+
+/* Notification popup */
+.notif-popup {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 380px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.notif-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+.notif-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notif-close:hover {
+  color: #333;
+}
+
+/* Notification list */
+.notif-list {
+  flex: 1;
+}
+
+.notif-empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+}
+
+/* Individual notification item */
+.notif-item {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.notif-item:hover {
+  background-color: #f9f9f9;
+}
+
+.notif-item-new {
+  background-color: #f0f4ff;
+}
+
+.notif-item-new:hover {
+  background-color: #e8efff;
+}
+
+.notif-item-content {
+  flex: 1;
+}
+
+.notif-item-text {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.notif-user {
+  font-weight: 600;
+  color: #222;
+}
+
+.notif-item-time {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+/* New notification dot */
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #5245B5;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* Footer */
+.notif-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.notif-mark-read {
+  background: transparent;
+  border: none;
+  color: #5245B5;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+}
+
+.notif-mark-read:hover {
+  opacity: 0.8;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .notif-popup {
+    width: 320px;
+  }
+}
