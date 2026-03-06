@@ -1,0 +1,1 @@
+// checks if a user belongs to a specific circle before allowing access to circle routes

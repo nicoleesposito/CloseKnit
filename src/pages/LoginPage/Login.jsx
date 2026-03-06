@@ -1,12 +1,29 @@
 import './Login.css'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
 
 function Login() {
     const navigate = useNavigate()
+    const { login } = useAuth()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        navigate('/home')
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        setError('')
+        setLoading(true)
+
+        try {
+            await login(email, password)
+            navigate('/home')
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -53,41 +70,49 @@ function Login() {
                 </div>
             </div>
 
-            {/* Right Side - Login Form */} 
+            {/* Right Side - Login Form */}
             <div className="right-section">
                 <div className="login-form">
                     <h1 className="login-title">Sign in to keep the moments going.</h1>
 
                     <form onSubmit={handleSubmit}>
+                        {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+
                         <div className="form-group">
                             <label htmlFor="email">Email</label>
-                            <input 
-                                type="email" 
-                                id="email" 
+                            <input
+                                type="email"
+                                id="email"
                                 placeholder="YourEmail123@gmail.com"
+                                value={email}
+                                onChange={(event) => setEmail(event.target.value)}
+                                required
                             />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="password">Password</label>
                             <div className="password-input-wrapper">
-                                <input 
-                                    type="password" 
-                                    id="password" 
+                                <input
+                                    type="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    required
                                 />
                                 <button type="button" className="toggle-password">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                        <line x1="1" y1="1" x2="23" y2="23"/>
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                        <line x1="1" y1="1" x2="23" y2="23" />
                                     </svg>
                                 </button>
                             </div>
-                            <a 
-                                href="#" 
+                            <a
+                                href="#"
                                 className="forgot-password"
-                                onClick={(e) => {
-                                    e.preventDefault()
+                                onClick={(event) => {
+                                    event.preventDefault()
                                     navigate('/forgot-password')
                                 }}
                             >
@@ -95,7 +120,9 @@ function Login() {
                             </a>
                         </div>
 
-                        <button type="submit" className="login-button">Log In</button>
+                        <button type="submit" className="login-button" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Log In'}
+                        </button>
                     </form>
 
                     <div className="divider">
@@ -120,10 +147,10 @@ function Login() {
                     </div>
 
                     <p className="signup-link">
-                        Don't have an account? <a 
+                        Don't have an account? <a
                             href="#"
-                            onClick={(e) => {
-                                e.preventDefault()
+                            onClick={(event) => {
+                                event.preventDefault()
                                 navigate('/signup')
                             }}
                         >
