@@ -5,6 +5,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { OAuth2Client } = require("google-auth-library");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // cookies options for auth
 const cookieOptions = {
@@ -55,7 +57,7 @@ async function register(req, res) {
     });
 }
 
-// login in function. checks that the found user has a valid login before creating a token
+// login in function. checks that the found user has a valid login before creating a token. gives response status of any errors that occur
 async function login(req, res) {
     const { email, password } = req.body;
 
@@ -93,4 +95,50 @@ async function me(req, res) {
     res.json(user);
 }
 
-module.exports = { register, login, logout, me };
+
+// google oauth docs: https://www.npmjs.com/package/google-auth-library
+// google oauth. verifies the token from google, finds or creates user, sets jwt cookie
+async function googleAuth(req, res) {
+    try {
+        const { token } = req.body;
+
+        // await allows the function to be completed later. it's going to verify the token with google and pauses until done
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+
+        // extracting the users information from the token
+        const payload = ticket.getPayload();
+        const { email, given_name: firstName, family_name: lastName = '', picture: profilePicture } = payload;
+
+        // find existing user. if there's not an existing user, create a new user with the following credentials.
+        let user = await User.findOne({ email });
+        if (!user) {
+            user = await User.create({
+                firstName,
+                lastName,
+                email,
+                password: 'oauth-google',
+                profilePicture
+            });
+        }
+
+        // adds a jwt token to the user and sends back the user info
+        const jwtToken = createToken(user._id);
+        res.cookie("token", jwtToken, cookieOptions);
+
+        res.json({
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            profilePicture: user.profilePicture
+        });
+    } catch (err) {
+        console.error("Google auth error:", err.message);
+        res.status(401).json({ message: "Google authentication failed" });
+    }
+}
+
+module.exports = { register, login, logout, me, googleAuth };

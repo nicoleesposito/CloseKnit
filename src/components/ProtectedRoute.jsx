@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 // Protected Routers: https://www.youtube.com/watch?v=pyfwQUc5Ssk
 // React Router auth: https://www.youtube.com/watch?v=oUZjO00NkhY

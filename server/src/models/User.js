@@ -3,13 +3,46 @@
 
 const mongoose = require('mongoose');
 
-// This defines the shape of a user document in MongoDB
+// structure of a user in the database. expanded it for better code readability, last push had it all combined and ugly (formatted like docs)
 const userSchema = new mongoose.Schema({
-    firstName: { type: String, required: true },
-    lastName:  { type: String, required: true },
-    email:     { type: String, required: true, unique: true, lowercase: true },
-    password:  { type: String, required: true }, // will be stored as a hash, never plain text
-}, { timestamps: true }); // automatically adds createdAt and updatedAt fields
+    firstName: {
+        type: String,
+        required: true
+    },
 
-// Export the model so other files can use it
+    lastName: {
+        type: String,
+        default: ''
+    },
+
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true
+    },
+
+    // stored as a hash, never plain text
+    password: {
+        type: String,
+        required: true
+    },
+
+    // cloudinary URL
+    profilePicture: {
+        type: String,
+        default: null
+    },
+
+    // cloudinary public ID for deletion
+    profilePicturePublicId: {
+        type: String,
+        default: null
+    }
+
+}, {
+    timestamps: true
+});
+
+// export the model so other files can use it
 module.exports = mongoose.model('User', userSchema);

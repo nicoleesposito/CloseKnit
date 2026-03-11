@@ -1,8 +1,9 @@
 // https://react.dev/reference/react/useContext
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
+export default AuthContext;
 
 export function AuthProvider({ children }) {
 
@@ -24,7 +25,7 @@ export function AuthProvider({ children }) {
                     setUser(data);
                 }
 
-            } catch (error) {
+            } catch {
                 console.log("Auth check failed");
             }
 
@@ -68,13 +69,14 @@ export function AuthProvider({ children }) {
         setUser(null);
     }
 
+    function updateUser(data) {
+        setUser(data);
+    }
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-export function useAuth() {
-    return useContext(AuthContext);
-}

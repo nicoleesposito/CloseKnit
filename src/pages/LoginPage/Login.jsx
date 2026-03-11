@@ -1,15 +1,64 @@
 import './Login.css'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import { useAuth } from '../../context/AuthContext'
+import { useState, useEffect, useCallback } from 'react'
+import { useAuth } from '../../context/useAuth'
 
 function Login() {
     const navigate = useNavigate()
-    const { login } = useAuth()
+    const { login, updateUser } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    const handleGoogleResponse = useCallback(async function (response) {
+
+        try {
+
+            const res = await fetch('/api/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    token: response.credential
+                })
+            })
+
+            const data = await res.json()
+
+            if (!res.ok) {
+                throw new Error(data.message)
+            }
+
+            updateUser(data)
+            navigate('/home')
+
+        } catch (err) {
+
+            setError(err.message)
+
+        }
+
+    }, [navigate, updateUser, setError])
+
+    useEffect(function () {
+
+        if (!window.google) {
+            return
+        }
+
+        window.google.accounts.id.initialize({
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+            callback: handleGoogleResponse
+        })
+
+    }, [handleGoogleResponse])
+
+    function handleGoogleClick() {
+        window.google.accounts.id.prompt()
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -130,19 +179,9 @@ function Login() {
                     </div>
 
                     <div className="social-buttons">
-                        <button className="social-button google">
+                        <button className="social-button google" onClick={handleGoogleClick}>
                             <img src="/images/ui/google.svg" alt="Google" />
                             Continue with Google
-                        </button>
-
-                        <button className="social-button apple">
-                            <img src="/images/ui/apple.svg" alt="Apple" />
-                            Continue with Apple
-                        </button>
-
-                        <button className="social-button facebook">
-                            <img src="/images/ui/facebook.svg" alt="Facebook" />
-                            Continue with Facebook
                         </button>
                     </div>
 
