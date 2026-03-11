@@ -3,9 +3,11 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../context/useAuth';
 
 function Home(props) {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     return (
         <div>
@@ -16,7 +18,7 @@ function Home(props) {
                     <div className="home-content">
                         {/* Welcome Section */}
                         <div className="welcome-header">
-                            <h1 className="greeting">Hi, Nicole</h1>
+                            <h1 className="greeting">Hi, {user?.firstName}</h1>
                             <p className="welcome-text">Welcome back!</p>
                         </div>
 

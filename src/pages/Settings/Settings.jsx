@@ -2,17 +2,20 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Settings.css";
 import Navbar from "../../components/Navbar/Navbar";
+import { useAuth } from "../../context/useAuth";
+
 
 function Settings() {
   const navigate = useNavigate();
+  const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState("Account");
 
   const [formData, setFormData] = useState({
-    firstName: "Nicole",
-    lastName: "Erickson",
-    email: "Ni_Erickson@gmail.com",
-    city: "Orlando",
-    timezone: "UTC/GMT -5:00 (EST)",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
+    city: "",
+    timezone: "",
   });
 
   // Notification toggles
@@ -23,13 +26,27 @@ function Settings() {
     closeKnitUpdates: false,
   });
 
-  // Accessibility toggles 
+  // Accessibility toggles
   const [accessibility, setAccessibility] = useState({
     darkMode: false,
     largerText: false,
   });
 
-  const [profilePic, setProfilePic] = useState("/images/profile-picture.jpg");
+  const [profilePic, setProfilePic] = useState(user?.profilePicture || "/images/profile-picture.jpg");
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+      }));
+      if (user.profilePicture) {
+        setProfilePic(user.profilePicture);
+      }
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,14 +56,30 @@ function Settings() {
     }));
   };
 
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePic(reader.result);
-      };
-      reader.readAsDataURL(file);
+  const handleProfilePicChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formPayload = new FormData();
+    formPayload.append('image', file);
+
+    try {
+      const res = await fetch('/api/users/profile-picture', {
+        method: 'PATCH',
+        credentials: 'include',
+        body: formPayload,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message);
+      }
+
+      setProfilePic(data.profilePicture);
+      updateUser({ ...user, profilePicture: data.profilePicture });
+    } catch (err) {
+      console.error('Profile picture upload failed:', err.message);
     }
   };
 
@@ -70,12 +103,12 @@ function Settings() {
 
   // Logout handler
   const handleLogout = () => {
-  
+
     // Navigate to landing page
     navigate("/");
   };
 
-  // Apply dark mode to the document 
+  // Apply dark mode to the document
   useEffect(() => {
     if (accessibility.darkMode) {
       document.documentElement.classList.add("dark-mode");
@@ -169,8 +202,8 @@ function Settings() {
                     style={{ display: "none" }}
                   />
                   <div className="profile-details">
-                    <h3>Nicole Erickson</h3>
-                    <p>Ni_Erickson@gmail.com</p>
+                    <h3>{user?.firstName} {user?.lastName}</h3>
+                    <p>{user?.email}</p>
                   </div>
                 </div>
 

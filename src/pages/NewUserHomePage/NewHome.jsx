@@ -3,9 +3,11 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../context/useAuth';
 
 function NewHome(props) {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     return (
         <div>
@@ -15,7 +17,7 @@ function NewHome(props) {
                 <main className='manage-main'>
                     <div className="welcome-page-content">
                         <div className="welcome-intro">
-                            <h1 className="greeting">Hi, Nicole</h1>
+                            <h1 className="greeting">Hi, {user?.firstName}</h1>
                             <p className="welcome-title">Welcome to CloseKnit!</p>
                             
                             <p className="welcome-description">

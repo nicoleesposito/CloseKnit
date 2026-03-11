@@ -23,64 +23,74 @@ function createToken(userId) {
 
 // creates a new account, checks required feilds, and checks if the email already is in use. req = request, res = response. parameters had to stay this way because of how express handles them
 async function register(req, res) {
-    const { firstName, lastName, email, password } = req.body;
+    try {
+        const { firstName, lastName, email, password } = req.body;
 
-    // if there is a missing field, an error response of 400 will show a missing fields notice. same applies if a user is already registered with the email
-    if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({ message: "Missing fields" });
+        // if there is a missing field, an error response of 400 will show a missing fields notice. same applies if a user is already registered with the email
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({ message: "Missing fields" });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already exists" });
+        }
+
+        // before saving the password, hash it to make it more secure
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword
+        });
+
+        const token = createToken(user._id);
+
+        res.cookie("token", token, cookieOptions);
+
+        res.json({
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        });
+    } catch (err) {
+        console.error("Register error:", err.message);
+        res.status(500).json({ message: "Registration failed" });
     }
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        return res.status(400).json({ message: "Email already exists" });
-    }
-
-    // before saving the password, hash it to make it more secure
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword
-    });
-
-    const token = createToken(user._id);
-
-    res.cookie("token", token, cookieOptions);
-
-    res.json({
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email
-    });
 }
 
 // login in function. checks that the found user has a valid login before creating a token. gives response status of any errors that occur
 async function login(req, res) {
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) {
-        return res.status(400).json({ message: "Invalid login" });
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid login" });
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            return res.status(400).json({ message: "Invalid login" });
+        }
+
+        const token = createToken(user._id);
+
+        res.cookie("token", token, cookieOptions);
+
+        res.json({
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        });
+    } catch (err) {
+        console.error("Login error:", err.message);
+        res.status(500).json({ message: "Login failed" });
     }
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-        return res.status(400).json({ message: "Invalid login" });
-    }
-
-    const token = createToken(user._id);
-
-    res.cookie("token", token, cookieOptions);
-
-    res.json({
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email
-    });
 }
 
 // logs the user out, clears the token
@@ -91,8 +101,13 @@ function logout(req, res) {
 
 // current user
 async function me(req, res) {
-    const user = await User.findById(req.user.id).select("-password");
-    res.json(user);
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        res.json(user);
+    } catch (err) {
+        console.error("Me error:", err.message);
+        res.status(500).json({ message: "Failed to get user" });
+    }
 }
 
 

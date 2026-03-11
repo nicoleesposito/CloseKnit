@@ -11,8 +11,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+function uploadToCloudinary(fileBuffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'closeknit', transformation: [{ width: 1200, crop: 'limit' }] },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve({ url: result.secure_url, public_id: result.public_id });
+      }
+    );
+    stream.end(fileBuffer);
+  });
+}
+
 async function deleteFromCloudinary(publicId) {
   await cloudinary.uploader.destroy(publicId);
 }
 
-module.exports = { cloudinary, deleteFromCloudinary };
+module.exports = { cloudinary, uploadToCloudinary, deleteFromCloudinary };
