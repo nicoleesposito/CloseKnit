@@ -88,7 +88,7 @@
 }
 
 .circle-name-row,
-.invite-row {
+.circle-name-row {
     display: grid;
     grid-template-columns: minmax(0, 420px) 1fr auto;
     align-items: center;
@@ -98,6 +98,15 @@
     min-width: 0;
 }
 
+.invite-row {
+    display: grid;
+    grid-template-columns: minmax(0, 420px) 1fr auto;
+    align-items: center;
+    column-gap: 10px;
+    padding-left: 30px;
+    width: 100%;
+    min-width: 0;
+}
 .icon-btn,
 .invite-row .primary-btn {
     justify-self: end;
@@ -355,4 +364,63 @@ button {
 .dark-mode .save-text {
     background: #5245b5;
     color: #ffffff;
+}
+.save-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #5245b5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(82, 69, 181, 0.3);
+    animation: fadeInOut 3s ease forwards;
+    z-index: 1000;
+}
+
+@keyframes fadeInOut {
+    0%   { opacity: 0; transform: translateY(10px); }
+    15%  { opacity: 1; transform: translateY(0); }
+    75%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.leave-btn {
+    height: 36px;
+    padding: 0 1rem;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #c0392b;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    align-self: flex-start;
+}
+
+.leave-btn:hover {
+    color: #e74c3c;
+}
+
+.leave-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    color: #1a1a1a;
+    padding: 1rem 2rem;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-left: 4px solid #e74c3c;
+    animation: fadeInOut 2s ease forwards;
+    z-index: 1000;
+    white-space: nowrap;
 }

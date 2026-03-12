@@ -3,149 +3,125 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useState } from "react";
-
-/*
-React props docs: https://www.w3schools.com/react/react_props.asp
-React Router Navigation docs: https://reactrouter.com/api/hooks/useNavigate
-- Worked on by Nicole
-
-Props are like arguments that are passed into the components, so the component will receive the argument as "props" and pass the data.
-*/
+import { useNavigate } from "react-router-dom";
 
 function ManageCircles(props) {
+    const navigate = useNavigate();
     const [circleNameEditingEnabled, setCircleNameEditingEnabled] = useState(false);
-    // stores the circle name text while the user is editing before it saves, which will then update the circle name property across the header once it's saved.
     const [circleNameDraftText, setCircleNameDraftText] = useState(props.circleName);
     const [createCircleModeEnabled, setCreateCircleModeEnabled] = useState(false);
     const [addMember, setAddMember] = useState("");
     const [circleMembersList, setCircleMembersList] = useState([]);
+    const [saveSuccess, setSaveSuccess] = useState(false);
+    const [leaveSuccess, setLeaveSuccess] = useState(false);
+    const [copySuccess, setCopySuccess] = useState(false);
+    const [limitReached, setLimitReached] = useState(false);
     const editIconImagePath = "/images/ui/edit-button-purple.svg";
 
-
-    // updates the circle name draft text as the user types.
     function circleNameDraftChange(changeEvent) {
-        const inputTextElement = changeEvent.target;
-        const inputTextValue = inputTextElement.value;
-
-        setCircleNameDraftText(inputTextValue);
+        setCircleNameDraftText(changeEvent.target.value);
     }
 
-    // when the user types into the Add Member email input, this function runs to grab the new member information and eventually set it in the members area.
     function addMemberEmail(changeEvent) {
-        const inputTextElement = changeEvent.target;
-        const inputTextValue = inputTextElement.value;
-
-        setAddMember(inputTextValue);
+        setAddMember(changeEvent.target.value);
     }
 
-    // switches the edit icon into a save button and saves the circle name when pressed again.
     function editOrSaveButton() {
-
-        // if editing is off, turn on editing abilities to active and load the current name into the draft area to be edited.
-        if (circleNameEditingEnabled === false) {
-            setCircleNameEditingEnabled(true);
+    if (circleNameEditingEnabled === false) {
+        setCircleNameEditingEnabled(true);
+        if (!createCircleModeEnabled) {
             setCircleNameDraftText(props.circleName);
-            return;
         }
-
-        // with editing is on, save the draft name into the global circle name state.
-        props.setCircleName(circleNameDraftText);
-        setCircleNameEditingEnabled(false);
+        return;
     }
+    if (!createCircleModeEnabled) {
+        props.updateCircleName(circleNameDraftText);
+    }
+    setCircleNameEditingEnabled(false);
+}
 
     function createNewCircleButton() {
-        setCreateCircleModeEnabled(true);
-        setCircleNameEditingEnabled(true);
-        setCircleNameDraftText(props.circleName);
+    if (props.circles.length >= 5) {
+        setLimitReached(true);
+        setTimeout(() => setLimitReached(false), 3000);
+        return;
     }
+    setCreateCircleModeEnabled(true);
+    setCircleNameEditingEnabled(true);
+    setCircleNameDraftText("");
+}
 
-    // cancels create circle mode and brings back the circle management state
     function cancelCreateCircleButton() {
         setCreateCircleModeEnabled(false);
         setCircleNameEditingEnabled(false);
         setCircleNameDraftText(props.circleName);
     }
 
-    /*
-    ------------- @michellesousaa
-    creates a circle by saving the draft name as the global state in the header, however, this function will be modified once Michelle creates the home page. it should eventually push the new circle into the circles area on the home page. CSS has already been created for it in preparation. */
     function finishCreateCircleButton() {
-        setCreateCircleModeEnabled(false);
-        setCircleNameEditingEnabled(false);
-        props.setCircleName(circleNameDraftText);
+    const nameToCreate = circleNameDraftText.trim();
+    setCreateCircleModeEnabled(false);
+    setCircleNameEditingEnabled(false);
+    setCircleNameDraftText("");
+    if (nameToCreate.length > 0) {
+        props.addCircle(nameToCreate);
     }
+}
 
-    // sends an invite and adds the invited user into the members section. extra space at the end is trimmed off and prevents an empty submission. the member is given an ID to track who they are using date.now to create a unique one each time.
-    function sendInviteButton() {
-        const trimmedEmailText = addMember.trim();
-
-        if (trimmedEmailText.length === 0) {
-            return;
+    function saveChangesButton() {
+        if (circleNameDraftText && circleNameDraftText.trim().length > 0) {
+            props.updateCircleName(circleNameDraftText.trim());
         }
-
-        const newMemberObject = {
-            memberId: "member-" + Date.now(),
-            memberLabel: trimmedEmailText
-        };
-
-        // make a copy of the members so that only the copy is modified and pushed to to updated list. this will add a member to it
-        const oldMembersList = circleMembersList;
-        const newMembersList = oldMembersList.slice();
-        newMembersList.push(newMemberObject);
-        setCircleMembersList(newMembersList);
-
-        setAddMember("");
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
     }
 
-    // removes a member from the circle by rebuilding the list. member updates are put in an empty array
+    function leaveCircleButton() {
+    setLeaveSuccess(true);
+    const remainingCircles = props.circles.filter(c => c._id !== props.activeCircleId);
+    setTimeout(async () => {
+        await props.removeCircle(props.activeCircleId);
+        setLeaveSuccess(false);
+        if (remainingCircles.length === 0) {
+            navigate('/newhome');
+        } else {
+            navigate('/home');
+        }
+    }, 2000);
+}
+
+    function copyInviteLink() {
+        const inviteText = `Join my circle "${props.circleName}" on CloseKnit!`;
+        navigator.clipboard.writeText(inviteText).then(() => {
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 3000);
+        });
+    }
+
     function removeMemberButton(memberIdRemoval) {
-        const oldMembersList = circleMembersList;
-        const updatedMembersList = [];
-        let indexNumber = 0;
-
-        // while the index is less than the length of the old members list, if the current member object's ID is not the one being removed, then add it to the updated members list
-        while (indexNumber < oldMembersList.length) {
-            const currentMemberObject = oldMembersList[indexNumber];
-
-            if (currentMemberObject.memberId !== memberIdRemoval) {
-                updatedMembersList.push(currentMemberObject);
-            }
-
-            indexNumber = indexNumber + 1;
-        }
-
+        const updatedMembersList = circleMembersList.filter(
+            member => member.memberId !== memberIdRemoval
+        );
         setCircleMembersList(updatedMembersList);
     }
 
-
-    // if statements to adjust what's visible/enabled in the layout
     let pageCardTitleText = "Circle Management";
-    if (createCircleModeEnabled === true) {
-        pageCardTitleText = "Create A Circle";
-    }
+    if (createCircleModeEnabled === true) pageCardTitleText = "Create A Circle";
 
     let showCreateNewCircleButton = true;
-    if (createCircleModeEnabled === true) {
-        showCreateNewCircleButton = false;
-    }
+    if (createCircleModeEnabled === true) showCreateNewCircleButton = false;
 
     let circleNameInputDisabled = true;
-    if (circleNameEditingEnabled === true) {
-        circleNameInputDisabled = false;
-    }
+    if (circleNameEditingEnabled === true) circleNameInputDisabled = false;
 
     let showManageBottomButtons = true;
     let showCreateBottomButtons = false;
-
     if (createCircleModeEnabled === true) {
         showManageBottomButtons = false;
         showCreateBottomButtons = true;
     }
 
     let showEmptyMembersPlaceholder = false;
-    if (circleMembersList.length === 0) {
-        showEmptyMembersPlaceholder = true;
-    }
+    if (circleMembersList.length === 0) showEmptyMembersPlaceholder = true;
 
     return (
         <div>
@@ -169,7 +145,6 @@ function ManageCircles(props) {
                                         {circleNameEditingEnabled === false && (
                                             <img className="circle-name-icon" src={editIconImagePath} alt="Edit circle name" />
                                         )}
-
                                         {circleNameEditingEnabled === true && (
                                             <span className="save-text">Save</span>
                                         )}
@@ -177,8 +152,8 @@ function ManageCircles(props) {
                                 </div>
                                 <p className="field-label section-space">Add member</p>
                                 <div className="invite-row">
-                                    <input className="text-input" type="text" placeholder="Email" value={addMember} onChange={addMemberEmail} />
-                                    <button className="primary-btn" type="button" onClick={sendInviteButton}>Send Invite</button>
+                                <input className="text-input" type="text" placeholder="Email" value={addMember} onChange={addMemberEmail} />
+                                <button className="primary-btn" type="button" onClick={copyInviteLink}>Copy Link</button>
                                 </div>
                                 <div className="members-header section-space">
                                     <p className="field-label">Manage members</p>
@@ -202,8 +177,12 @@ function ManageCircles(props) {
                                 <div className="bottom-actions">
                                     {showManageBottomButtons && (
                                         <div className="bottom-actions-manage">
-                                            <a className="leave-link" href="#leave">Leave Circle</a>
-                                            <button className="primary-btn" type="button">Save Changes</button>
+                                            {props.activeCircleId && props.circleName && props.circleName.trim().length > 0 && (
+                                                <button className="leave-btn" type="button" onClick={leaveCircleButton}>Leave Circle</button>
+                                            )}
+                                            {circleNameEditingEnabled && (
+                                                <button className="primary-btn" type="button" onClick={saveChangesButton}>Save Changes</button>
+                                            )}
                                         </div>
                                     )}
                                     {showCreateBottomButtons && (
@@ -215,6 +194,20 @@ function ManageCircles(props) {
                                 </div>
                             </div>
                         </div>
+                        {saveSuccess && (
+                            <div className="save-toast">✓ Changes saved!</div>
+                        )}
+                        {leaveSuccess && (
+                            <div className="leave-toast">You left "{props.circleName}"!</div>
+                        )}
+                        {copySuccess && (
+                            <div className="save-toast">✓ Invite link copied to clipboard!</div>
+                        )}
+                        {limitReached && (
+                        <div className="save-toast">
+                        ⚠️ Your limit is 5 circles!
+                        </div>
+                        )}
                         <div className="invites-card">
                             <h3 className="invites-title">Circle Invitations</h3>
                             <div className="invites-empty"></div>

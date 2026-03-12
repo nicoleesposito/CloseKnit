@@ -114,33 +114,19 @@ function Home(props) {
 
                         {/* Circle Selector */}
                         <div className="circle-selector">
-                            <button 
-                                className="circle-btn empty"
-                                onClick={() => navigate('/managecircles')}
-                                aria-label="Manage circles"
-                            ></button>
-                            <button 
-                                className="circle-btn empty"
-                                onClick={() => navigate('/managecircles')}
-                                aria-label="Manage circles"
-                            ></button>
-                            <button 
-                                className="circle-btn active"
-                                aria-label="Current circle"
-                            >
-                                C2026
-                            </button>
-                            <button 
-                                className="circle-btn empty"
-                                onClick={() => navigate('/managecircles')}
-                                aria-label="Manage circles"
-                            ></button>
-                            <button 
-                                className="circle-btn empty"
-                                onClick={() => navigate('/managecircles')}
-                                aria-label="Manage circles"
-                            ></button>
-                        </div>
+                        {props.circles && props.circles.map(circle => (
+                        <button
+                        key={circle._id}
+                        className={`circle-btn ${circle._id === props.activeCircleId ? 'active' : 'empty'}`}
+                        onClick={() => props.setActiveCircleId(circle._id)}
+                        aria-label={circle.name === props.circleName 
+                        ? "Current circle" 
+                        : `Switch to ${circle.name}`}
+        >
+            {circle.name}                                          
+        </button>
+    ))}
+</div>
                     </div>
                 </main>
                 <ActivityFeed />

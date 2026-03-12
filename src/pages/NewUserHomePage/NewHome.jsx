@@ -49,34 +49,34 @@ function NewHome(props) {
                             </p>
                             
                             <div className="circle-selector welcome-circles">
-                                <button 
-                                    className="circle-btn empty"
-                                    onClick={() => navigate('/managecircles')}
-                                    aria-label="Manage circles"
-                                ></button>
-                                <button 
-                                    className="circle-btn empty"
-                                    onClick={() => navigate('/managecircles')}
-                                    aria-label="Manage circles"
-                                ></button>
-                                <button 
-                                    className="circle-btn placeholder"
-                                    onClick={() => navigate('/managecircles')}
-                                    aria-label="Manage circles"
-                                >
-                                    N
-                                </button>
-                                <button 
-                                    className="circle-btn empty"
-                                    onClick={() => navigate('/managecircles')}
-                                    aria-label="Manage circles"
-                                ></button>
-                                <button 
-                                    className="circle-btn empty"
-                                    onClick={() => navigate('/managecircles')}
-                                    aria-label="Manage circles"
-                                ></button>
-                            </div>
+    <button 
+        className="circle-btn empty"
+        onClick={() => navigate('/managecircles?create=true')}
+        aria-label="Manage circles"
+    ></button>
+    <button 
+        className="circle-btn empty"
+        onClick={() => navigate('/managecircles?create=true')}
+        aria-label="Manage circles"
+    ></button>
+    <button 
+        className="circle-btn placeholder"
+        onClick={() => navigate('/managecircles')}
+        aria-label="Manage circles"
+    >
+        C2026
+    </button>
+    <button 
+        className="circle-btn empty"
+        onClick={() => navigate('/managecircles?create=true')}
+        aria-label="Manage circles"
+    ></button>
+    <button 
+        className="circle-btn empty"
+        onClick={() => navigate('/managecircles?create=true')}
+        aria-label="Manage circles"
+    ></button>
+</div>
                         </div>
                     </div>
                 </main>

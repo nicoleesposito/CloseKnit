@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './App.css'
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -21,8 +21,89 @@ import Settings from './pages/Settings/Settings';
 function App() {
   //any javascript needed would go in this area here
   //The current state for the circle name is saved to this jsx file so that it's saved across the pages with the header. This will likely have to be edited to incorporate the backend later on.
-  const [circleName, setCircleName] = useState("Capstone 2025!");
 
+const [activeCircleId, setActiveCircleId] = useState(null);
+const [circles, setCircles] = useState([]);
+
+const circleName = circles.find(c => c._id === activeCircleId)?.name || "";
+const setCircleName = (name) => {
+    const circle = circles.find(c => c.name === name);
+    if (circle) setActiveCircleId(circle._id);
+};
+
+useEffect(() => {
+    async function fetchCircles() {
+        try {
+            const response = await fetch('/api/circles', {
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setCircles(data);
+                if (data.length > 0) setActiveCircleId(data[0]._id);
+            }
+        } catch {
+            console.log('Failed to fetch circles');
+        }
+    }
+    fetchCircles();
+}, []);
+
+async function addCircle(newCircleName) {
+    try {
+        const response = await fetch('/api/circles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ name: newCircleName })
+        });
+        if (response.ok) {
+            const newCircle = await response.json();
+            setCircles(prev => [...prev, newCircle]);
+            setActiveCircleId(newCircle._id);
+        }
+    } catch {
+        console.log('Failed to create circle');
+    }
+}
+
+async function updateCircleName(newName) {
+    try {
+        const response = await fetch(`/api/circles/${activeCircleId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ name: newName })
+        });
+        if (response.ok) {
+            setCircles(prev => prev.map(circle =>
+                circle._id === activeCircleId ? { ...circle, name: newName } : circle
+            ));
+        }
+    } catch {
+        console.log('Failed to update circle');
+    }
+}
+
+async function removeCircle(circleId) {
+    try {
+        const response = await fetch(`/api/circles/${circleId}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const updatedCircles = circles.filter(c => c._id !== circleId);
+            setCircles(updatedCircles);
+            if (updatedCircles.length > 0) {
+                setActiveCircleId(updatedCircles[0]._id);
+            } else {
+                setActiveCircleId(null);
+            }
+        }
+    } catch {
+        console.log('Failed to leave circle');
+    }
+}
   return (
     <AuthProvider>
       <Routes>
@@ -35,9 +116,20 @@ function App() {
 
 
         {/* These routes are for a user who is logged in */}
-        <Route path="/home" element={<ProtectedRoute><Home circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
+        <Route path="/home" element={
+  <ProtectedRoute>
+    <Home 
+      circleName={circleName} 
+      setCircleName={setCircleName} 
+      circles={circles}
+      activeCircleId={activeCircleId}
+      setActiveCircleId={setActiveCircleId}
+    />
+  </ProtectedRoute>
+} />
+
+        <Route path="/managecircles" element={<ProtectedRoute><ManageCircles circleName={circleName} setCircleName={setCircleName} addCircle={addCircle} updateCircleName={updateCircleName} removeCircle={removeCircle} activeCircleId={activeCircleId} circles={circles} /></ProtectedRoute>} />
         <Route path="/newhome" element={<ProtectedRoute><NewHome circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
-        <Route path="/managecircles" element={<ProtectedRoute><ManageCircles circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
         <Route path="/calendar" element={<ProtectedRoute><Calendar circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
         <Route path="/journal" element={<ProtectedRoute><Journal circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
         <Route path="/memoryboard" element={<ProtectedRoute><MemoryBoard circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
