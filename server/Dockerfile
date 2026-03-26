@@ -16,7 +16,7 @@ RUN npm install
 COPY . .
 
 # Expose the port the server runs on
-EXPOSE 5000
+EXPOSE 3000
 
 # Command to run the server. "npm run dev" in the command line.
 CMD ["npm", "run", "dev"]
