@@ -23,7 +23,7 @@ const memoryBoardRoutes = require('./routes/memoryboard');
 const activityRoutes = require('./routes/activity');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 
 // function runs between the request and response before reaching a route
