@@ -19,10 +19,10 @@ function NewHome(props) {
                         <div className="welcome-intro">
                             <h1 className="greeting">Hi, {user?.firstName}</h1>
                             <p className="welcome-title">Welcome to CloseKnit!</p>
-                            
+
                             <p className="welcome-description">
-                                You're just one step away from building your first circle. Circles help you stay 
-                                connected to friends & family through shared calendars, journals, and memory 
+                                You're just one step away from building your first circle. Circles help you stay
+                                connected to friends & family through shared calendars, journals, and memory
                                 boards, all in one place.
                             </p>
 
@@ -34,7 +34,7 @@ function NewHome(props) {
 
                         <div className="invite-section">
                             <h2 className="invite-heading">Ready to bring your circle to life?</h2>
-                            <button 
+                            <button
                                 className="send-invites-button"
                                 onClick={() => navigate('/managecircles')}
                             >
@@ -44,39 +44,37 @@ function NewHome(props) {
 
                         <div className="circle-info-section">
                             <p className="circle-info-text">
-                                You can easily find all of your joined circles in this tab. Press one to 
+                                You can easily find all of your joined circles in this tab. You'll press here to
                                 switch between them!
                             </p>
-                            
+
                             <div className="circle-selector welcome-circles">
-    <button 
-        className="circle-btn empty"
-        onClick={() => navigate('/managecircles?create=true')}
-        aria-label="Manage circles"
-    ></button>
-    <button 
-        className="circle-btn empty"
-        onClick={() => navigate('/managecircles?create=true')}
-        aria-label="Manage circles"
-    ></button>
-    <button 
-        className="circle-btn placeholder"
-        onClick={() => navigate('/managecircles')}
-        aria-label="Manage circles"
-    >
-        C2026
-    </button>
-    <button 
-        className="circle-btn empty"
-        onClick={() => navigate('/managecircles?create=true')}
-        aria-label="Manage circles"
-    ></button>
-    <button 
-        className="circle-btn empty"
-        onClick={() => navigate('/managecircles?create=true')}
-        aria-label="Manage circles"
-    ></button>
-</div>
+                                <button
+                                    className="circle-btn empty"
+                                    onClick={() => navigate('/managecircles?create=true')}
+                                    aria-label="Manage circles"
+                                ></button>
+                                <button
+                                    className="circle-btn empty"
+                                    onClick={() => navigate('/managecircles?create=true')}
+                                    aria-label="Manage circles"
+                                ></button>
+                                <button
+                                    className="circle-btn empty"
+                                    onClick={() => navigate('/managecircles')}
+                                    aria-label="Manage circles"
+                                ></button>
+                                <button
+                                    className="circle-btn empty"
+                                    onClick={() => navigate('/managecircles?create=true')}
+                                    aria-label="Manage circles"
+                                ></button>
+                                <button
+                                    className="circle-btn empty"
+                                    onClick={() => navigate('/managecircles?create=true')}
+                                    aria-label="Manage circles"
+                                ></button>
+                            </div>
                         </div>
                     </div>
                 </main>

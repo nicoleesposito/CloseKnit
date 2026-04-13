@@ -24,6 +24,7 @@ function App() {
 
 const [activeCircleId, setActiveCircleId] = useState(null);
 const [circles, setCircles] = useState([]);
+const [circlesLoaded, setCirclesLoaded] = useState(false);
 
 const circleName = circles.find(c => c._id === activeCircleId)?.name || "";
 const setCircleName = (name) => {
@@ -45,6 +46,7 @@ useEffect(() => {
         } catch {
             console.log('Failed to fetch circles');
         }
+        setCirclesLoaded(true);
     }
     fetchCircles();
 }, []);
@@ -118,21 +120,24 @@ async function removeCircle(circleId) {
         {/* These routes are for a user who is logged in */}
         <Route path="/home" element={
   <ProtectedRoute>
-    <Home 
-      circleName={circleName} 
-      setCircleName={setCircleName} 
-      circles={circles}
-      activeCircleId={activeCircleId}
-      setActiveCircleId={setActiveCircleId}
-    />
+    {circlesLoaded && circles.length === 0
+      ? <NewHome circleName={circleName} setCircleName={setCircleName} />
+      : <Home
+          circleName={circleName}
+          setCircleName={setCircleName}
+          circles={circles}
+          activeCircleId={activeCircleId}
+          setActiveCircleId={setActiveCircleId}
+        />
+    }
   </ProtectedRoute>
 } />
 
         <Route path="/managecircles" element={<ProtectedRoute><ManageCircles circleName={circleName} setCircleName={setCircleName} addCircle={addCircle} updateCircleName={updateCircleName} removeCircle={removeCircle} activeCircleId={activeCircleId} circles={circles} /></ProtectedRoute>} />
         <Route path="/newhome" element={<ProtectedRoute><NewHome circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
         <Route path="/calendar" element={<ProtectedRoute><Calendar circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
-        <Route path="/journal" element={<ProtectedRoute><Journal circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
-        <Route path="/memoryboard" element={<ProtectedRoute><MemoryBoard circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
+        <Route path="/journal" element={<ProtectedRoute><Journal circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
+        <Route path="/memoryboard" element={<ProtectedRoute><MemoryBoard circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       </Routes>
     </AuthProvider>

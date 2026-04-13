@@ -1,5 +1,5 @@
 import './MemoryBoard.css'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
@@ -10,7 +10,6 @@ References:
 HTML DOM creatObjectURL(): https://www.geeksforgeeks.org/html/html-dom-createobjecturl-method/
 Unshift: https://www.w3schools.com/jsref/jsref_unshift.asp
 Colorpicker: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/color
-
 */
 
 function MemoryBoard(props) {
@@ -35,6 +34,39 @@ function MemoryBoard(props) {
     const [borderWeightNumber, setBorderWeightNumber] = useState(3);
     const [borderColorOpen, setBorderColorOpen] = useState(false);
     const [borderWeightOpen, setBorderWeightOpen] = useState(false);
+
+    // fetch memory boards from the backend whenever the active circle changes
+    useEffect(function () {
+        if (!props.activeCircleId) {
+            setMemoryItems([]);
+            return;
+        }
+
+        async function fetchBoards() {
+            try {
+                const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setMemoryItems(data);
+                }
+            } catch {
+                console.log('Failed to fetch memory boards');
+            }
+        }
+
+        fetchBoards();
+    }, [props.activeCircleId]);
+
+    // returns the full name of a board's author
+    function getAuthorName(board) {
+        if (board.author && board.author.firstName) {
+            return board.author.firstName + ' ' + board.author.lastName;
+        }
+        return 'Unknown';
+    }
 
     // functon will take the user to the main screen with the list of boards
     function goToListScreen() {
@@ -70,8 +102,9 @@ function MemoryBoard(props) {
         setBorderWeightOpen(false);
     }
 
-    // when a template is selected, the template is given an id and the user can see the template. functions are called to show/build the elements of this page
-    function goToLayoutScreen(templateId) {
+    // when a template is selected, the template is given an id and the user can see the template.
+    // the board is created in the backend right away so that slot images can be uploaded to it.
+    async function goToLayoutScreen(templateId) {
         setSelectedTemplateId(templateId);
         setMemoryboardScreen("layout");
         setLayoutPageNumber(1);
@@ -90,18 +123,33 @@ function MemoryBoard(props) {
         setBorderWeightNumber(3);
         setBorderColorOpen(false);
         setBorderWeightOpen(false);
+
+        // create the board in the backend so we have an id before the user uploads images
+        try {
+            const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    titleText: 'Board 1',
+                    templateId: templateId,
+                    pageCount: 1,
+                    borderColorValue: '#5245B5',
+                    borderWeightNumber: 3
+                })
+            });
+
+            if (response.ok) {
+                const newBoard = await response.json();
+                setActiveBoardId(newBoard._id);
+            }
+        } catch {
+            console.log('Failed to create memory board');
+        }
     }
 
     function newMemoryClick() {
         goToTemplateScreen();
-    }
-
-    // creates a random id for the memory board for easier targeting/tracking
-    function createMemoryBoardId() {
-        const timeNumber = Date.now();
-        const randomNumber = Math.floor(Math.random() * 100000);
-        const idText = "memory-" + timeNumber + "-" + randomNumber;
-        return idText;
     }
 
     // finds a memory by id
@@ -112,7 +160,7 @@ function MemoryBoard(props) {
         while (index < memoryItems.length) {
             const currentItem = memoryItems[index];
 
-            if (currentItem.id === memoryId) {
+            if (currentItem._id === memoryId) {
                 found = currentItem;
             }
 
@@ -122,7 +170,8 @@ function MemoryBoard(props) {
         return found;
     }
 
-    // when a saved memory is clicked, open the non editing mode screen to preview the board. this is only if there is a board already stored since its going to grab the id that is passed into it and then run the functions inside of the function
+    // when a saved memory is clicked, open the non editing mode screen to preview the board.
+    // this only works if there is a board already stored since its going to grab the id that is passed into it and then run the functions inside of the function
     function openMemory(memoryId) {
         const memoryObject = findMemoryById(memoryId);
 
@@ -130,7 +179,7 @@ function MemoryBoard(props) {
             return;
         }
 
-        setViewBoardId(memoryObject.id);
+        setViewBoardId(memoryObject._id);
         setSelectedTemplateId(memoryObject.templateId);
         setLayoutPageCount(memoryObject.pageCount);
         setLayoutPageNumber(1);
@@ -147,7 +196,7 @@ function MemoryBoard(props) {
         setMemoryboardScreen("view");
     }
 
-    // when the edit button is pressed from the preview screen the functions will run. a screen with no id won;t work
+    // when the edit button is pressed from the preview screen the functions will run.
     // Claude 2/5. "The button wont display the edit button. Pinpoint what is causing the error" (assisted in finding that id was not being passed properly)
     function editFromPreviewClick() {
         if (viewBoardId === null) {
@@ -160,7 +209,7 @@ function MemoryBoard(props) {
             return;
         }
 
-        setActiveBoardId(memoryObject.id);
+        setActiveBoardId(memoryObject._id);
         setSelectedTemplateId(memoryObject.templateId);
         setLayoutPageCount(memoryObject.pageCount);
         setLayoutPageNumber(1);
@@ -197,7 +246,7 @@ function MemoryBoard(props) {
         return chooseTemplateClick;
     }
 
-    // each template has a small preview box, so when the correct id that was set to the template is passed through the function it will return the correct svg to the preview. originally tried to hand code this out but it was too difficult so it would resize better, i ended up adding the svgs instead. may end up causing possile resizing issues
+    // each template has a small preview box, so when the correct id that was set to the template is passed through the function it will return the correct svg to the preview.
     function buildTemplateBoxPreview(templateId) {
         if (templateId === "template-1") {
             return <img className="memoryboard-template-image" src="/images/ui/template1.svg" alt="template1" />;
@@ -350,7 +399,7 @@ function MemoryBoard(props) {
         const key = buildSlotKey(layoutPageNumber, slotId);
         setUploadSlotKey(key);
 
-        // use DOM to grab the input element on the page with the matching it, and check if the file exists before executing the code.
+        // use DOM to grab the input element on the page with the matching id, and check if the file exists before executing the code.
         const fileInput = document.getElementById("memoryboard-file-input");
         if (fileInput) {
             fileInput.value = null;
@@ -358,35 +407,74 @@ function MemoryBoard(props) {
         }
     }
 
-    // when there is a change detected (such as with photo upload) the function targets the select file. if its null it stops.
-    function fileInputChange(changeEvent) {
+    // when there is a change detected (such as with photo upload) the function targets the selected file.
+    // shows a local preview right away, then uploads to cloudinary and replaces with the permanent url.
+    async function fileInputChange(changeEvent) {
         if (uploadSlotKey === null) {
             return;
         }
 
-        // target the file the was submit from the changed event, and if there is no file or the length of it is 0, stop executing. this means the user has backed out of the upload.
+        // target the file that was submitted from the changed event, and if there is no file or the length of it is 0, stop executing. this means the user has backed out of the upload.
         const fileList = changeEvent.target.files;
         if (!fileList || fileList.length === 0) {
             return;
         }
 
-        // the first image in the list is grabbed and put into the html DOM method by letting it show up in the img tag. afterwards, and object is created using the slot image. while loop checks that the length of the object is more than 0, and then copies everything from slot image into the updated map.
         const fileObject = fileList[0];
-        const imageUrl = URL.createObjectURL(fileObject);
+        const slotKeyToUse = uploadSlotKey;
 
-        const updatedMap = {};
-        const keys = Object.keys(slotImageMap);
+        // show a local preview right away so the user sees something immediately
+        const localUrl = URL.createObjectURL(fileObject);
+        const updatedMapLocal = {};
+        const existingKeys = Object.keys(slotImageMap);
 
-        let index = 0;
-        while (index < keys.length) {
-            const keyName = keys[index];
-            updatedMap[keyName] = slotImageMap[keyName];
-            index = index + 1;
+        let existingIndex = 0;
+        while (existingIndex < existingKeys.length) {
+            const keyName = existingKeys[existingIndex];
+            updatedMapLocal[keyName] = slotImageMap[keyName];
+            existingIndex = existingIndex + 1;
         }
 
-        // after it runs, this sets the slot to have the new image
-        updatedMap[uploadSlotKey] = imageUrl;
-        setSlotImageMap(updatedMap);
+        updatedMapLocal[slotKeyToUse] = localUrl;
+        setSlotImageMap(updatedMapLocal);
+
+        // if there is no board id yet, stop here (image will show locally but not saved)
+        if (activeBoardId === null) {
+            console.log('Board id not set yet, image shown locally only');
+            return;
+        }
+
+        // upload the image to the backend which saves it to cloudinary
+        try {
+            const formData = new FormData();
+            formData.append('image', fileObject);
+            formData.append('slotKey', slotKeyToUse);
+
+            const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard/' + activeBoardId + '/images', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                // replace the local blob url with the cloudinary url
+                const updatedMapCloudinary = {};
+                const cloudinaryKeys = Object.keys(slotImageMap);
+
+                let cloudinaryIndex = 0;
+                while (cloudinaryIndex < cloudinaryKeys.length) {
+                    const keyName = cloudinaryKeys[cloudinaryIndex];
+                    updatedMapCloudinary[keyName] = slotImageMap[keyName];
+                    cloudinaryIndex = cloudinaryIndex + 1;
+                }
+
+                updatedMapCloudinary[result.slotKey] = result.url;
+                setSlotImageMap(updatedMapCloudinary);
+            }
+        } catch {
+            console.log('Failed to upload slot image');
+        }
     }
 
     // each slot has an icon to upload a photo. this function lets the upload functionality occur by running the slots id into it and then running the uploadClick function that occurs when the user presses the button. prevent default and stoppropagation stop default behavior from triggering in the slot after the button click
@@ -417,7 +505,7 @@ function MemoryBoard(props) {
         );
     }
 
-    // picks a cover image for the memory board submission by using the image in the first slot. it loops through the keys from slot image and checks if it starts with the 1- key. if it does it returns that url to the cover (since the DOM stored the image as a url)
+    // picks a cover image for the memory board submission by using the image in the first slot. it loops through the keys from slot image and checks if it starts with the 1- key. if it does it returns that url to the cover
     function getDefaultCoverPhoto() {
         const keys = Object.keys(slotImageMap);
 
@@ -438,64 +526,64 @@ function MemoryBoard(props) {
         return null;
     }
 
-    // captures the current layout and saves it in memooryitems to show that its essentially completed. it saves all of the settings that the user changed such as the title and the images uploaded. date.now also adds the submission creation
-    function saveBoardToList() {
-        const nowTimeNumber = Date.now();
+    // sends the current board's metadata (title, border settings, page count) to the backend and updates the list in state
+    async function saveBoardToApi() {
+        if (activeBoardId === null) {
+            return;
+        }
 
         let finalTitle = boardTitleDraftText.trim();
         if (finalTitle.length === 0) {
             finalTitle = "Board 1";
         }
 
-        const coverUrl = getDefaultCoverPhoto();
+        try {
+            const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard/' + activeBoardId, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    titleText: finalTitle,
+                    pageCount: layoutPageCount,
+                    borderColorValue: borderColorValue,
+                    borderWeightNumber: borderWeightNumber
+                })
+            });
 
-        let boardIdToUse = activeBoardId;
-        if (boardIdToUse === null) {
-            boardIdToUse = createMemoryBoardId();
-            setActiveBoardId(boardIdToUse);
-        }
+            if (response.ok) {
+                const updatedBoard = await response.json();
 
-        // final board saved into an object
-        const boardObject = {
-            id: boardIdToUse,
-            titleText: finalTitle,
-            templateId: selectedTemplateId,
-            pageCount: layoutPageCount,
-            coverImageUrl: coverUrl,
-            slotImageMap: slotImageMap,
-            authorName: "Nicole",
-            createdTimeNumber: nowTimeNumber,
-            borderColorValue: borderColorValue,
-            borderWeightNumber: borderWeightNumber,
-        };
+                // replace the old version of this board in the list, or add it if it's new
+                const updatedList = [];
+                let found = false;
 
-        const updatedList = [];
-        let found = false;
+                let index = 0;
+                while (index < memoryItems.length) {
+                    const currentItem = memoryItems[index];
 
-        // loops through every saved board and grab the current memory board thats being looked at. if the ids match, then replace the older version with the newly updated board. if the board was never found, then that means its a new memory and unshift moves it to the top of the list.
-        let index = 0;
-        while (index < memoryItems.length) {
-            const currentItem = memoryItems[index];
+                    if (currentItem._id === activeBoardId) {
+                        updatedList.push(updatedBoard);
+                        found = true;
+                    } else {
+                        updatedList.push(currentItem);
+                    }
 
-            if (currentItem.id === boardIdToUse) {
-                updatedList.push(boardObject);
-                found = true;
-            } else {
-                updatedList.push(currentItem);
+                    index = index + 1;
+                }
+
+                if (found === false) {
+                    updatedList.unshift(updatedBoard);
+                }
+
+                setMemoryItems(updatedList);
             }
-
-            index = index + 1;
+        } catch {
+            console.log('Failed to save memory board');
         }
-
-        if (found === false) {
-            updatedList.unshift(boardObject);
-        }
-
-        setMemoryItems(updatedList);
     }
 
-    // leaves the editiing mode and fixes the title before exiting
-    function saveAndExitEdit() {
+    // leaves the editing mode and fixes the title before exiting
+    async function saveAndExitEdit() {
         const trimmedTitle = boardTitleDraftText.trim();
 
         if (trimmedTitle.length === 0) {
@@ -508,19 +596,18 @@ function MemoryBoard(props) {
 
         setEditingBoardTitle(false);
         setLayoutEditMode(false);
-
         setBorderColorOpen(false);
         setBorderWeightOpen(false);
 
-        saveBoardToList();
+        await saveBoardToApi();
     }
 
     // back arrow on active layout saves the board, adds it to the main list, and takes you back
-    function backFromLayoutClick() {
+    async function backFromLayoutClick() {
         if (layoutEditMode) {
-            saveAndExitEdit();
+            await saveAndExitEdit();
         } else {
-            saveBoardToList();
+            await saveBoardToApi();
         }
 
         goToListScreen();
@@ -824,8 +911,8 @@ function MemoryBoard(props) {
         }
     }
 
-    // functions the same as the color picker function for the slots created earlier
-    function coverFileInputChange(changeEvent) {
+    // uploads a new cover photo for a board from the list screen
+    async function coverFileInputChange(changeEvent) {
         if (editingCoverBoardId === null) {
             return;
         }
@@ -837,66 +924,109 @@ function MemoryBoard(props) {
         }
 
         const fileObject = fileList[0];
-        const imageUrl = URL.createObjectURL(fileObject);
+        const boardIdForCover = editingCoverBoardId;
 
-        const updatedList = [];
+        // show a local preview right away
+        const localUrl = URL.createObjectURL(fileObject);
+        const updatedListLocal = [];
 
-        let index = 0;
-        while (index < memoryItems.length) {
-            const currentItem = memoryItems[index];
+        let localIndex = 0;
+        while (localIndex < memoryItems.length) {
+            const currentItem = memoryItems[localIndex];
 
-            if (currentItem.id === editingCoverBoardId) {
+            if (currentItem._id === boardIdForCover) {
                 const updatedItem = {
-                    id: currentItem.id,
-                    titleText: currentItem.titleText,
-                    templateId: currentItem.templateId,
-                    pageCount: currentItem.pageCount,
-                    coverImageUrl: imageUrl,
-                    slotImageMap: currentItem.slotImageMap,
-                    authorName: currentItem.authorName,
-                    createdTimeNumber: currentItem.createdTimeNumber,
-                    borderColorValue: currentItem.borderColorValue,
-                    borderWeightNumber: currentItem.borderWeightNumber,
+                    ...currentItem,
+                    coverImageUrl: localUrl
                 };
-
-                updatedList.push(updatedItem);
+                updatedListLocal.push(updatedItem);
             } else {
-                updatedList.push(currentItem);
+                updatedListLocal.push(currentItem);
             }
 
-            index = index + 1;
+            localIndex = localIndex + 1;
         }
 
-        setMemoryItems(updatedList);
+        setMemoryItems(updatedListLocal);
         setEditingCoverBoardId(null);
-    }
 
+        // upload the cover to the backend which saves it to cloudinary
+        try {
+            const formData = new FormData();
+            formData.append('image', fileObject);
 
-    // loops through and finds the memory id that doesn't match, then updates the empty array with the new list.
-    function deleteMemoryById(memoryId) {
-        const updatedList = [];
+            const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard/' + boardIdForCover + '/cover', {
+                method: 'PUT',
+                credentials: 'include',
+                body: formData
+            });
 
-        let index = 0;
-        while (index < memoryItems.length) {
-            const currentItem = memoryItems[index];
+            if (response.ok) {
+                const result = await response.json();
+                // replace the local blob url with the cloudinary url
+                const updatedListCloudinary = [];
 
-            if (currentItem.id !== memoryId) {
-                updatedList.push(currentItem);
+                let cloudinaryIndex = 0;
+                while (cloudinaryIndex < memoryItems.length) {
+                    const currentItem = memoryItems[cloudinaryIndex];
+
+                    if (currentItem._id === boardIdForCover) {
+                        const updatedItem = {
+                            ...currentItem,
+                            coverImageUrl: result.url
+                        };
+                        updatedListCloudinary.push(updatedItem);
+                    } else {
+                        updatedListCloudinary.push(currentItem);
+                    }
+
+                    cloudinaryIndex = cloudinaryIndex + 1;
+                }
+
+                setMemoryItems(updatedListCloudinary);
             }
-
-            index = index + 1;
+        } catch {
+            console.log('Failed to upload cover image');
         }
-
-        setMemoryItems(updatedList);
     }
 
-    function confirmDeleteClick() {
+    // sends a delete request to the backend and removes the board from the list in state
+    async function deleteMemoryFromApi(memoryId) {
+        try {
+            const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard/' + memoryId, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                // rebuild the list without the deleted board
+                const updatedList = [];
+
+                let index = 0;
+                while (index < memoryItems.length) {
+                    const currentItem = memoryItems[index];
+
+                    if (currentItem._id !== memoryId) {
+                        updatedList.push(currentItem);
+                    }
+
+                    index = index + 1;
+                }
+
+                setMemoryItems(updatedList);
+            }
+        } catch {
+            console.log('Failed to delete memory board');
+        }
+    }
+
+    async function confirmDeleteClick() {
         if (deleteMemoryId === null) {
             closeDeletePopup();
             return;
         }
 
-        deleteMemoryById(deleteMemoryId);
+        await deleteMemoryFromApi(deleteMemoryId);
         closeDeletePopup();
     }
 
@@ -987,7 +1117,7 @@ function MemoryBoard(props) {
                             const coverUrl = memoryObject.coverImageUrl;
 
                             return (
-                                <button key={memoryObject.id} className="memoryboard-cover-card" onClick={function () { openMemory(memoryObject.id); }} type="button">
+                                <button key={memoryObject._id} className="memoryboard-cover-card" onClick={function () { openMemory(memoryObject._id); }} type="button">
                                     <div className="memoryboard-cover-image-wrap">
                                         {coverUrl && (
                                             <img className="memoryboard-cover-image" src={coverUrl} alt="" />
@@ -999,10 +1129,10 @@ function MemoryBoard(props) {
                                             </div>
                                         )}
 
-                                        <button className="memoryboard-cover-menu-button" onClick={function (event) { toggleBoardMenuClick(event, memoryObject.id); }} type="button" >
+                                        <button className="memoryboard-cover-menu-button" onClick={function (event) { toggleBoardMenuClick(event, memoryObject._id); }} type="button" >
                                             <span className="memoryboard-cover-menu-dots">•••</span>
                                         </button>
-                                        {buildBoardCardMenu(memoryObject.id)}
+                                        {buildBoardCardMenu(memoryObject._id)}
                                     </div>
                                     <p className="memoryboard-cover-title">{memoryObject.titleText}</p>
                                 </button>

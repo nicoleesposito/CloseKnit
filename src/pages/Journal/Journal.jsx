@@ -7,16 +7,10 @@ import HelpButton from '../../components/HelpButton/HelpButton';
 
 /*
 useEffect docs: https://react.dev/reference/react/useEffect
-JSON: https://www.w3schools.com/js/js_json_parse.asp
 Jeremy McPeak CH.12 of Javascript Book
-unshift: https://www.geeksforgeeks.org/javascript/javascript-array-unshift-method/
-https://www.w3schools.com/jsref/jsref_unshift.asp
 */
 
 function Journal(props) {
-    const storageKey = "journal_entries";
-    const commentsKey = "journal_comments";
-
     const [currentJournalScreen, setCurrentJournalScreen] = useState("list");
     const [journalEntries, setJournalEntries] = useState([]);
     const [activeEntryId, setActiveEntryId] = useState(null);
@@ -39,56 +33,53 @@ function Journal(props) {
     // states for the comment box, whether its open or not and the text it holds
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [commentInputText, setCommentInputText] = useState("");
-    const [commentsByEntryId, setCommentsByEntryId] = useState({});
 
     // delete entry
     const [deletePopupOpen, setDeletePopupOpen] = useState(false);
     const [deleteEntryId, setDeleteEntryId] = useState(null);
 
-    // using JSON to store the entry locally, but will eventually be stored in the database for the user's account
-    //useEffect runs after the UI loads, which will look up the value under the storage key (which is the journal entries defined above) and return a string if something is there.
+    // fetch journal entries from the backend whenever the active circle changes
     useEffect(function () {
-        const savedEntriesText = localStorage.getItem(storageKey);
-        // if there is something saved then the JSON string will be parsed into JS data array.
-        if (savedEntriesText) {
-            const parsedEntries = JSON.parse(savedEntriesText);
-            if (Array.isArray(parsedEntries)) {
-                setJournalEntries(parsedEntries);
+        if (!props.activeCircleId) {
+            setJournalEntries([]);
+            return;
+        }
+
+        async function fetchEntries() {
+            try {
+                const response = await fetch('/api/circles/' + props.activeCircleId + '/journal', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setJournalEntries(data);
+                }
+            } catch {
+                console.log('Failed to fetch journal entries');
             }
         }
 
-        // same concept as entries using the comments key. if the parsed comment exists and it is an object the comment will be saved in state.
-        const savedCommentsText = localStorage.getItem(commentsKey);
+        fetchEntries();
+    }, [props.activeCircleId]);
 
-        if (savedCommentsText) {
-            const parsedComments = JSON.parse(savedCommentsText);
-            if (parsedComments && typeof parsedComments === "object") {
-                setCommentsByEntryId(parsedComments);
-            }
+    // returns the full name of an entry's author
+    function getAuthorName(entry) {
+        if (entry.author && entry.author.firstName) {
+            return entry.author.firstName + ' ' + entry.author.lastName;
         }
-    }, []);
-
-    // when the journal entries change, convert to JSON and save it under the journal_entries so that any edits or creations are stored
-    useEffect(function () {
-        const textToSave = JSON.stringify(journalEntries);
-        localStorage.setItem(storageKey, textToSave);
-    }, [journalEntries]);
-
-    // same function but with comments
-    useEffect(function () {
-        const textToSave = JSON.stringify(commentsByEntryId);
-        localStorage.setItem(commentsKey, textToSave);
-    }, [commentsByEntryId]);
-
-    // creates a random ID for the entry. followed the same concept used in the journal for making a unique ID using date.now since it prevents duplicates.
-    function createEntryId() {
-        const timeNumber = Date.now();
-        const randomNumber = Math.floor(Math.random() * 100000);
-        const idText = "entry-" + timeNumber + "-" + randomNumber;
-        return idText;
+        return 'Unknown';
     }
 
-    // loops through the journal entries and returns the object with the matching id. entry starts as null before the entry id is passed through the function.
+    // returns the full name of a comment's author
+    function getCommentAuthorName(comment) {
+        if (comment.author && comment.author.firstName) {
+            return comment.author.firstName + ' ' + comment.author.lastName;
+        }
+        return 'Unknown';
+    }
+
+    // loops through the journal entries and returns the object with the matching id
     function findEntryById(entryId) {
         let foundEntry = null;
 
@@ -96,7 +87,7 @@ function Journal(props) {
         while (index < journalEntries.length) {
             const currentEntry = journalEntries[index];
 
-            if (currentEntry.id === entryId) {
+            if (currentEntry._id === entryId) {
                 foundEntry = currentEntry;
             }
 
@@ -106,10 +97,11 @@ function Journal(props) {
         return foundEntry;
     }
 
-    // each journal entry has a time stamp. this function calculates how many days ago the entry was created and returns the matching number.
-    function getDaysAgoText(timeNumber) {
+    // calculates how many days ago the entry was created and returns the matching label
+    function getDaysAgoText(dateString) {
         const nowTimeNumber = Date.now();
-        const differenceNumber = nowTimeNumber - timeNumber;
+        const entryTimeNumber = new Date(dateString).getTime();
+        const differenceNumber = nowTimeNumber - entryTimeNumber;
         const oneDayNumber = 24 * 60 * 60 * 1000;
         const dayCount = Math.floor(differenceNumber / oneDayNumber);
 
@@ -124,7 +116,9 @@ function Journal(props) {
         return dayCount + " Days Ago";
     }
 
-    // filters the text entries by trimming extra space and turning it into lowercase for standard text. if the search is empty then just show the journal entries, but when the index is greater than 0 in length the while loop iterates through the entries and checks if it matches. matching entries are added into the empty array
+    // filters the text entries by trimming extra space and turning it into lowercase for standard text.
+    // if the search is empty then just show the journal entries, but when the index is greater than 0 in length
+    // the while loop iterates through the entries and checks if it matches. matching entries are added into the empty array
     function getFilteredEntries() {
         const trimmedSearchText = searchText.trim().toLowerCase();
 
@@ -150,7 +144,6 @@ function Journal(props) {
 
             filteredList.push(currentEntry);
 
-
             index = index + 1;
         }
 
@@ -169,7 +162,7 @@ function Journal(props) {
         setSuggestedEntriesOpen(true);
     }
 
-    //checks if anything is empty to prevent saving empty strings
+    // checks if anything is empty to prevent saving empty strings
     function entryIsEmpty() {
         const trimmedTitle = entryTitleText.trim();
         const trimmedDescription = entryDescriptionText.trim();
@@ -182,7 +175,8 @@ function Journal(props) {
         return false;
     }
 
-    // builds the text as an object with the features being passed through from the if statements. this only shows while edit mode is on
+    // builds the text style object as an object with the features being passed through from the if statements.
+    // this only shows while edit mode is on
     function getEditorStyleObject() {
         const styleObject = {
             fontFamily: selectedFontName,
@@ -207,7 +201,7 @@ function Journal(props) {
         return styleObject;
     }
 
-    // similar to last function, but is activated only when an entry (which is submit as an object) is viewed to show the styling of it
+    // similar to last function, but is activated only when an entry (which is submitted as an object) is viewed to show the styling of it
     function viewStyle(entryObject) {
         const styleObject = {
             fontFamily: entryObject.fontName,
@@ -235,25 +229,23 @@ function Journal(props) {
         return styleObject;
     }
 
-    // comments get displayed on entries
+    // returns the comments for the entry currently being viewed
+    // comments come from the entry object itself since the backend returns them nested inside the entry
     function getCommentsForActiveEntry() {
-        const entryId = activeEntryId;
-
-        if (entryId === null) {
+        if (activeEntryId === null) {
             return [];
         }
 
-        const commentList = commentsByEntryId[entryId];
+        const entry = findEntryById(activeEntryId);
 
-        if (commentList) {
-            return commentList;
+        if (!entry) {
+            return [];
         }
 
-        return [];
+        return entry.comments;
     }
 
-
-    // the following functions reads the current input's value and updates the state. when an event (the user input) is available, it's stored in the variable and passed through to the state.
+    // the following functions read the current input's value and update the state
     function searchTextChange(changeEvent) {
         const inputValue = changeEvent.currentTarget.value;
         setSearchText(inputValue);
@@ -319,7 +311,7 @@ function Journal(props) {
         chooseSuggestedTemplate("growth");
     }
 
-    // these functions handle the toolbar settings in editor
+    // these functions handle the toolbar settings in the editor
     function boldClick() {
         const newValue = !isBoldActive;
         setBoldActive(newValue);
@@ -377,7 +369,7 @@ function Journal(props) {
         const entryToEdit = findEntryById(entryId);
 
         if (entryToEdit) {
-            setActiveEntryId(entryToEdit.id);
+            setActiveEntryId(entryToEdit._id);
             setEntryTitleText(entryToEdit.titleText);
             setEntryDescriptionText(entryToEdit.shortDescriptionText);
             setEntryBodyText(entryToEdit.bodyText);
@@ -401,13 +393,11 @@ function Journal(props) {
         setCurrentJournalScreen("list");
     }
 
-    // function saves the new entry to return the id using date.now to create a unique id. entry is then turned into an object and copies what they typed into the form states previously created.
-    function saveNewEntryAndReturnId() {
-        const nowTimeNumber = Date.now();
-        const newEntryId = createEntryId();
+    // sends a new entry to the backend and adds it to the top of the list in state
+    async function saveNewEntry() {
+        const circleId = props.activeCircleId;
 
-        const entryObject = {
-            id: newEntryId,
+        const entryData = {
             titleText: entryTitleText,
             shortDescriptionText: entryDescriptionText,
             bodyText: entryBodyText,
@@ -415,93 +405,109 @@ function Journal(props) {
             textAlign: selectedTextAlign,
             isBold: isBoldActive,
             isItalic: isItalicActive,
-            isUnderline: isUnderlineActive,
-            authorName: "Nicole",
-            createdTimeNumber: nowTimeNumber,
-            updatedTimeNumber: nowTimeNumber,
+            isUnderline: isUnderlineActive
         };
 
-        // by slicing the entries we create a copy to modify the duplicate and keep the original as is. then unshift is going to push this new entry to the front of the list and the state is going to update the ui to rerender.
-        const updatedEntries = journalEntries.slice();
-        updatedEntries.unshift(entryObject);
+        try {
+            const response = await fetch('/api/circles/' + circleId + '/journal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(entryData)
+            });
 
-        setJournalEntries(updatedEntries);
-
-        return newEntryId;
-    }
-
-    // iterates through any journal entries that are longer than 0 characters in length, if the ids match when clicked, the entry object is going to update and it will get pushed into the new array. if else is for if the entry is not being edited, which will add the original entry instead (the one not changed)
-    function updateExistingEntry(entryId) {
-        const nowTimeNumber = Date.now();
-        const updatedEntries = [];
-
-        let index = 0;
-        while (index < journalEntries.length) {
-            const currentEntry = journalEntries[index];
-
-            if (currentEntry.id === entryId) {
-                const updatedEntryObject = {
-                    id: currentEntry.id,
-                    titleText: entryTitleText,
-                    shortDescriptionText: entryDescriptionText,
-                    bodyText: entryBodyText,
-                    fontName: selectedFontName,
-                    textAlign: selectedTextAlign,
-                    isBold: isBoldActive,
-                    isItalic: isItalicActive,
-                    isUnderline: isUnderlineActive,
-                    authorName: currentEntry.authorName,
-                    createdTimeNumber: currentEntry.createdTimeNumber,
-                    updatedTimeNumber: nowTimeNumber,
-                };
-
-                updatedEntries.push(updatedEntryObject);
-            } else {
-                updatedEntries.push(currentEntry);
+            if (response.ok) {
+                const createdEntry = await response.json();
+                // put the new entry at the top of the list
+                const updatedEntries = journalEntries.slice();
+                updatedEntries.unshift(createdEntry);
+                setJournalEntries(updatedEntries);
+                setActiveEntryId(createdEntry._id);
             }
-
-            index = index + 1;
+        } catch {
+            console.log('Failed to save journal entry');
         }
-
-        setJournalEntries(updatedEntries);
     }
 
-    // if the user didnt type anything then do nothing. if its null we are creating a new entry and passing through the date.now from the save new entry function to return a unique id and update it. the last line is for if the comments are toggled to change the boolean and view
-    function saveButtonClick() {
+    // sends the updated entry to the backend and replaces the old version in state
+    async function updateEntryInApi(entryId) {
+        const circleId = props.activeCircleId;
+
+        const entryData = {
+            titleText: entryTitleText,
+            shortDescriptionText: entryDescriptionText,
+            bodyText: entryBodyText,
+            fontName: selectedFontName,
+            textAlign: selectedTextAlign,
+            isBold: isBoldActive,
+            isItalic: isItalicActive,
+            isUnderline: isUnderlineActive
+        };
+
+        try {
+            const response = await fetch('/api/circles/' + circleId + '/journal/' + entryId, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(entryData)
+            });
+
+            if (response.ok) {
+                const updatedEntry = await response.json();
+                // replace the old version of this entry in the list
+                const updatedEntries = [];
+                let index = 0;
+                while (index < journalEntries.length) {
+                    const currentEntry = journalEntries[index];
+                    if (currentEntry._id === entryId) {
+                        updatedEntries.push(updatedEntry);
+                    } else {
+                        updatedEntries.push(currentEntry);
+                    }
+                    index = index + 1;
+                }
+                setJournalEntries(updatedEntries);
+            }
+        } catch {
+            console.log('Failed to update journal entry');
+        }
+    }
+
+    // if the user didn't type anything then do nothing. if activeEntryId is null we are creating a new entry.
+    // the last line is for switching the screen to view mode after saving
+    async function saveButtonClick() {
         if (entryIsEmpty()) {
             return;
         }
 
         if (activeEntryId === null) {
-            const newId = saveNewEntryAndReturnId();
-            setActiveEntryId(newId);
+            await saveNewEntry();
         } else {
-            updateExistingEntry(activeEntryId);
+            await updateEntryInApi(activeEntryId);
         }
 
         setCommentsOpen(false);
         setCurrentJournalScreen("view");
     }
 
-    // if the user wants to go back to the main entry page for the journal, pressing the back arrow will take them there
-    function backArrowFromCreate() {
+    // if the user wants to go back to the main entry page, pressing the back arrow will save and take them there
+    async function backArrowFromCreate() {
         if (entryIsEmpty()) {
             setCurrentJournalScreen("list");
             return;
         }
 
         if (activeEntryId === null) {
-            const newId = saveNewEntryAndReturnId();
-            setActiveEntryId(newId);
+            await saveNewEntry();
         } else {
-            updateExistingEntry(activeEntryId);
+            await updateEntryInApi(activeEntryId);
         }
 
         setCommentsOpen(false);
         setCurrentJournalScreen("list");
     }
 
-    // controls the opening and closing of the comments section. next 2 functions control which arrow is displayed as they are toggled.
+    // controls the opening and closing of the comments section
     function commentsToggleClick() {
         const newValue = !commentsOpen;
         setCommentsOpen(newValue);
@@ -521,8 +527,8 @@ function Journal(props) {
         return <img src='/images/ui/dropdown-arrow-open.svg' />;
     }
 
-    // creates the comment by trimming the text input. the if statement won't let an empty comment be submitted, and when an entry is null, it will stop.
-    function addCommentClick() {
+    // sends a new comment to the backend and updates the entry in state with the returned version
+    async function addCommentClick() {
         const trimmedComment = commentInputText.trim();
 
         if (trimmedComment.length === 0) {
@@ -533,28 +539,37 @@ function Journal(props) {
             return;
         }
 
-        // makes a timestamp for the comment and an object it made with the poster's information.
-        const nowTimeNumber = Date.now();
+        const circleId = props.activeCircleId;
 
-        const newCommentObject = {
-            id: "comment-" + nowTimeNumber,
-            text: trimmedComment,
-            authorName: "Nicole",
-            createdTimeNumber: nowTimeNumber,
-        };
+        try {
+            const response = await fetch('/api/circles/' + circleId + '/journal/' + activeEntryId + '/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ text: trimmedComment })
+            });
 
-        // grab the current comment and copies the array with slice. spread operator is copying the overall object that stores the comments and is replacing the active entry comments list with the new list. in the end the text box is cleared, and state is updated.
-        const existingComments = getCommentsForActiveEntry();
-        const updatedComments = existingComments.slice();
-        updatedComments.push(newCommentObject);
-
-        const updatedCommentsByEntryId = { ...commentsByEntryId };
-        updatedCommentsByEntryId[activeEntryId] = updatedComments;
-
-        setCommentsByEntryId(updatedCommentsByEntryId);
-        setCommentInputText("");
+            if (response.ok) {
+                const updatedEntry = await response.json();
+                // replace the entry in the list with the updated version which now has the new comment
+                const updatedEntries = [];
+                let index = 0;
+                while (index < journalEntries.length) {
+                    const currentEntry = journalEntries[index];
+                    if (currentEntry._id === activeEntryId) {
+                        updatedEntries.push(updatedEntry);
+                    } else {
+                        updatedEntries.push(currentEntry);
+                    }
+                    index = index + 1;
+                }
+                setJournalEntries(updatedEntries);
+                setCommentInputText("");
+            }
+        } catch {
+            console.log('Failed to post comment');
+        }
     }
-
 
     // functions made for the pop up box to delete an entry
     function openDeletePopup(entryId) {
@@ -567,47 +582,51 @@ function Journal(props) {
         setDeleteEntryId(null);
     }
 
-    // this function rebuilds the new list of entries and skips the one that's being deleted.
-    function deleteEntryById(entryId) {
-        const updatedEntries = [];
+    // sends a delete request to the backend and rebuilds the list without the deleted entry
+    async function deleteEntryFromApi(entryId) {
+        const circleId = props.activeCircleId;
 
-        let index = 0;
-        while (index < journalEntries.length) {
-            const currentEntry = journalEntries[index];
+        try {
+            const response = await fetch('/api/circles/' + circleId + '/journal/' + entryId, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
 
-            if (currentEntry.id !== entryId) {
-                updatedEntries.push(currentEntry);
+            if (response.ok) {
+                // rebuild the list skipping the deleted entry
+                const updatedEntries = [];
+                let index = 0;
+                while (index < journalEntries.length) {
+                    const currentEntry = journalEntries[index];
+                    if (currentEntry._id !== entryId) {
+                        updatedEntries.push(currentEntry);
+                    }
+                    index = index + 1;
+                }
+                setJournalEntries(updatedEntries);
+
+                if (activeEntryId === entryId) {
+                    setActiveEntryId(null);
+                    setCurrentJournalScreen("list");
+                }
             }
-
-            index = index + 1;
-        }
-
-        setJournalEntries(updatedEntries);
-
-        // the comments from an entry id are copied as an object from spread, then deleted alongisde the entry
-        const updatedComments = { ...commentsByEntryId };
-        if (updatedComments[entryId]) {
-            delete updatedComments[entryId];
-            setCommentsByEntryId(updatedComments);
-        }
-
-        if (activeEntryId === entryId) {
-            setActiveEntryId(null);
-            setCurrentJournalScreen("list");
+        } catch {
+            console.log('Failed to delete journal entry');
         }
     }
 
-    function confirmDeleteClick() {
+    async function confirmDeleteClick() {
         if (deleteEntryId === null) {
             closeDeletePopup();
             return;
         }
 
-        deleteEntryById(deleteEntryId);
+        await deleteEntryFromApi(deleteEntryId);
         closeDeletePopup();
     }
 
-    // prevent default stops browser, stop propagation stops the processes from running in chain. this is because i coded a button inside a button and was the only solution i could find without restructuring everything
+    // prevent default stops browser, stop propagation stops the processes from running in chain.
+    // this is because there is a button inside a button and was the only solution without restructuring everything
     function createOpenDeletePopup(entryId) {
         function inputClick(clickEvent) {
             clickEvent.preventDefault();
@@ -617,7 +636,7 @@ function Journal(props) {
         return inputClick;
     }
 
-    // shows the delete pop up when pressed.
+    // shows the delete pop up when pressed
     function buildDeletePopup() {
         if (deletePopupOpen === false) {
             return null;
@@ -682,10 +701,10 @@ function Journal(props) {
                     <div className="journal-entries-grid">
                         {filteredEntries.map(function (entryObject) {
                             return (
-                                <button key={entryObject.id} className="journal-entry-card" onClick={createOpenEntryClick(entryObject.id)} type="button" >
+                                <button key={entryObject._id} className="journal-entry-card" onClick={createOpenEntryClick(entryObject._id)} type="button" >
                                     <div className="journal-card-top-row">
                                         <h3 className="journal-card-title">{entryObject.titleText}</h3>
-                                        <button className="journal-card-menu-button" onClick={createOpenDeletePopup(entryObject.id)} type="button">
+                                        <button className="journal-card-menu-button" onClick={createOpenDeletePopup(entryObject._id)} type="button">
                                             <span className="journal-card-menu">•••</span>
                                         </button>
                                     </div>
@@ -693,10 +712,10 @@ function Journal(props) {
                                     <div className="journal-card-bottom-row">
                                         <div className="journal-card-author">
                                             <span className="journal-card-avatar"><img src="/images/ui/user-pfp.svg" /></span>
-                                            <span>{entryObject.authorName}</span>
+                                            <span>{getAuthorName(entryObject)}</span>
                                         </div>
                                         <span className="journal-card-date">
-                                            {getDaysAgoText(entryObject.createdTimeNumber)}
+                                            {getDaysAgoText(entryObject.createdAt)}
                                         </span>
                                     </div>
                                 </button>
@@ -798,14 +817,14 @@ function Journal(props) {
             );
         }
 
-        // object is mapped out with .map to clean up code and repeat the rendering of submitted comments
+        // object is mapped out with .map to repeat the rendering of submitted comments
         return (
             <div className="journal-comments-list">
                 {commentList.map(function (commentObject) {
                     return (
-                        <div key={commentObject.id} className="journal-comment">
+                        <div key={commentObject._id} className="journal-comment">
                             <p className="journal-comment-text">{commentObject.text}</p>
-                            <p className="journal-comment-meta">{commentObject.authorName}</p>
+                            <p className="journal-comment-meta">{getCommentAuthorName(commentObject)}</p>
                         </div>
                     );
                 })}
@@ -855,7 +874,7 @@ function Journal(props) {
                     <div className={commentsPanelClassName()}>
                         <button className="journal-comments-header" onClick={commentsToggleClick} type="button">
                             <div className="journal-comments-header-left">
-                                <span className="journal-comments-icon">💬</span>
+                                <span className="journal-comments-icon"></span>
                                 <span>Comments</span>
                             </div>
                             <div className="journal-comments-header-right">
