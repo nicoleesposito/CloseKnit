@@ -10,11 +10,19 @@
     margin: 0;
 }
 
+.calendar-top-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
 .calendar-panel {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     min-width: 0;
+    padding: 30px 16px;
+    box-sizing: border-box;
 }
 
 .calendar-middle-layout {
@@ -96,7 +104,7 @@
 .calendar-card {
     background: #ffffff;
     border-radius: 22px;
-    padding: 18px 22px 20px 22px;
+    padding: 14px 22px 14px 22px;
     border: 3px solid transparent;
     position: relative;
     z-index: 2;
@@ -108,7 +116,7 @@
     grid-template-columns: 44px 1fr 44px;
     align-items: center;
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .calendar-nav-btn {
@@ -139,8 +147,8 @@
 .calendar-dow-row {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    margin-top: 6px;
-    margin-bottom: 10px;
+    margin-top: 4px;
+    margin-bottom: 6px;
 }
 
 .calendar-dow-cell {
@@ -152,31 +160,31 @@
 .calendar-day-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    row-gap: 18px;
+    row-gap: 12px;
     column-gap: 6px;
-    padding: 10px 6px 18px 6px;
+    padding: 6px 6px 10px 6px;
 
     min-width: 0;
 }
 
 .calendar-day-cell {
-    height: 56px;
+    height: 50px;
     display: grid;
     justify-items: center;
     align-content: start;
 }
 
 .calendar-day-number-wrap {
-    height: 36px;
+    height: 32px;
     display: grid;
     align-items: center;
     justify-items: center;
 }
 
 .calendar-day-number {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
     display: grid;
     align-items: center;
     justify-items: center;
@@ -184,7 +192,7 @@
 
 .calendar-day-text {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     color: #111;
 }
 
@@ -197,11 +205,11 @@
 }
 
 .calendar-dot-row {
-    height: 16px;
+    height: 10px;
     display: grid;
     align-items: center;
     justify-items: center;
-    margin-top: 6px;
+    margin-top: 3px;
 }
 
 .calendar-event-dot {
@@ -355,6 +363,24 @@
     border-radius: 10px;
     cursor: pointer;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.10);
+}
+
+.calendar-delete-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #e53e3e;
+    background: white;
+    color: #e53e3e;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.10);
+}
+
+.calendar-delete-icon {
+    width: 16px;
+    height: 16px;
 }
 
 @media (max-width: 900px) {

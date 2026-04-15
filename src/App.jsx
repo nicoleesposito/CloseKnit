@@ -135,7 +135,7 @@ async function removeCircle(circleId) {
 
         <Route path="/managecircles" element={<ProtectedRoute><ManageCircles circleName={circleName} setCircleName={setCircleName} addCircle={addCircle} updateCircleName={updateCircleName} removeCircle={removeCircle} activeCircleId={activeCircleId} circles={circles} /></ProtectedRoute>} />
         <Route path="/newhome" element={<ProtectedRoute><NewHome circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
-        <Route path="/calendar" element={<ProtectedRoute><Calendar circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
+        <Route path="/calendar" element={<ProtectedRoute><Calendar circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
         <Route path="/journal" element={<ProtectedRoute><Journal circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
         <Route path="/memoryboard" element={<ProtectedRoute><MemoryBoard circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />

@@ -2,6 +2,7 @@
 /* global require, module */
 
 const JournalEntry = require('../models/JournalEntry');
+const logActivity = require('../utilities/activityLog');
 
 
 // function to populate author and comment authors
@@ -59,9 +60,11 @@ async function createJournalEntry(request, response) {
 
         const newEntry = await JournalEntry.create(data);
 
-        await populateEntry(newEntry);
+        await logActivity('journal', userId, circleId, 'JournalEntry', newEntry._id, 'shared a journal entry');
 
-        response.status(201).json(newEntry);
+        const populatedEntry = await populateEntry(JournalEntry.findById(newEntry._id));
+
+        response.status(201).json(populatedEntry);
     } catch {
         response.status(500).json({ message: 'Failed to create journal entry' });
     }
@@ -89,9 +92,10 @@ async function updateJournalEntry(request, response) {
         Object.assign(entry, data);
 
         await entry.save();
-        await populateEntry(entry);
 
-        response.json(entry);
+        const populatedEntry = await populateEntry(JournalEntry.findById(entry._id));
+
+        response.json(populatedEntry);
     } catch {
         response.status(500).json({ message: 'Failed to update journal entry' });
     }
@@ -146,9 +150,10 @@ async function addComment(request, response) {
         });
 
         await entry.save();
-        await populateEntry(entry);
 
-        response.json(entry);
+        const populatedEntry = await populateEntry(JournalEntry.findById(entry._id));
+
+        response.json(populatedEntry);
     } catch {
         response.status(500).json({ message: 'Failed to add comment' });
     }
@@ -183,9 +188,10 @@ async function deleteComment(request, response) {
         entry.comments.pull({ _id: commentId });
 
         await entry.save();
-        await populateEntry(entry);
 
-        response.json(entry);
+        const populatedEntry = await populateEntry(JournalEntry.findById(entry._id));
+
+        response.json(populatedEntry);
     } catch {
         response.status(500).json({ message: 'Failed to delete comment' });
     }

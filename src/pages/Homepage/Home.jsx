@@ -2,12 +2,163 @@ import './Home.css'
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/useAuth';
+
+const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+// converts a date object into a YYYY-MM-DD string
+function toDateKey(dateObj) {
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    return year + "-" + month + "-" + day;
+}
+
+// returns a string for how long ago the board was created
+function getMemoryTimestamp(createdAt) {
+    const now = Date.now();
+    const then = new Date(createdAt).getTime();
+    const diffDays = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+        return "Today";
+    }
+    if (diffDays === 1) {
+        return "1 day ago";
+    }
+    if (diffDays < 7) {
+        return diffDays + " days ago";
+    }
+
+    const weeks = Math.floor(diffDays / 7);
+
+    if (weeks === 1) {
+        return "1 week ago";
+    }
+
+    return weeks + " weeks ago";
+}
 
 function Home(props) {
     const navigate = useNavigate();
     const { user } = useAuth();
+
+    const [calendarEvents, setCalendarEvents] = useState([]);
+    const [memoryImages, setMemoryImages] = useState([]);
+    const [memoryTimestamp, setMemoryTimestamp] = useState("");
+
+    // fetch calendar events and the most recent memory board when the circle changes
+    useEffect(function () {
+        if (!props.activeCircleId) {
+            setCalendarEvents([]);
+            setMemoryImages([]);
+            setMemoryTimestamp("");
+            return;
+        }
+
+        async function fetchCalendarEvents() {
+            try {
+                const response = await fetch('/api/circles/' + props.activeCircleId + '/calendar', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setCalendarEvents(data);
+                }
+            } catch {
+                console.log('Failed to fetch calendar events for home');
+            }
+        }
+
+        async function fetchMemoryBoard() {
+            try {
+                const response = await fetch('/api/circles/' + props.activeCircleId + '/memoryboard', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.length === 0) {
+                        return;
+                    }
+
+                    const latestBoard = data[0];
+                    const imageUrls = Object.values(latestBoard.slotImageMap || {});
+
+                    const images = [];
+                    let i = 0;
+                    while (i < imageUrls.length && images.length < 2) {
+                        images.push(imageUrls[i]);
+                        i = i + 1;
+                    }
+
+                    setMemoryImages(images);
+                    setMemoryTimestamp(getMemoryTimestamp(latestBoard.createdAt));
+                }
+            } catch {
+                console.log('Failed to fetch memory board for home');
+            }
+        }
+
+        fetchCalendarEvents();
+        fetchMemoryBoard();
+    }, [props.activeCircleId]);
+
+    const today = new Date();
+    const todayKey = toDateKey(today);
+    const todayDow = today.getDay();
+    const mondayOffset = (todayDow + 6) % 7;
+    const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - mondayOffset);
+
+    // build a lookup map of dateKey event color so we can check each day quickly
+    const eventDayMap = {};
+    let evIndex = 0;
+    while (evIndex < calendarEvents.length) {
+        const ev = calendarEvents[evIndex];
+        if (!eventDayMap[ev.dateKey]) {
+            eventDayMap[ev.dateKey] = ev.color;
+        }
+        evIndex = evIndex + 1;
+    }
+
+    // 7 day objects for Mon through Sun
+    const weekDayObjects = [];
+    let dayIndex = 0;
+    while (dayIndex < 7) {
+        const dayDate = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + dayIndex);
+        const dayKey = toDateKey(dayDate);
+
+        weekDayObjects.push({
+            label: DAY_LABELS[dayIndex],
+            number: dayDate.getDate(),
+            isToday: dayKey === todayKey,
+            eventColor: eventDayMap[dayKey] || null,
+            key: dayKey
+        });
+
+        dayIndex = dayIndex + 1;
+    }
+
+
+    let photo1Src = "/images/ui/dog-home.svg";
+    let photo2Src = "/images/ui/dog-home2.svg";
+
+    if (memoryImages.length > 0) {
+        photo1Src = memoryImages[0];
+    }
+
+    if (memoryImages.length > 1) {
+        photo2Src = memoryImages[1];
+    }
+
+    let timestampDisplay = "No memories yet";
+    if (memoryTimestamp.length > 0) {
+        timestampDisplay = memoryTimestamp;
+    }
 
     return (
         <div>
@@ -16,6 +167,7 @@ function Home(props) {
                 <Navbar activePage="home" />
                 <main className='manage-main'>
                     <div className="home-content">
+
                         {/* Welcome Section */}
                         <div className="welcome-header">
                             <h1 className="greeting">Hi, {user?.firstName}</h1>
@@ -26,37 +178,27 @@ function Home(props) {
                         <div className="calendar-widget">
                             <h3 className="widget-title">This week in your circle:</h3>
                             <div className="week-days">
-                                <div className="day">
-                                    <span className="day-label">MON</span>
-                                    <span className="day-number">30</span>
-                                </div>
-                                <div className="day">
-                                    <span className="day-label">TUE</span>
-                                    <span className="day-number">31</span>
-                                </div>
-                                <div className="day">
-                                    <span className="day-label">WED</span>
-                                    <span className="day-number">1</span>
-                                </div>
-                                <div className="day active">
-                                    <span className="day-label">THU</span>
-                                    <span className="day-number">2</span>
-                                    <div className="event-dot"></div>
-                                </div>
-                                <div className="day">
-                                    <span className="day-label">FRI</span>
-                                    <span className="day-number">3</span>
-                                </div>
-                                <div className="day">
-                                    <span className="day-label">SAT</span>
-                                    <span className="day-number">4</span>
-                                </div>
-                                <div className="day">
-                                    <span className="day-label">SUN</span>
-                                    <span className="day-number">5</span>
-                                </div>
+                                {weekDayObjects.map(function (dayObj) {
+                                    let dayClass = "day";
+                                    if (dayObj.isToday) {
+                                        dayClass = "day active";
+                                    }
+
+                                    let dotOutput = null;
+                                    if (dayObj.eventColor) {
+                                        dotOutput = <div className="event-dot" style={{ backgroundColor: dayObj.eventColor }}></div>;
+                                    }
+
+                                    return (
+                                        <div key={dayObj.key} className={dayClass}>
+                                            <span className="day-label">{dayObj.label}</span>
+                                            <span className="day-number">{dayObj.number}</span>
+                                            {dotOutput}
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            <button 
+                            <button
                                 className="widget-arrow"
                                 onClick={() => navigate('/calendar')}
                                 aria-label="Go to calendar"
@@ -67,22 +209,15 @@ function Home(props) {
 
                         {/* Cards Grid */}
                         <div className="cards-grid">
+
                             {/* Memory Board Card */}
                             <div className="card memory-card">
-                                <span className="memory-timestamp">2 Weeks<br />ago</span>
+                                <span className="memory-timestamp">{timestampDisplay}</span>
                                 <div className="memory-photos">
-                                    <img 
-                                        src="/images/ui/dog-home.svg" 
-                                        alt="Recent memory" 
-                                        className="memory-photo"
-                                    />
-                                    <img 
-                                        src="/images/ui/dog-home2.svg" 
-                                        alt="Recent memory" 
-                                        className="memory-photo"
-                                    />
+                                    <img src={photo1Src} alt="Recent memory" className="memory-photo" />
+                                    <img src={photo2Src} alt="Recent memory" className="memory-photo" />
                                 </div>
-                                <button 
+                                <button
                                     className="widget-arrow"
                                     onClick={() => navigate('/memoryboard')}
                                     aria-label="Go to memory board"
@@ -95,14 +230,14 @@ function Home(props) {
                             <div className="card journal-card">
                                 <h3 className="journal-title">Continue Collaborative Journaling</h3>
                                 <div className="journal-content">
-                                    <img 
-                                        src="/images/ui/journal.svg" 
-                                        alt="" 
+                                    <img
+                                        src="/images/ui/journal.svg"
+                                        alt=""
                                         className="journal-icon"
                                     />
                                     <p className="journal-prompt">Share a memory from your latest trip and capture the moments that made it special</p>
                                 </div>
-                                <button 
+                                <button
                                     className="widget-arrow"
                                     onClick={() => navigate('/journal')}
                                     aria-label="Go to journal"
@@ -110,26 +245,28 @@ function Home(props) {
                                     <img src="/images/ui/arrowcircleright.svg" alt="" />
                                 </button>
                             </div>
+
                         </div>
 
                         {/* Circle Selector */}
                         <div className="circle-selector">
-                        {props.circles && props.circles.map(circle => (
-                        <button
-                        key={circle._id}
-                        className={`circle-btn ${circle._id === props.activeCircleId ? 'active' : 'empty'}`}
-                        onClick={() => props.setActiveCircleId(circle._id)}
-                        aria-label={circle.name === props.circleName 
-                        ? "Current circle" 
-                        : `Switch to ${circle.name}`}
-        >
-            {circle.name}                                          
-        </button>
-    ))}
-</div>
+                            {props.circles && props.circles.map(circle => (
+                                <button
+                                    key={circle._id}
+                                    className={`circle-btn ${circle._id === props.activeCircleId ? 'active' : 'empty'}`}
+                                    onClick={() => props.setActiveCircleId(circle._id)}
+                                    aria-label={circle.name === props.circleName
+                                        ? "Current circle"
+                                        : `Switch to ${circle.name}`}
+                                >
+                                    {circle.name}
+                                </button>
+                            ))}
+                        </div>
+
                     </div>
                 </main>
-                <ActivityFeed />
+                <ActivityFeed activeCircleId={props.activeCircleId} />
             </div>
         </div>
     );

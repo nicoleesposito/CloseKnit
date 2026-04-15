@@ -3,6 +3,7 @@
 
 const MemoryBoard = require('../models/MemoryBoard');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const logActivity = require('../utilities/activityLog');
 
 
 // show the author (populate)
@@ -55,6 +56,8 @@ async function createBoard(request, response) {
         data.circle = request.params.circleId;
 
         const newBoard = await MemoryBoard.create(data);
+
+        await logActivity('memory', request.user.id, request.params.circleId, 'MemoryBoard', newBoard._id, 'created a memory board');
 
         await populateBoard(newBoard);
 

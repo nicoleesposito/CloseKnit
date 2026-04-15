@@ -1077,11 +1077,8 @@ function MemoryBoard(props) {
             return (
                 <main className='manage-main'>
                     <div className="memoryboard-panel memoryboard-panel-relative">
-                        <div className="memoryboard-help-button-container">
-                            <HelpButton page="memoryBoard" />
-                        </div>
-
                         <div className="memoryboard-list-top-row">
+                            <HelpButton page="memoryBoard" />
                             <button className="memoryboard-new-button" onClick={newMemoryClick} type="button">
                                 <span className="memoryboard-new-icon">
                                     <img src="/images/ui/add-button.svg" alt="" />
@@ -1105,6 +1102,7 @@ function MemoryBoard(props) {
             <main className='manage-main'>
                 <div className="memoryboard-panel">
                     <div className="memoryboard-list-top-row">
+                        <HelpButton page="memoryBoard" />
                         <button className="memoryboard-new-button" onClick={newMemoryClick} type="button">
                             <span className="memoryboard-new-icon">
                                 <img src="/images/ui/add-button.svg" alt="" />
@@ -1168,7 +1166,7 @@ function MemoryBoard(props) {
             <div className="manage-layout">
                 <Navbar activePage="memoryboard" />
                 {buildMainScreenContent()}
-                <ActivityFeed />
+                <ActivityFeed activeCircleId={props.activeCircleId} />
             </div>
         </div>
     );

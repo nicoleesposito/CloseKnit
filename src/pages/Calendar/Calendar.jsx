@@ -1,5 +1,5 @@
 import './Calendar.css'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
@@ -39,6 +39,31 @@ function Calendar(props) {
 
     // colors for the event types
     const [customColor, setCustomColor] = useState("#2a9d8f");
+
+    // fetch events from the backend whenever the active circle changes
+    useEffect(function () {
+        if (!props.activeCircleId) {
+            setEvents([]);
+            return;
+        }
+
+        async function fetchEvents() {
+            try {
+                const response = await fetch('/api/circles/' + props.activeCircleId + '/calendar', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setEvents(data);
+                }
+            } catch {
+                console.log('Failed to fetch calendar events');
+            }
+        }
+
+        fetchEvents();
+    }, [props.activeCircleId]);
 
     const typeColors = {
         Birthday: "#ff6b6b",
@@ -99,13 +124,47 @@ function Calendar(props) {
         setEditingEventId(null);
     }
 
+    // sends a delete request to the backend and removes the event from the current state
+    async function deleteEventFromApi() {
+        if (!editingEventId) {
+            return;
+        }
+
+        const circleId = props.activeCircleId;
+
+        try {
+            const response = await fetch('/api/circles/' + circleId + '/calendar/' + editingEventId, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                const updatedEvents = [];
+                let i = 0;
+
+                while (i < events.length) {
+                    if (events[i]._id !== editingEventId) {
+                        updatedEvents.push(events[i]);
+                    }
+                    i = i + 1;
+                }
+
+                setEvents(updatedEvents);
+                setIsEditing(false);
+                setEditingEventId(null);
+            }
+        } catch {
+            console.log('Failed to delete calendar event');
+        }
+    }
+
     // opens the event through the timeline to edit the details. I use a while loop to iterate through the event's ids. Once it find the id it loads it into the form.
     function openEditEventById(eventId) {
         let found = null;
         let i = 0;
 
         while (i < events.length) {
-            if (events[i].id === eventId) {
+            if (events[i]._id === eventId) {
                 found = events[i];
             }
             i = i + 1;
@@ -115,7 +174,7 @@ function Calendar(props) {
             return;
         }
 
-        setEditingEventId(found.id);
+        setEditingEventId(found._id);
 
         setFormTitle(found.title);
         setFormType(found.type);
@@ -136,7 +195,7 @@ function Calendar(props) {
     }
 
     // doesn't allow for empty titles to be returned and trims them so that they don't carry extra spaces at the end.
-    function saveEvent() {
+    async function saveEvent() {
         const titleTrimmed = formTitle.trim();
         if (titleTrimmed.length === 0) {
             return;
@@ -147,37 +206,7 @@ function Calendar(props) {
             eventColor = customColor;
         }
 
-        // chose to slice the events so that the original array isn't directly affected when editing event.
-        if (editingEventId) {
-            const nextEvents = events.slice();
-            let i = 0;
-
-            // while iterating through the loop, if the sliced event matches the edited event id, the nextEvents variable will have a new object. inside the object the list is updated to match the event's input and sets it has the updated event. The boolean is changed to false to exit editing mode, and the id is set to null so that a new one can be insert into the function
-            while (i < nextEvents.length) {
-                if (nextEvents[i].id === editingEventId) {
-                    nextEvents[i] = {
-                        id: editingEventId,
-                        title: titleTrimmed,
-                        type: formType,
-                        dateKey: toDateKey(selectedDate),
-                        startTime: formStartTime,
-                        endTime: formEndTime,
-                        note: formNote.trim(),
-                        color: eventColor,
-                    };
-                }
-                i = i + 1;
-            }
-
-            setEvents(nextEvents);
-            setIsEditing(false);
-            setEditingEventId(null);
-            return;
-        }
-
-        // builds a new event object. date.now() docs explain the function as creating a unique number based on the current time. this makes it easier to give it an id and put into the timeline. ESList identifies this as being an impure function, but don't try to fix it because it will break the timeline feature.
-        const newEvent = {
-            id: String(Date.now()),
+        const eventData = {
             title: titleTrimmed,
             type: formType,
             dateKey: toDateKey(selectedDate),
@@ -187,12 +216,62 @@ function Calendar(props) {
             color: eventColor,
         };
 
-        const nextEvents = events.slice();
-        nextEvents.push(newEvent);
+        const circleId = props.activeCircleId;
 
-        setEvents(nextEvents);
-        setIsEditing(false);
-        setEditingEventId(null);
+        // if editing an existing event, send a PUT request and replace it in state
+        if (editingEventId) {
+            try {
+                const response = await fetch('/api/circles/' + circleId + '/calendar/' + editingEventId, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(eventData)
+                });
+
+                if (response.ok) {
+                    const updatedEvent = await response.json();
+                    const nextEvents = [];
+                    let i = 0;
+
+                    while (i < events.length) {
+                        if (events[i]._id === editingEventId) {
+                            nextEvents.push(updatedEvent);
+                        } else {
+                            nextEvents.push(events[i]);
+                        }
+                        i = i + 1;
+                    }
+
+                    setEvents(nextEvents);
+                    setIsEditing(false);
+                    setEditingEventId(null);
+                }
+            } catch {
+                console.log('Failed to update calendar event');
+            }
+            return;
+        }
+
+        // if creating a new event, send a POST request and add it to state
+        try {
+            const response = await fetch('/api/circles/' + circleId + '/calendar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(eventData)
+            });
+
+            if (response.ok) {
+                const newEvent = await response.json();
+                const nextEvents = events.slice();
+                nextEvents.push(newEvent);
+                setEvents(nextEvents);
+                setIsEditing(false);
+                setEditingEventId(null);
+            }
+        } catch {
+            console.log('Failed to create calendar event');
+        }
     }
 
     // input handlers to grab the element the user types and to read its value. this is then stored into the state.
@@ -362,6 +441,12 @@ function Calendar(props) {
                     </div>
                     <div className="calendar-button-row">
                         <button className="calendar-secondary-btn" onClick={closeEdit}>Cancel</button>
+                        {editingEventId && (
+                            <button className="calendar-delete-btn" onClick={deleteEventFromApi} type="button">
+                                <img src="/images/ui/trash.svg" alt="" className="calendar-delete-icon" />
+                                Delete Event
+                            </button>
+                        )}
                         <button className="calendar-primary-btn" onClick={saveEvent}>Save Changes</button>
                     </div>
                 </div>
@@ -377,6 +462,9 @@ function Calendar(props) {
 
         return (
             <div className="calendar-panel">
+                <div className="calendar-top-row">
+                    <HelpButton page="calendar" />
+                </div>
                 <div className="calendar-middle-layout">
                     <div className="calendar-timeline-card">
                         <div className="calendar-timeline-title">Your Timeline</div>
@@ -385,11 +473,7 @@ function Calendar(props) {
                         <TimelineSection title="Goals" items={timeline.goals} onPickEvent={openEditEventById} />
                         <TimelineSection title="Custom Dates" items={timeline.custom} onPickEvent={openEditEventById} />
                     </div>
-                    <div className="calendar-card-with-help">
-                        <div className="calendar-help-button-container">
-                            <HelpButton page="calendar" />
-                        </div>
-                        <div className="calendar-card">
+                    <div className="calendar-card">
                             <div className="calendar-topbar">
                                 <button className="calendar-nav-btn" onClick={goPrevMonth}>{"<"}</button>
                                 <div className="calendar-month-block">
@@ -398,52 +482,62 @@ function Calendar(props) {
                                 </div>
                                 <button className="calendar-nav-btn" onClick={goNextMonth}>{">"}</button>
                             </div>
-                        <div className="calendar-dow-row">
-                            <div className="calendar-dow-cell">Mon</div>
-                            <div className="calendar-dow-cell">Tue</div>
-                            <div className="calendar-dow-cell">Wed</div>
-                            <div className="calendar-dow-cell">Thu</div>
-                            <div className="calendar-dow-cell">Fri</div>
-                            <div className="calendar-dow-cell">Sat</div>
-                            <div className="calendar-dow-cell">Sun</div>
-                        </div>
-                        <div className="calendar-day-grid">
-                            {calendarDays.map(function (dayObj) {
-                                const dateKey = toDateKey(dayObj.date);
-                                const isToday = dateKey === todayKey;
-                                const dayEvents = eventsByDate[dateKey];
-                                let hasEvents = false;
-                                if (dayEvents) {
-                                    if (dayEvents.length > 0) {
-                                        hasEvents = true;
+                            <div className="calendar-dow-row">
+                                <div className="calendar-dow-cell">Mon</div>
+                                <div className="calendar-dow-cell">Tue</div>
+                                <div className="calendar-dow-cell">Wed</div>
+                                <div className="calendar-dow-cell">Thu</div>
+                                <div className="calendar-dow-cell">Fri</div>
+                                <div className="calendar-dow-cell">Sat</div>
+                                <div className="calendar-dow-cell">Sun</div>
+                            </div>
+                            <div className="calendar-day-grid">
+                                {calendarDays.map(function (dayObj) {
+                                    const dateKey = toDateKey(dayObj.date);
+                                    const isToday = dateKey === todayKey;
+                                    const dayEvents = eventsByDate[dateKey];
+                                    let hasEvents = false;
+                                    if (dayEvents) {
+                                        if (dayEvents.length > 0) {
+                                            hasEvents = true;
+                                        }
                                     }
-                                }
-                                let dotOutput = null;
-                                if (hasEvents) {
-                                    dotOutput = renderOneDot(dayEvents);
-                                }
+                                    let dotOutput = null;
+                                    if (hasEvents) {
+                                        dotOutput = renderOneDot(dayEvents);
+                                    }
 
-                                return (
-                                    <div key={dateKey} className="calendar-day-cell">
-                                        <div className="calendar-day-number-wrap">
-                                            <div className={getDayNumberClass(isToday)}>
-                                                <span className={getDayTextClass(dayObj.isOtherMonth)}>
-                                                    {dayObj.dayNumber}
-                                                </span>
+                                    // build the click handler for days that have events
+                                    let dayCellClick = null;
+                                    let dayCellStyle = {};
+                                    if (hasEvents) {
+                                        const firstEventId = dayEvents[0]._id;
+                                        dayCellClick = function () {
+                                            openEditEventById(firstEventId);
+                                        };
+                                        dayCellStyle = { cursor: 'pointer' };
+                                    }
+
+                                    return (
+                                        <div key={dateKey} className="calendar-day-cell" onClick={dayCellClick} style={dayCellStyle}>
+                                            <div className="calendar-day-number-wrap">
+                                                <div className={getDayNumberClass(isToday)}>
+                                                    <span className={getDayTextClass(dayObj.isOtherMonth)}>
+                                                        {dayObj.dayNumber}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="calendar-dot-row">
+                                                {dotOutput}
                                             </div>
                                         </div>
-                                        <div className="calendar-dot-row">
-                                            {dotOutput}
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
+                            <div className="calendar-bottombar">
+                                <button className="calendar-primary-btn" onClick={openAddEvent}>Add Event</button>
+                            </div>
                         </div>
-                        <div className="calendar-bottombar">
-                            <button className="calendar-primary-btn" onClick={openAddEvent}>Add Event</button>
-                        </div>
-                    </div>
-                    </div>
                 </div>
             </div>
         );
@@ -466,7 +560,7 @@ function Calendar(props) {
                 <main className='manage-main'>
                     {pageContent}
                 </main>
-                <ActivityFeed />
+                <ActivityFeed activeCircleId={props.activeCircleId} />
             </div>
         </div>
     );
@@ -676,7 +770,7 @@ function sortByDateKey(a, b) {
 
 // converts a event into a smaller object formatted for the timeline display
 function toTimelineItem(eventObj, MONTHS_SHORT) {
-    const id = eventObj.id;
+    const id = eventObj._id;
     const title = eventObj.title;
     const label = shortDateLabel(eventObj.dateKey, MONTHS_SHORT);
     const color = eventObj.color;

@@ -137,6 +137,11 @@ async function googleAuth(req, res) {
                 password: 'oauth-google',
                 profilePicture
             });
+        } else if (profilePicture && user.profilePicture !== profilePicture) {
+            // always keep the profile picture URL up to date from google.
+            // google URLs can change between sessions and expire if not refreshed.
+            user.profilePicture = profilePicture;
+            await user.save();
         }
 
         // adds a jwt token to the user and sends back the user info

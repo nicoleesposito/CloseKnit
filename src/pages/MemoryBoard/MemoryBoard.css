@@ -25,8 +25,8 @@
 
 .memoryboard-list-top-row {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
 .memoryboard-new-button {
@@ -66,7 +66,7 @@
 
 .memoryboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 280px);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
@@ -845,8 +845,10 @@
 }
 
 .memoryboard-cover-image-wrap {
-    width: 240px;
-    height: 240px;
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1;
+    height: auto;
     border-radius: 28px;
     overflow: hidden;
     border: 3px solid #5245B5;

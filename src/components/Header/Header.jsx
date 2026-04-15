@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from '../Navbar/Navbar';
 import ActivityFeed from '../Activity Feed/ActivityFeed';
 import NotifBell from '../Notification/NotifBell';
+import { useAuth } from '../../context/useAuth';
 
 /*
 React props docs: https://www.w3schools.com/react/react_props.asp
@@ -17,6 +18,12 @@ Props are like  arguments that are passed into the components, so the component 
 
 function Header(props) {
     let navigate = useNavigate();
+    const { user } = useAuth();
+
+    let profilePicSrc = "/images/ui/user-pfp.svg";
+    if (user && user.profilePicture) {
+        profilePicSrc = user.profilePicture;
+    }
 
     function logoHome() {
         navigate("/home");
@@ -96,7 +103,7 @@ function Header(props) {
         <div className="header-right">
           <NotifBell />
           <img
-            src="/images/ui/user-pfp.svg"
+            src={profilePicSrc}
             alt="Profile"
             className="profile-pic"
           />

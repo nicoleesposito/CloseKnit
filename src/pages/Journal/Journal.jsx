@@ -393,7 +393,8 @@ function Journal(props) {
         setCurrentJournalScreen("list");
     }
 
-    // sends a new entry to the backend and adds it to the top of the list in state
+    // sends a new entry to the backend and adds it to the top of the list in state.
+    // returns the created entry on success, or null if it failed.
     async function saveNewEntry() {
         const circleId = props.activeCircleId;
 
@@ -422,14 +423,17 @@ function Journal(props) {
                 const updatedEntries = journalEntries.slice();
                 updatedEntries.unshift(createdEntry);
                 setJournalEntries(updatedEntries);
-                setActiveEntryId(createdEntry._id);
+                return createdEntry;
             }
         } catch {
             console.log('Failed to save journal entry');
         }
+
+        return null;
     }
 
-    // sends the updated entry to the backend and replaces the old version in state
+    // sends the updated entry to the backend and replaces the old version in state.
+    // returns the updated entry on success, or null if it failed.
     async function updateEntryInApi(entryId) {
         const circleId = props.activeCircleId;
 
@@ -467,25 +471,35 @@ function Journal(props) {
                     index = index + 1;
                 }
                 setJournalEntries(updatedEntries);
+                return updatedEntry;
             }
         } catch {
             console.log('Failed to update journal entry');
         }
+
+        return null;
     }
 
     // if the user didn't type anything then do nothing. if activeEntryId is null we are creating a new entry.
-    // the last line is for switching the screen to view mode after saving
+    // only switches to view screen if the save actually succeeded.
     async function saveButtonClick() {
         if (entryIsEmpty()) {
             return;
         }
 
+        let savedEntry = null;
+
         if (activeEntryId === null) {
-            await saveNewEntry();
+            savedEntry = await saveNewEntry();
         } else {
-            await updateEntryInApi(activeEntryId);
+            savedEntry = await updateEntryInApi(activeEntryId);
         }
 
+        if (savedEntry === null) {
+            return;
+        }
+
+        setActiveEntryId(savedEntry._id);
         setCommentsOpen(false);
         setCurrentJournalScreen("view");
     }
@@ -497,10 +511,16 @@ function Journal(props) {
             return;
         }
 
+        let savedEntry = null;
+
         if (activeEntryId === null) {
-            await saveNewEntry();
+            savedEntry = await saveNewEntry();
         } else {
-            await updateEntryInApi(activeEntryId);
+            savedEntry = await updateEntryInApi(activeEntryId);
+        }
+
+        if (savedEntry !== null) {
+            setActiveEntryId(savedEntry._id);
         }
 
         setCommentsOpen(false);
@@ -913,7 +933,7 @@ function Journal(props) {
             <div className="manage-layout">
                 <Navbar activePage="journal" />
                 {buildScreenContent()}
-                <ActivityFeed />
+                <ActivityFeed activeCircleId={props.activeCircleId} />
             </div>
         </div>
     );

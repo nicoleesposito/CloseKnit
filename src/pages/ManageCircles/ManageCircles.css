@@ -16,10 +16,11 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 20px 30px;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
 }
 
 .circle-card,
@@ -33,11 +34,11 @@
 }
 
 .circle-card {
-    padding: 36px 38px;
+    padding: 18px 28px;
 }
 
 .invites-card {
-    padding: 26px 28px;
+    padding: 14px 22px;
 }
 
 .circle-card-header {
@@ -49,25 +50,25 @@
 }
 
 .circle-title {
-    font-size: 30px;
+    font-size: 22px;
     font-weight: 600;
     margin: 0;
     text-align: left;
 }
 
 .circle-form {
-    margin-top: 18px;
+    margin-top: 8px;
 }
 
 .field-label {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
-    margin: 10px 0 10px 0;
+    margin: 5px 0 5px 0;
     text-align: left;
 }
 
 .section-space {
-    margin-top: 22px;
+    margin-top: 10px;
 }
 
 .text-input {
@@ -112,6 +113,12 @@
     justify-self: end;
 }
 
+.member-error {
+    color: #e53e3e;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
 .icon-btn {
     width: 56px;
     height: 56px;
@@ -140,15 +147,15 @@
 }
 
 .members-empty {
-    min-height: 160px;
+    min-height: 80px;
 }
 
 .members-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    column-gap: 40px;
-    row-gap: 16px;
-    margin-top: 8px;
+    column-gap: 28px;
+    row-gap: 8px;
+    margin-top: 4px;
 
     width: 100%;
     max-width: 760px;
@@ -166,7 +173,7 @@
 
 .member-name {
     margin: 0;
-    font-size: 18px;
+    font-size: 15px;
     min-width: 0;
 }
 
@@ -181,7 +188,7 @@
 }
 
 .bottom-actions {
-    margin-top: 34px;
+    margin-top: 12px;
 }
 
 .bottom-actions-manage {
@@ -258,12 +265,12 @@
 
 .invites-title {
     margin: 0;
-    font-size: 30px;
+    font-size: 22px;
     font-weight: 600;
 }
 
 .invites-empty {
-    min-height: 120px;
+    min-height: 80px;
 }
 
 @media (max-width: 720px) {
