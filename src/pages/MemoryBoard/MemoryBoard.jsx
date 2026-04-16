@@ -1166,7 +1166,7 @@ function MemoryBoard(props) {
         <div>
             <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
             <div className="manage-layout">
-                <Navbar activePage="memoryboard" />
+                <Navbar activePage="memoryboard" activeCircleId={props.activeCircleId} />
                 {buildMainScreenContent()}
                 <ActivityFeed activeCircleId={props.activeCircleId} />
             </div>

@@ -547,7 +547,7 @@ function Calendar(props) {
         <div className='calendar-page'>
             <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
             <div className="manage-layout">
-                <Navbar activePage="calendar" />
+                <Navbar activePage="calendar" activeCircleId={props.activeCircleId} />
                 <main className='manage-main'>
                     {pageContent}
                 </main>

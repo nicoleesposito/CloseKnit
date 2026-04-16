@@ -153,7 +153,7 @@ function Home(props) {
         <div>
             <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
             <div className="manage-layout">
-                <Navbar activePage="home" />
+                <Navbar activePage="home" activeCircleId={props.activeCircleId} />
                 <main className='manage-main'>
                     <div className="home-content">
 

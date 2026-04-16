@@ -272,7 +272,7 @@ function ManageCircles(props) {
         <div>
             <Header currentCircle={props.circleName} profileImage="#" activePage="managecircles" />
             <div className="manage-layout">
-                <Navbar activePage="managecircles" />
+                <Navbar activePage="managecircles" activeCircleId={props.activeCircleId} />
                 <main className='manage-main'>
                     <div className="manage-panel">
                         <div className="circle-card">

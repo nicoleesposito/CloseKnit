@@ -2,6 +2,8 @@ export const translations = {
   en: {
     nav: {
       search: 'Search for...',
+      noResults: 'No results found',
+      untitled: 'Untitled',
       home: 'Home',
       manageCircles: 'Manage Circles',
       calendar: 'Calendar',
@@ -295,6 +297,8 @@ export const translations = {
   es: {
     nav: {
       search: 'Buscar...',
+      noResults: 'Sin resultados',
+      untitled: 'Sin título',
       home: 'Inicio',
       manageCircles: 'Gestionar Círculos',
       calendar: 'Calendario',

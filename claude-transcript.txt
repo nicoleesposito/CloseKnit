@@ -2119,3 +2119,506 @@ Before making any changes, briefly explain:
       136      }
       137
 
+    ❯ the search bar in the nav doesn't do anything. recommend a good approach and implement it
+
+  Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+⏺ Let me look at the pages that have searchable content to understand what's available.
+
+  Searched for 1 pattern, read 2 files (ctrl+o to expand)
+
+⏺ Let me quickly check what the calendar data looks like too.
+
+  Read 2 files (ctrl+o to expand)
+
+⏺ Let me check how Navbar is used across the remaining pages.
+
+  Searched for 3 patterns, read 1 file (ctrl+o to expand)
+
+⏺ Good picture of the codebase. Here's my approach:
+
+  The Navbar will fetch from the journal, memoryboard, and calendar APIs directly (same endpoints the pages use) when
+  the user types 2+ characters. Results appear in a dropdown below the search bar with a type label (Journal / Board /
+  Calendar). Clicking navigates to that page. No backend changes needed.
+
+  Let me implement it:
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 130 lines, removed 2 lines
+        1  import './Navbar.css'
+        2  import { useNavigate } from 'react-router-dom';
+        3  import { useLanguage } from '../../context/LanguageContext';
+        4 +import { useState, useEffect, useRef } from 'react';
+        5
+        6  function Navbar(props) {
+        7      const navigate = useNavigate();
+        8      const { t } = useLanguage();
+        9 +    const [searchText, setSearchText] = useState('');
+       10 +    const [searchResults, setSearchResults] = useState([]);
+       11 +    const [searchOpen, setSearchOpen] = useState(false);
+       12 +    const searchRef = useRef(null);
+       13
+       14 +    // close dropdown when clicking outside the search area
+       15 +    useEffect(function () {
+       16 +        function handleOutsideClick(event) {
+       17 +            if (searchRef.current && !searchRef.current.contains(event.target)) {
+       18 +                setSearchOpen(false);
+       19 +            }
+       20 +        }
+       21 +        document.addEventListener('mousedown', handleOutsideClick);
+       22 +        return function () {
+       23 +            document.removeEventListener('mousedown', handleOutsideClick);
+       24 +        };
+       25 +    }, []);
+       26 +
+       27 +    // debounced search: wait 300ms after the user stops typing before fetching
+       28 +    useEffect(function () {
+       29 +        const trimmed = searchText.trim();
+       30 +
+       31 +        if (trimmed.length < 2 || !props.activeCircleId) {
+       32 +            setSearchResults([]);
+       33 +            setSearchOpen(false);
+       34 +            return;
+       35 +        }
+       36 +
+       37 +        const timer = setTimeout(async function () {
+       38 +            const query = trimmed.toLowerCase();
+       39 +            const circleId = props.activeCircleId;
+       40 +            const combined = [];
+       41 +
+       42 +            try {
+       43 +                const [journalRes, boardRes, calendarRes] = await Promise.all([
+       44 +                    fetch('/api/circles/' + circleId + '/journal', { credentials: 'include' }),
+       45 +                    fetch('/api/circles/' + circleId + '/memoryboard', { credentials: 'include' }),
+       46 +                    fetch('/api/circles/' + circleId + '/calendar', { credentials: 'include' })
+       47 +                ]);
+       48 +
+       49 +                if (journalRes.ok) {
+       50 +                    const entries = await journalRes.json();
+       51 +                    entries.forEach(function (entry) {
+       52 +                        const titleMatch = entry.titleText && entry.titleText.toLowerCase().includes(
+          +query);
+       53 +                        const descMatch = entry.shortDescriptionText && entry.shortDescriptionText.to
+          +LowerCase().includes(query);
+       54 +                        if (titleMatch || descMatch) {
+       55 +                            combined.push({ type: 'Journal', label: entry.titleText || t('nav.untitle
+          +d'), path: '/journal' });
+       56 +                        }
+       57 +                    });
+       58 +                }
+       59 +
+       60 +                if (boardRes.ok) {
+       61 +                    const boards = await boardRes.json();
+       62 +                    boards.forEach(function (board) {
+       63 +                        if (board.titleText && board.titleText.toLowerCase().includes(query)) {
+       64 +                            combined.push({ type: 'Board', label: board.titleText, path: '/memoryboar
+          +d' });
+       65 +                        }
+       66 +                    });
+       67 +                }
+       68 +
+       69 +                if (calendarRes.ok) {
+       70 +                    const events = await calendarRes.json();
+       71 +                    events.forEach(function (event) {
+       72 +                        if (event.title && event.title.toLowerCase().includes(query)) {
+       73 +                            combined.push({ type: 'Calendar', label: event.title, path: '/calendar' }
+          +);
+       74 +                        }
+       75 +                    });
+       76 +                }
+       77 +            } catch {
+       78 +                // silently ignore fetch errors in search
+       79 +            }
+       80 +
+       81 +            setSearchResults(combined.slice(0, 8));
+       82 +            setSearchOpen(combined.length > 0);
+       83 +        }, 300);
+       84 +
+       85 +        return function () {
+       86 +            clearTimeout(timer);
+       87 +        };
+       88 +    }, [searchText, props.activeCircleId]);
+       89 +
+       90 +    function handleSearchChange(changeEvent) {
+       91 +        setSearchText(changeEvent.target.value);
+       92 +    }
+       93 +
+       94 +    function handleResultClick(path) {
+       95 +        setSearchText('');
+       96 +        setSearchResults([]);
+       97 +        setSearchOpen(false);
+       98 +        goTo(path);
+       99 +    }
+      100 +
+      101 +    function typeLabel(type) {
+      102 +        if (type === 'Journal') return 'nav-result-tag nav-result-tag-journal';
+      103 +        if (type === 'Board') return 'nav-result-tag nav-result-tag-board';
+      104 +        return 'nav-result-tag nav-result-tag-calendar';
+      105 +    }
+      106 +
+      107      function isActive(pageName) {
+      108          if (props.activePage === pageName) {
+      109              return "navrow navrow-active";
+     ...
+      122
+      123      return (
+      124          <aside className='navbar'>
+      125 +            <div className="nav-search-wrap" ref={searchRef}>
+      126              <div className="nav-search">
+      127                  <img src='/images/ui/search.svg' alt="Magnifying glass search icon" />
+       29 -                <input type='text' placeholder={t('nav.search')} className='search-input' />
+       30 -                {/* right now the search bar isn't coded to filter or find any content. to be worked
+          -on at a later point in time */}
+      128 +                <input
+      129 +                    type='text'
+      130 +                    placeholder={t('nav.search')}
+      131 +                    className='search-input'
+      132 +                    value={searchText}
+      133 +                    onChange={handleSearchChange}
+      134 +                    autoComplete="off"
+      135 +                />
+      136              </div>
+      137 +            {searchOpen && searchResults.length > 0 && (
+      138 +                <div className="nav-search-dropdown">
+      139 +                    {searchResults.map(function (result, index) {
+      140 +                        return (
+      141 +                            <button
+      142 +                                key={index}
+      143 +                                className="nav-result-row"
+      144 +                                type="button"
+      145 +                                onClick={function () { handleResultClick(result.path); }}
+      146 +                            >
+      147 +                                <span className={typeLabel(result.type)}>{result.type}</span>
+      148 +                                <span className="nav-result-label">{result.label}</span>
+      149 +                            </button>
+      150 +                        );
+      151 +                    })}
+      152 +                </div>
+      153 +            )}
+      154 +            {searchText.trim().length >= 2 && searchResults.length === 0 && searchOpen === false && (
+      155 +                <div className="nav-search-dropdown">
+      156 +                    <p className="nav-result-empty">{t('nav.noResults') || 'No results found'}</p>
+      157 +                </div>
+      158 +            )}
+      159 +            </div>
+      160              <div className="links">
+      161                  {/* "home" is passed through the function isActive which will match the button's clas
+           s name to the active page (from the active jsx file). if it matches exactly then it will update which
+            one gets highlighted by changing the class name to the one being returned from the function*/}
+      162                  <button className={isActive("home")} onClick={function () { goTo("/home"); }}><img sr
+           c='/images/ui/home.svg' alt="Home button icon" /> {t('nav.home')}</button>
+
+⏺ Now add the dropdown styles to Navbar.css:
+
+⏺ Update(src/components/Navbar/Navbar.css)
+  ⎿  Added 75 lines, removed 1 line
+      22  }
+      23
+      24  /* search bar */
+      25 +.nav-search-wrap {
+      26 +    position: relative;
+      27 +    margin-top: 60px;
+      28 +}
+      29 +
+      30  .nav-search {
+      31      display: flex;
+      32      align-items: center;
+     ...
+       34      border: 1px solid #dddddd;
+       35      border-radius: 12px;
+       36      padding: 10px 12px;
+       32 -    margin-top: 60px;
+       37      background-color: #F3F3F3;
+       38      box-shadow: none !important;
+       39  }
+       40
+       41 +.nav-search-dropdown {
+       42 +    position: absolute;
+       43 +    top: calc(100% + 6px);
+       44 +    left: 0;
+       45 +    right: 0;
+       46 +    background: #ffffff;
+       47 +    border: 1px solid #e0e0e0;
+       48 +    border-radius: 12px;
+       49 +    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+       50 +    z-index: 999;
+       51 +    overflow: hidden;
+       52 +}
+       53 +
+       54 +.nav-result-row {
+       55 +    display: flex;
+       56 +    align-items: center;
+       57 +    gap: 8px;
+       58 +    width: 100%;
+       59 +    padding: 9px 12px;
+       60 +    background: transparent;
+       61 +    border: none;
+       62 +    cursor: pointer;
+       63 +    text-align: left;
+       64 +    font-family: inherit;
+       65 +    font-size: 13px;
+       66 +    color: #1a1a1a;
+       67 +}
+       68 +
+       69 +.nav-result-row:hover {
+       70 +    background-color: #f5f5f5;
+       71 +}
+       72 +
+       73 +.nav-result-tag {
+       74 +    flex-shrink: 0;
+       75 +    font-size: 10px;
+       76 +    font-weight: 700;
+       77 +    padding: 2px 7px;
+       78 +    border-radius: 20px;
+       79 +    text-transform: uppercase;
+       80 +    letter-spacing: 0.4px;
+       81 +}
+       82 +
+       83 +.nav-result-tag-journal {
+       84 +    background: #e8f4fd;
+       85 +    color: #2563eb;
+       86 +}
+       87 +
+       88 +.nav-result-tag-board {
+       89 +    background: #ede9ff;
+       90 +    color: #5245b5;
+       91 +}
+       92 +
+       93 +.nav-result-tag-calendar {
+       94 +    background: #e6f9f0;
+       95 +    color: #16a34a;
+       96 +}
+       97 +
+       98 +.nav-result-label {
+       99 +    overflow: hidden;
+      100 +    text-overflow: ellipsis;
+      101 +    white-space: nowrap;
+      102 +}
+      103 +
+      104 +.nav-result-empty {
+      105 +    padding: 10px 14px;
+      106 +    margin: 0;
+      107 +    font-size: 13px;
+      108 +    color: #888;
+      109 +}
+      110 +
+      111  .nav-search img {
+      112      width: 18px;
+      113      height: 18px;
+
+⏺ Also remove the old margin-top: 60px from .nav-search since it moved to .nav-search-wrap:
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Good — that's the nav-search-wrap rule already, not a duplicate. Now pass activeCircleId to Navbar from each page
+  that has it:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Now update all 6 Navbar instances to pass activeCircleId:
+
+⏺ Update(src/pages/Homepage/Home.jsx)
+  ⎿  Added 1 line, removed 1 line
+      153          <div>
+      154              <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
+      155              <div className="manage-layout">
+      156 -                <Navbar activePage="home" />
+      156 +                <Navbar activePage="home" activeCircleId={props.activeCircleId} />
+      157                  <main className='manage-main'>
+      158                      <div className="home-content">
+      159
+
+⏺ Update(src/pages/Journal/Journal.jsx)
+  ⎿  Added 1 line, removed 1 line
+      940          <div>
+      941              <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
+      942              <div className="manage-layout">
+      943 -                <Navbar activePage="journal" />
+      943 +                <Navbar activePage="journal" activeCircleId={props.activeCircleId} />
+      944                  {buildScreenContent()}
+      945                  <ActivityFeed activeCircleId={props.activeCircleId} />
+      946              </div>
+
+⏺ Update(src/pages/MemoryBoard/MemoryBoard.jsx)
+  ⎿  Added 1 line, removed 1 line
+      1166          <div>
+      1167              <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
+      1168              <div className="manage-layout">
+      1169 -                <Navbar activePage="memoryboard" />
+      1169 +                <Navbar activePage="memoryboard" activeCircleId={props.activeCircleId} />
+      1170                  {buildMainScreenContent()}
+      1171                  <ActivityFeed activeCircleId={props.activeCircleId} />
+      1172              </div>
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(src/pages/Calendar/Calendar.jsx)
+  ⎿  Added 1 line, removed 1 line
+      547          <div className='calendar-page'>
+      548              <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
+      549              <div className="manage-layout">
+      550 -                <Navbar activePage="calendar" />
+      550 +                <Navbar activePage="calendar" activeCircleId={props.activeCircleId} />
+      551                  <main className='manage-main'>
+      552                      {pageContent}
+      553                  </main>
+
+⏺ Update(src/pages/ManageCircles/ManageCircles.jsx)
+  ⎿  Added 1 line, removed 1 line
+      272          <div>
+      273              <Header currentCircle={props.circleName} profileImage="#" activePage="managecircles" />
+      274              <div className="manage-layout">
+      275 -                <Navbar activePage="managecircles" />
+      275 +                <Navbar activePage="managecircles" activeCircleId={props.activeCircleId} />
+      276                  <main className='manage-main'>
+      277                      <div className="manage-panel">
+      278                          <div className="circle-card">
+
+⏺ Now add dark mode styles for the dropdown:
+
+⏺ Update(src/components/Navbar/Navbar.css)
+  ⎿  Added 19 lines
+      387                color 0.2s ease,
+      388                border-color 0.2s ease;
+      389  }
+      390 +/* Search dropdown dark mode */
+      391 +.dark-mode .nav-search-dropdown {
+      392 +    background: #2d2d30;
+      393 +    border-color: #404040;
+      394 +    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      395 +}
+      396 +
+      397 +.dark-mode .nav-result-row {
+      398 +    color: #ffffff;
+      399 +}
+      400 +
+      401 +.dark-mode .nav-result-row:hover {
+      402 +    background-color: #3a3a3d;
+      403 +}
+      404 +
+      405 +.dark-mode .nav-result-empty {
+      406 +    color: #888;
+      407 +}
+      408 +
+      409  /* Search bar styling - WHITE BACKGROUND IN DARK MODE */
+      410  .dark-mode .nav-search {
+      411    background-color: #FFFFFF !important;
+
+⏺ Also need to handle the "no results found" case — the empty state should only show after the debounce settles. Right
+  now the logic shows it when searchResults.length === 0 && searchOpen === false but the initial fetch might not have
+  completed yet. Let me fix the empty state logic to use a separate state:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ The empty state condition has a timing issue — it'll flash "No results" during the debounce delay. I'll add a
+  searchFetched flag:
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 1 line
+       9      const [searchText, setSearchText] = useState('');
+      10      const [searchResults, setSearchResults] = useState([]);
+      11      const [searchOpen, setSearchOpen] = useState(false);
+      12 +    const [searchFetched, setSearchFetched] = useState(false);
+      13      const searchRef = useRef(null);
+      14
+      15      // close dropdown when clicking outside the search area
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 1 line
+      32          if (trimmed.length < 2 || !props.activeCircleId) {
+      33              setSearchResults([]);
+      34              setSearchOpen(false);
+      35 +            setSearchFetched(false);
+      36              return;
+      37          }
+      38
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 1 line
+      82
+      83              setSearchResults(combined.slice(0, 8));
+      84              setSearchOpen(combined.length > 0);
+      85 +            setSearchFetched(true);
+      86          }, 300);
+      87
+      88          return function () {
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 1 line, removed 1 line
+      154                      })}
+      155                  </div>
+      156              )}
+      157 -            {searchText.trim().length >= 2 && searchResults.length === 0 && searchOpen === false && (
+      157 +            {searchFetched && searchResults.length === 0 && (
+      158                  <div className="nav-search-dropdown">
+      159                      <p className="nav-result-empty">{t('nav.noResults') || 'No results found'}</p>
+      160                  </div>
+
+⏺ Also reset searchFetched when clicking a result:
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 1 line
+       98          setSearchText('');
+       99          setSearchResults([]);
+      100          setSearchOpen(false);
+      101 +        setSearchFetched(false);
+      102          goTo(path);
+      103      }
+      104
+
+⏺ The search is now fully implemented. Here's what it does:
+
+  - Type 2+ characters → debounces 300ms, then fetches journal entries, memory boards, and calendar events in parallel
+  from the circle's APIs
+  - Results dropdown appears below the search bar, showing up to 8 matches with color-coded type pills (blue = Journal,
+   purple = Board, green = Calendar)
+  - Click a result → navigates to that feature's page and clears the search
+  - Click outside → closes the dropdown
+  - No results → shows "No results found" only after the fetch completes (no premature flash)
+  - Dark mode → dropdown styled to match the rest of the app
+
+✻ Brewed for 3m 9s
+
+※ recap: Implemented global nav search that queries journal entries, memory boards, and calendar events as you type,
+  showing results in a dropdown with type labels. Everything is working — no pending actions needed.
+
+❯ it says nav.noResults, not just No Results
+
+  Searched for 8 patterns, read 2 files (ctrl+o to expand)
+
+⏺ Update(src/translations/index.js)
+  ⎿  Added 2 lines
+      2    en: {
+      3      nav: {
+      4        search: 'Search for...',
+      5 +      noResults: 'No results found',
+      6 +      untitled: 'Untitled',
+      7        home: 'Home',
+      8        manageCircles: 'Manage Circles',
+      9        calendar: 'Calendar',
+
+⏺ Update(src/translations/index.js)
+  ⎿  Added 2 lines
+      297    es: {
+      298      nav: {
+      299        search: 'Buscar...',
+      300 +      noResults: 'Sin resultados',
+      301 +      untitled: 'Sin título',
+      302        home: 'Inicio',
+      303        manageCircles: 'Gestionar Círculos',
+      304        calendar: 'Calendario',
+
+⏺ Also remove the || 'No results found' fallback in Navbar since the translation now exists:
+
+⏺ Update(src/components/Navbar/Navbar.jsx)
+  ⎿  Added 1 line, removed 1 line
+      157              )}
+      158              {searchFetched && searchResults.length === 0 && (
+      159                  <div className="nav-search-dropdown">
+      160 -                    <p className="nav-result-empty">{t('nav.noResults') || 'No results found'}</p>
+      160 +                    <p className="nav-result-empty">{t('nav.noResults')}</p>
+      161                  </div>
+      162              )}
+      163              </div>
+
+⏺ Fixed — nav.noResults and nav.untitled are now defined in the translations file for both English and Spanish.

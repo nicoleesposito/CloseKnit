@@ -22,6 +22,11 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
 }
 
 /* search bar */
+.nav-search-wrap {
+    position: relative;
+    margin-top: 60px;
+}
+
 .nav-search {
     display: flex;
     align-items: center;
@@ -29,9 +34,78 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
     border: 1px solid #dddddd;
     border-radius: 12px;
     padding: 10px 12px;
-    margin-top: 60px;
     background-color: #F3F3F3;
     box-shadow: none !important;
+}
+
+.nav-search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    overflow: hidden;
+}
+
+.nav-result-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13px;
+    color: #1a1a1a;
+}
+
+.nav-result-row:hover {
+    background-color: #f5f5f5;
+}
+
+.nav-result-tag {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.nav-result-tag-journal {
+    background: #e8f4fd;
+    color: #2563eb;
+}
+
+.nav-result-tag-board {
+    background: #ede9ff;
+    color: #5245b5;
+}
+
+.nav-result-tag-calendar {
+    background: #e6f9f0;
+    color: #16a34a;
+}
+
+.nav-result-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nav-result-empty {
+    padding: 10px 14px;
+    margin: 0;
+    font-size: 13px;
+    color: #888;
 }
 
 .nav-search img {
@@ -313,6 +387,25 @@ nav,
               color 0.2s ease,
               border-color 0.2s ease;
 }
+/* Search dropdown dark mode */
+.dark-mode .nav-search-dropdown {
+    background: #2d2d30;
+    border-color: #404040;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .nav-result-row {
+    color: #ffffff;
+}
+
+.dark-mode .nav-result-row:hover {
+    background-color: #3a3a3d;
+}
+
+.dark-mode .nav-result-empty {
+    color: #888;
+}
+
 /* Search bar styling - WHITE BACKGROUND IN DARK MODE */
 .dark-mode .nav-search {
   background-color: #FFFFFF !important;

@@ -940,7 +940,7 @@ function Journal(props) {
         <div>
             <Header currentCircle={props.circleName || "Name Placeholder"} profileImage="#" />
             <div className="manage-layout">
-                <Navbar activePage="journal" />
+                <Navbar activePage="journal" activeCircleId={props.activeCircleId} />
                 {buildScreenContent()}
                 <ActivityFeed activeCircleId={props.activeCircleId} />
             </div>
