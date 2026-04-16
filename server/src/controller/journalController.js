@@ -75,16 +75,11 @@ async function createJournalEntry(request, response) {
 async function updateJournalEntry(request, response) {
     try {
         const entryId = request.params.entryId;
-        const userId = request.user.id;
 
         const entry = await JournalEntry.findById(entryId);
 
         if (!entry) {
             return response.status(404).json({ message: 'Entry not found' });
-        }
-
-        if (entry.author.toString() !== userId) {
-            return response.status(403).json({ message: 'Only the author can edit this entry' });
         }
 
         const data = buildEntryData(request.body);

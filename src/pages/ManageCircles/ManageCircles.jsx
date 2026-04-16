@@ -15,6 +15,7 @@ function ManageCircles(props) {
     const [circleNameDraftText, setCircleNameDraftText] = useState(props.circleName);
     const [createCircleModeEnabled, setCreateCircleModeEnabled] = useState(false);
     const [addMemberEmail, setAddMemberEmail] = useState("");
+    const [pendingInviteEmails, setPendingInviteEmails] = useState([]);
     const [circleMembersList, setCircleMembersList] = useState([]);
     const [memberError, setMemberError] = useState("");
     const [saveSuccess, setSaveSuccess] = useState(false);
@@ -110,15 +111,27 @@ function ManageCircles(props) {
         setCreateCircleModeEnabled(false);
         setCircleNameEditingEnabled(false);
         setCircleNameDraftText(props.circleName);
+        setPendingInviteEmails([]);
     }
 
-    function finishCreateCircleButton() {
+    async function finishCreateCircleButton() {
         const nameToCreate = circleNameDraftText.trim();
         setCreateCircleModeEnabled(false);
         setCircleNameEditingEnabled(false);
         setCircleNameDraftText("");
+        setPendingInviteEmails([]);
         if (nameToCreate.length > 0) {
-            props.addCircle(nameToCreate);
+            const newCircleId = await props.addCircle(nameToCreate);
+            if (newCircleId && pendingInviteEmails.length > 0) {
+                for (const email of pendingInviteEmails) {
+                    await fetch('/api/circles/' + newCircleId + '/invitations', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ email })
+                    });
+                }
+            }
         }
     }
 
@@ -152,11 +165,24 @@ function ManageCircles(props) {
             return;
         }
 
-        if (!props.activeCircleId) {
+        setMemberError("");
+
+        // when creating a new circle, queue the invite instead of sending immediately
+        if (createCircleModeEnabled) {
+            if (pendingInviteEmails.includes(email)) {
+                setMemberError(t('manageCircles.alreadyQueued') || 'This email is already queued.');
+                return;
+            }
+            setPendingInviteEmails(prev => [...prev, email]);
+            setAddMemberEmail("");
+            setInviteSuccess(true);
+            setTimeout(() => setInviteSuccess(false), 3000);
             return;
         }
 
-        setMemberError("");
+        if (!props.activeCircleId) {
+            return;
+        }
 
         try {
             const response = await fetch('/api/circles/' + props.activeCircleId + '/invitations', {
@@ -277,29 +303,33 @@ function ManageCircles(props) {
                                 {memberError.length > 0 && (
                                     <p className="member-error">{memberError}</p>
                                 )}
-                                <div className="members-header section-space">
-                                    <p className="field-label">{t('manageCircles.manageMembers')}</p>
-                                    <p className="member-count">({circleMembersList.length}/8)</p>
-                                </div>
-                                {showEmptyMembersPlaceholder && (
-                                    <div className="members-empty"></div>
-                                )}
-                                {!showEmptyMembersPlaceholder && (
-                                    <div className="members-grid">
-                                        {circleMembersList.map(function (memberObject) {
-                                            const memberName = memberObject.user.firstName + ' ' + memberObject.user.lastName;
-                                            const memberUserId = memberObject.user._id;
-                                            const canRemove = isOwner && memberUserId !== user._id;
+                                {!createCircleModeEnabled && (
+                                    <div>
+                                        <div className="members-header section-space">
+                                            <p className="field-label">{t('manageCircles.manageMembers')}</p>
+                                            <p className="member-count">({circleMembersList.length}/8)</p>
+                                        </div>
+                                        {showEmptyMembersPlaceholder && (
+                                            <div className="members-empty"></div>
+                                        )}
+                                        {!showEmptyMembersPlaceholder && (
+                                            <div className="members-grid">
+                                                {circleMembersList.map(function (memberObject) {
+                                                    const memberName = memberObject.user.firstName + ' ' + memberObject.user.lastName;
+                                                    const memberUserId = memberObject.user._id;
+                                                    const canRemove = isOwner && memberUserId !== user._id;
 
-                                            return (
-                                                <div className="member-row" key={memberObject._id}>
-                                                    <p className="member-name">{memberName}</p>
-                                                    {canRemove && (
-                                                        <button className="member-remove" type="button" onClick={function () { removeMemberButton(memberUserId); }}>{t('manageCircles.remove')}</button>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
+                                                    return (
+                                                        <div className="member-row" key={memberObject._id}>
+                                                            <p className="member-name">{memberName}</p>
+                                                            {canRemove && (
+                                                                <button className="member-remove" type="button" onClick={function () { removeMemberButton(memberUserId); }}>{t('manageCircles.remove')}</button>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 <div className="bottom-actions">

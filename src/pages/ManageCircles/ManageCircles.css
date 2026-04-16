@@ -58,6 +58,14 @@
 
 .circle-form {
     margin-top: 8px;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+.circle-form .bottom-actions {
+    margin-top: auto;
+    padding-top: 24px;
 }
 
 .field-label {
@@ -381,14 +389,63 @@
 
 @media (max-width: 720px) {
 
+    .manage-panel {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .circle-card {
+        padding: 14px 16px;
+    }
+
+    .invites-card {
+        padding: 12px 16px;
+    }
+
     .circle-name-row,
     .invite-row {
-        grid-template-columns: minmax(0, 1fr) auto;
-        column-gap: 16px;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding-left: 0;
+    }
+
+    .circle-name-row .icon-btn,
+    .invite-row .primary-btn {
+        width: 100%;
+        justify-self: stretch;
     }
 
     .text-input {
         width: 100%;
+        max-width: 100%;
+    }
+
+    .members-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bottom-actions-manage {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .bottom-actions-create {
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+    }
+
+    .circle-title,
+    .invites-title {
+        font-size: 18px;
+    }
+
+    .invites-row {
+        gap: 10px;
     }
 }
 

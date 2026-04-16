@@ -265,6 +265,25 @@
     .memoryboard-gray-arrow {
         display: none;
     }
+
+    .memoryboard-panel {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .memoryboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .memoryboard-cover-image-wrap {
+        max-width: 100%;
+    }
+
+    .memoryboard-list-top-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 }
 
 /* Claude. 2/5. " the slots arent resizing according to screen size. What solution is there to have them shrink without interfering with the activity feed? I already tried adjusting height, width, and different flex settings."*/

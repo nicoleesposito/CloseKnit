@@ -65,10 +65,12 @@ async function addCircle(newCircleName) {
             const newCircle = await response.json();
             setCircles(prev => [...prev, newCircle]);
             setActiveCircleId(newCircle._id);
+            return newCircle._id;
         }
     } catch {
         console.log('Failed to create circle');
     }
+    return null;
 }
 
 async function updateCircleName(newName) {
