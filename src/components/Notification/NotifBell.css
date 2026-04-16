@@ -169,3 +169,62 @@
     width: 320px;
   }
 }
+
+/* ================= DARK MODE ================= */
+
+.dark-mode .notif-popup {
+  background: #2d2d30;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .notif-header {
+  border-bottom-color: #404040;
+}
+
+.dark-mode .notif-header h3 {
+  color: #ffffff;
+}
+
+.dark-mode .notif-close {
+  color: #b3b3b3;
+}
+
+.dark-mode .notif-close:hover {
+  color: #ffffff;
+}
+
+.dark-mode .notif-item {
+  border-bottom-color: #404040;
+}
+
+.dark-mode .notif-item:hover {
+  background-color: #3a3a3d;
+}
+
+.dark-mode .notif-item-new {
+  background-color: #2a2a40;
+}
+
+.dark-mode .notif-item-new:hover {
+  background-color: #32324a;
+}
+
+.dark-mode .notif-item-text {
+  color: #e5e5e5;
+}
+
+.dark-mode .notif-user {
+  color: #ffffff;
+}
+
+.dark-mode .notif-item-time {
+  color: #808080;
+}
+
+.dark-mode .notif-empty {
+  color: #808080;
+}
+
+.dark-mode .notif-footer {
+  border-top-color: #404040;
+}

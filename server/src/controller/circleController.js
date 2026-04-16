@@ -77,15 +77,22 @@ async function leaveCircle(request, response) {
             return response.status(404).json({ message: 'Circle not found' });
         }
 
+        const wasOwner = circle.owner.toString() === request.user.id;
+
         // remove user from members
         circle.members = circle.members.filter(
             member => member.user.toString() !== request.user.id
         );
 
-        // if no members left or user was owner, delete the circle
-        if (circle.members.length === 0 || circle.owner.toString() === request.user.id) {
+        // delete the circle only if no members remain
+        if (circle.members.length === 0) {
             await Circle.findByIdAndDelete(request.params.id);
         } else {
+            // if the owner left, transfer ownership to the first remaining member
+            if (wasOwner) {
+                circle.owner = circle.members[0].user;
+                circle.members[0].role = 'owner';
+            }
             await circle.save();
         }
 

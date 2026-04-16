@@ -1,6 +1,8 @@
 import './LandingPage.css'
+import { useLanguage } from '../../context/LanguageContext';
 
 const LandingPage = () => {
+    const { t } = useLanguage();
     return (
         <div className="landing-page">
 {/* header */}
@@ -15,24 +17,24 @@ const LandingPage = () => {
                 </div>
 
                 <nav className="landing-header-center">
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#help">FAQs</a>
+                    <a href="#home">{t('landing.navHome')}</a>
+                    <a href="#about">{t('landing.navAbout')}</a>
+                    <a href="#help">{t('landing.navFaqs')}</a>
                 </nav>
 
                 <div className="landing-header-right">
-                    <a href="/signup" className="landing-cta">Sign Up</a>
-                    <a href="/login" className="landing-cta">Login</a>
+                    <a href="/signup" className="landing-cta">{t('landing.signUp')}</a>
+                    <a href="/login" className="landing-cta">{t('landing.login')}</a>
                 </div>
             </header>
 
 {/* mission statement */}
             <section className="landing-section">
-                <h1 className="landing-h1">Your Circle. Your Stories. One Place.</h1><br></br>
+                <h1 className="landing-h1">{t('landing.hero')}</h1><br></br>
                 <p className="landing-p">
-                    CloseKnit helps you share life's moments, memories and goals with the people who matter most.
+                    {t('landing.tagline')}
                     <br /><br />
-                    <a href="/signup" className="landing-cta">Get Started</a>
+                    <a href="/signup" className="landing-cta">{t('landing.getStarted')}</a>
                 </p>
             </section>
 
@@ -54,14 +56,14 @@ const LandingPage = () => {
 
                 <div className="landing-content-card">
                     <section className="landing-section">
-                        <h2 className="landing-h2">Connecting People, Near and Far</h2>
+                        <h2 className="landing-h2">{t('landing.connectingTitle')}</h2>
 
-                        <p className="landing-p">CloseKnit is a platform designed to connect users no matter where they are, whether just minutes apart or across the globe.</p>
+                        <p className="landing-p">{t('landing.connectingText1')}</p>
 
-                        <p className="landing-p">Join CloseKnit today and start sharing memories, planning moments, and connecting with your favorite people.
+                        <p className="landing-p">{t('landing.connectingText2')}
                             <br></br>
                             <button className="landing-button" onClick={() => (window.location.href = "/signup")}>
-                            Get Started
+                            {t('landing.getStarted')}
                         </button></p>
 
                         
@@ -72,31 +74,31 @@ const LandingPage = () => {
 {/* FAQ */}
             <div className="landing-centered-box">
                 <section className="landing-section">
-                    <h3 className="landing-h3">Frequently Asked Questions</h3>
-                    <p className="landing-p">Got questions? Find answers to the most common questions about CloseKnit.</p>
+                    <h3 className="landing-h3">{t('landing.faqTitle')}</h3>
+                    <p className="landing-p">{t('landing.faqIntro')}</p>
                     <details className="landing-details">
-                        <summary className="landing-summary">Is CloseKnit free to use?</summary>
-                        <p className="landing-p">Yes! CloseKnit is completely free to use. You can create an account, connect with friends and family, and access all the core features like the memory board, shared journal, and calendar at no cost.</p>
+                        <summary className="landing-summary">{t('landing.faq1Q')}</summary>
+                        <p className="landing-p">{t('landing.faq1A')}</p>
                     </details>
 
                     <details className="landing-details">
-                        <summary className="landing-summary">What devices are supported?</summary>
-                        <p className="landing-p">CloseKnit can be accessed through any modern web browser on desktop, laptop, tablet, or mobile devices. There's no need to download an app, everything works directly in your browser for a smooth and consistent experience.</p>
+                        <summary className="landing-summary">{t('landing.faq2Q')}</summary>
+                        <p className="landing-p">{t('landing.faq2A')}</p>
                     </details>
 
                     <details className="landing-details">
-                        <summary className="landing-summary">Is CloseKnit suitable for kids or teens?</summary>
-                        <p className="landing-p">CloseKnit is designed for users aged 13 and older. While the platform encourages positive connections and family-friendly interactions, younger users should have permission and guidance from a parent or guardian when creating an account or sharing content.</p>
+                        <summary className="landing-summary">{t('landing.faq3Q')}</summary>
+                        <p className="landing-p">{t('landing.faq3A')}</p>
                     </details>
 
                     <details className="landing-details">
-                        <summary className="landing-summary">Can I leave a circle?</summary>
-                        <p className="landing-p">Yes, you can leave a circle at any time. Simply go to your circle settings and select the option to leave. Once you do, you'll no longer receive updates or notifications from that group, but you can rejoin later if invited back.</p>
+                        <summary className="landing-summary">{t('landing.faq4Q')}</summary>
+                        <p className="landing-p">{t('landing.faq4A')}</p>
                     </details>
 
                     <details className="landing-details">
-                        <summary className="landing-summary">Can I use CloseKnit internationally?</summary>
-                        <p className="landing-p">Yes, CloseKnit can be used anywhere with an internet connection. Whether your loved ones are across town or across the world, you can stay connected and share moments seamlessly through your web browser.</p>
+                        <summary className="landing-summary">{t('landing.faq5Q')}</summary>
+                        <p className="landing-p">{t('landing.faq5A')}</p>
                     </details>
                 </section>
             </div>
@@ -112,27 +114,26 @@ const LandingPage = () => {
                             height="60"
                         />
                         <p className="landing-p">
-                            CloseKnit brings friends and family together by providing a space
-                            to connect and remember what matters most.
+                            {t('landing.footerTagline')}
                         </p>
                     </div>
 
                     <div className="landing-footer-center">
-                        © 2026 All Rights Reserved | CloseKnit
+                        {t('landing.footerCopyright')}
                     </div>
 
                     <div className="landing-footer-right">
                         <div>
-                            <strong>Menu</strong><br />
-                            <a href="#" className="landing-a">Home</a><br />
-                            <a href="#" className="landing-a">About</a><br />
-                            <a href="#" className="landing-a">FAQs</a>
+                            <strong>{t('landing.footerMenu')}</strong><br />
+                            <a href="#" className="landing-a">{t('landing.navHome')}</a><br />
+                            <a href="#" className="landing-a">{t('landing.navAbout')}</a><br />
+                            <a href="#" className="landing-a">{t('landing.navFaqs')}</a>
                         </div>
 
                         <div>
-                            <strong>Get Started</strong><br />
-                            <a href="/signup" className="landing-a">Sign Up</a><br />
-                            <a href="/login" className="landing-a">Login</a>
+                            <strong>{t('landing.footerGetStarted')}</strong><br />
+                            <a href="/signup" className="landing-a">{t('landing.signUp')}</a><br />
+                            <a href="/login" className="landing-a">{t('landing.login')}</a>
                         </div>
                     </div>
                 </footer>

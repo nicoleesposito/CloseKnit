@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import './App.css'
 import { AuthProvider } from './context/AuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 // these imports are for the pages created in the other files. check /src/pages to see pages
@@ -108,6 +109,7 @@ async function removeCircle(circleId) {
     }
 }
   return (
+    <LanguageProvider>
     <AuthProvider>
       <Routes>
         {/* These routes are for a user who is logged out. */}
@@ -142,6 +144,7 @@ async function removeCircle(circleId) {
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       </Routes>
     </AuthProvider>
+    </LanguageProvider>
   );
 }
 

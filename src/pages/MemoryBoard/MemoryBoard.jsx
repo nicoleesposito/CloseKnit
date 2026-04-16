@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import HelpButton from '../../components/HelpButton/HelpButton';
+import { useLanguage } from '../../context/LanguageContext';
 
 /*
 References:
@@ -13,6 +14,7 @@ Colorpicker: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Element
 */
 
 function MemoryBoard(props) {
+    const { t } = useLanguage();
     const [memoryItems, setMemoryItems] = useState([]);
     const [memoryboardScreen, setMemoryboardScreen] = useState("list");
     const [selectedTemplateId, setSelectedTemplateId] = useState(null);
@@ -65,7 +67,7 @@ function MemoryBoard(props) {
         if (board.author && board.author.firstName) {
             return board.author.firstName + ' ' + board.author.lastName;
         }
-        return 'Unknown';
+        return t('journal.unknown');
     }
 
     // functon will take the user to the main screen with the list of boards
@@ -281,7 +283,7 @@ function MemoryBoard(props) {
                         <button className="memoryboard-back-button" onClick={goToListScreen} type="button">
                             <img src="/images/ui/back-arrow.svg" alt="Back arrow" />
                         </button>
-                        <h2 className="memoryboard-templates-heading">Your Layouts</h2>
+                        <h2 className="memoryboard-templates-heading">{t('memoryBoard.yourLayouts')}</h2>
                         <div className="memoryboard-templates-right-spacer"></div>
                     </div>
 
@@ -1041,12 +1043,12 @@ function MemoryBoard(props) {
                     <div className="memoryboard-icon-wrap">
                         <img className="memoryboard-icon" src="/images/ui/trash.svg" alt="" />
                     </div>
-                    <h2 className="memoryboard-title">Delete this memory board?</h2>
-                    <p className="memoryboard-text">Are you sure you want to delete this memory board?</p>
-                    <p className="memoryboard-subtext">This action cannot be undone.</p>
+                    <h2 className="memoryboard-title">{t('memoryBoard.deleteTitle')}</h2>
+                    <p className="memoryboard-text">{t('memoryBoard.deleteConfirmText')}</p>
+                    <p className="memoryboard-subtext">{t('memoryBoard.cannotUndo')}</p>
                     <div className="memoryboard-buttons">
-                        <button className="memoryboard-cancel" onClick={closeDeletePopup} type="button">Cancel</button>
-                        <button className="memoryboard-delete" onClick={confirmDeleteClick} type="button">Delete</button>
+                        <button className="memoryboard-cancel" onClick={closeDeletePopup} type="button">{t('memoryBoard.cancel')}</button>
+                        <button className="memoryboard-delete" onClick={confirmDeleteClick} type="button">{t('memoryBoard.delete')}</button>
                     </div>
                 </div>
             </div>
@@ -1062,11 +1064,11 @@ function MemoryBoard(props) {
             <div className="memoryboard-card-menu-popover">
                 <button className="memoryboard-card-menu-item" onClick={function (clickEvent) { clickEvent.preventDefault(); clickEvent.stopPropagation(); openCoverPhotoPicker(memoryId); }} type="button">
                     <span className="memoryboard-card-menu-icon"><img src="/images/ui/edit-button.svg" /></span>
-                    <span>Change Cover</span>
+                    <span>{t('memoryBoard.changeCover')}</span>
                 </button>
                 <button className="memoryboard-card-menu-item" onClick={function (clickEvent) { clickEvent.preventDefault(); clickEvent.stopPropagation(); openDeletePopup(memoryId); }} type="button">
                     <span className="memoryboard-card-menu-icon"><img src="/images/ui/trash.svg" /></span>
-                    <span>Delete</span>
+                    <span>{t('memoryBoard.delete')}</span>
                 </button>
             </div>
         );
@@ -1088,8 +1090,8 @@ function MemoryBoard(props) {
 
                         <img className="memoryboard-gray-arrow" src="/images/ui/gray-arrow.svg" alt="" />
                         <div className="memoryboard-empty-state">
-                            <p className="memoryboard-empty-title">No memories yet.</p>
-                            <p className="memoryboard-empty-subtitle">Add your first memory to the board!</p>
+                            <p className="memoryboard-empty-title">{t('memoryBoard.noMemoriesYet')}</p>
+                            <p className="memoryboard-empty-subtitle">{t('memoryBoard.addFirstMemory')}</p>
                         </div>
                         <input id="memoryboard-cover-file-input" type="file" accept="image/*" onChange={coverFileInputChange} style={{ display: "none" }} />
                         {buildDeletePopup()}
@@ -1109,7 +1111,7 @@ function MemoryBoard(props) {
                             </span>
                         </button>
                     </div>
-                    <h2 className="memoryboard-heading">Your Memories</h2>
+                    <h2 className="memoryboard-heading">{t('memoryBoard.yourMemories')}</h2>
                     <div className="memoryboard-grid">
                         {memoryItems.map(function (memoryObject) {
                             const coverUrl = memoryObject.coverImageUrl;
@@ -1123,7 +1125,7 @@ function MemoryBoard(props) {
 
                                         {!coverUrl && (
                                             <div className="memoryboard-cover-placeholder">
-                                                <span>No Cover</span>
+                                                <span>{t('memoryBoard.noCover')}</span>
                                             </div>
                                         )}
 

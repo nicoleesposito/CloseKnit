@@ -1,42 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './HelpButton.css';
-
-// help content for each page (can be changed / added to in the future)
-const helpContent = {
-    //not added yet waiting on memory boardd page to be finalized
-  memoryBoard: {
-    title: 'Memory Board — Help Guide',
-    items: [
-      'Create Board: Tap the + button to start a new memory board and choose a layout.',
-      'Your Boards: Existing boards will appear here with the cover image you selected.',
-      'View or Edit: Select any board to open, update, or add new memories.'
-    ]
-  },
-  //added & aligned
-  journal: {
-    title: 'Journal Page — Help Guide',
-    items: [
-      'Our Entries: View all past journal entries you\'ve created.' , 
-      'Search Bar: Use the search field to quickly find a specific entry.',
-      'New Entry: Tap New Entry to start writing a fresh journal entry.',
-      'Edit Entry: Click on any entry to view, edit, or add more content.'
-    ]
-  },
-  //added
-  calendar: {
-  title: 'Calendar Page — Help Guide',
-  items: [
-    'Current Circle: At the top, you\'ll see the circle you\'re currently viewing.',
-    'Timeline: The bar to the left shows upcoming events. Each color matches an event type.',
-    'Calendar View: Days with events show a color dot underneath.',
-    'Month Navigation: Use the arrows at the top to move between months.',
-    'Add Event: Tap the \'Add Event\' button to create a new event.'
-  ]
-}
-};
+import { useLanguage } from '../../context/LanguageContext';
 
 const HelpButton = ({ page }) => {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDark, setIsDark] = useState(localStorage.getItem('darkMode') === 'true');
+
+  // help content for each page, pulled from translations
+  const helpContent = {
+    memoryBoard: {
+      title: t('help.memoryBoardTitle'),
+      items: [
+        t('help.memoryBoardItem1'),
+        t('help.memoryBoardItem2'),
+        t('help.memoryBoardItem3'),
+      ]
+    },
+    journal: {
+      title: t('help.journalTitle'),
+      items: [
+        t('help.journalItem1'),
+        t('help.journalItem2'),
+        t('help.journalItem3'),
+        t('help.journalItem4'),
+      ]
+    },
+    calendar: {
+      title: t('help.calendarTitle'),
+      items: [
+        t('help.calendarItem1'),
+        t('help.calendarItem2'),
+        t('help.calendarItem3'),
+        t('help.calendarItem4'),
+        t('help.calendarItem5'),
+      ]
+    },
+  };
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark-mode'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
   
   // get content for the current page/ safety and error handling for future chnages
   const content = helpContent[page];
@@ -54,10 +62,10 @@ const HelpButton = ({ page }) => {
         className="help-button"
         aria-label="Help"
       >
-        <img 
-          src="/images/ui/help.svg" 
-          alt="Help" 
-          width="24" 
+        <img
+          src={isDark ? "/images/ui/help-darktheme.svg" : "/images/ui/help.svg"}
+          alt="Help"
+          width="24"
           height="24"
         />
       </button>

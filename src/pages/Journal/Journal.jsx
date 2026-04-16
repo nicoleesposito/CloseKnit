@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import HelpButton from '../../components/HelpButton/HelpButton';
+import { useLanguage } from '../../context/LanguageContext';
 
 /*
 useEffect docs: https://react.dev/reference/react/useEffect
@@ -11,6 +12,7 @@ Jeremy McPeak CH.12 of Javascript Book
 */
 
 function Journal(props) {
+    const { t } = useLanguage();
     const [currentJournalScreen, setCurrentJournalScreen] = useState("list");
     const [journalEntries, setJournalEntries] = useState([]);
     const [activeEntryId, setActiveEntryId] = useState(null);
@@ -68,7 +70,7 @@ function Journal(props) {
         if (entry.author && entry.author.firstName) {
             return entry.author.firstName + ' ' + entry.author.lastName;
         }
-        return 'Unknown';
+        return t('journal.unknown');
     }
 
     // returns the full name of a comment's author
@@ -76,7 +78,7 @@ function Journal(props) {
         if (comment.author && comment.author.firstName) {
             return comment.author.firstName + ' ' + comment.author.lastName;
         }
-        return 'Unknown';
+        return t('journal.unknown');
     }
 
     // loops through the journal entries and returns the object with the matching id
@@ -106,14 +108,14 @@ function Journal(props) {
         const dayCount = Math.floor(differenceNumber / oneDayNumber);
 
         if (dayCount <= 0) {
-            return "Today";
+            return t('journal.today');
         }
 
         if (dayCount === 1) {
-            return "1 Day Ago";
+            return t('journal.oneDayAgo');
         }
 
-        return dayCount + " Days Ago";
+        return t('journal.daysAgo').replace('{n}', dayCount);
     }
 
     // filters the text entries by trimming extra space and turning it into lowercase for standard text.
@@ -281,21 +283,21 @@ function Journal(props) {
         setSuggestedEntriesOpen(false);
 
         if (templateName === "travel") {
-            setEntryTitleText("Travel Memory");
-            setEntryDescriptionText("Share a favorite moment from your recent adventure!");
-            setEntryBodyText("Write about where you went, what you did, and what made it memorable.");
+            setEntryTitleText(t('journal.travelTitle'));
+            setEntryDescriptionText(t('journal.travelText'));
+            setEntryBodyText(t('journal.travelBody'));
         }
 
         if (templateName === "happy") {
-            setEntryTitleText("Happy Memory");
-            setEntryDescriptionText("Write about something that made you smile today!");
-            setEntryBodyText("Write what happened, why it made you happy, and what you want to remember.");
+            setEntryTitleText(t('journal.happyTitle'));
+            setEntryDescriptionText(t('journal.happyText'));
+            setEntryBodyText(t('journal.happyBody'));
         }
 
         if (templateName === "growth") {
-            setEntryTitleText("Growth Memory");
-            setEntryDescriptionText("Reflect on something you learned recently");
-            setEntryBodyText("Write what you learned, what challenged you, and how you want to apply it next time.");
+            setEntryTitleText(t('journal.growthTitle'));
+            setEntryDescriptionText(t('journal.growthText'));
+            setEntryBodyText(t('journal.growthBody'));
         }
     }
 
@@ -668,12 +670,12 @@ function Journal(props) {
                     <div className="journal-modal-icon-wrap">
                         <img className="journal-modal-icon" src="/images/ui/trash.svg" alt="" />
                     </div>
-                    <h2 className="journal-modal-title">Confirm Entry Deletion?</h2>
-                    <p className="journal-modal-text">Are you sure you want to delete this entry?</p>
-                    <p className="journal-modal-subtext">This action cannot be undone.</p>
+                    <h2 className="journal-modal-title">{t('journal.confirmDeletion')}</h2>
+                    <p className="journal-modal-text">{t('journal.deleteConfirmText')}</p>
+                    <p className="journal-modal-subtext">{t('journal.cannotUndo')}</p>
                     <div className="journal-modal-buttons">
-                        <button className="journal-modal-cancel" onClick={closeDeletePopup} type="button">Cancel</button>
-                        <button className="journal-modal-delete" onClick={confirmDeleteClick} type="button">Delete</button>
+                        <button className="journal-modal-cancel" onClick={closeDeletePopup} type="button">{t('journal.cancel')}</button>
+                        <button className="journal-modal-delete" onClick={confirmDeleteClick} type="button">{t('journal.delete')}</button>
                     </div>
                 </div>
             </div>
@@ -689,16 +691,16 @@ function Journal(props) {
                     <div className="journal-panel journal-panel-relative">
                         <div className="journal-list-top-row">
                             <HelpButton page="journal" />
-                            <input className="journal-search-input" placeholder="Search for ..." value={searchText} onChange={searchTextChange} type="text" />
+                            <input className="journal-search-input" placeholder={t('journal.searchPlaceholder')} value={searchText} onChange={searchTextChange} type="text" />
                             <button className="journal-new-entry-button" onClick={newEntryClick} type="button">
                                 <span className="journal-new-entry-icon"><img src="/images/ui/add-entry-white.svg" alt="" /></span>
-                                <span>New Entry</span>
+                                <span>{t('journal.newEntry')}</span>
                             </button>
                         </div>
                         <img className="journal-gray-arrow" src="/images/ui/gray-arrow.svg" alt="" />
                         <div className="journal-empty-state">
-                            <p className="journal-empty-title">No entries yet.</p>
-                            <p className="journal-empty-subtitle">Create your first journal entry!</p>
+                            <p className="journal-empty-title">{t('journal.noEntriesYet')}</p>
+                            <p className="journal-empty-subtitle">{t('journal.createFirstEntry')}</p>
                         </div>
                         {buildDeletePopup()}
                     </div>
@@ -711,13 +713,13 @@ function Journal(props) {
                 <div className="journal-panel">
                     <div className="journal-list-top-row">
                         <HelpButton page="journal" />
-                        <input className="journal-search-input" placeholder="Search for ..." value={searchText} onChange={searchTextChange} type="text" />
+                        <input className="journal-search-input" placeholder={t('journal.searchPlaceholder')} value={searchText} onChange={searchTextChange} type="text" />
                         <button className="journal-new-entry-button" onClick={newEntryClick} type="button">
                             <span className="journal-new-entry-icon"><img src="/images/ui/add-entry-white.svg" alt="" /></span>
-                            <span>New Entry</span>
+                            <span>{t('journal.newEntry')}</span>
                         </button>
                     </div>
-                    <h2 className="journal-entries-heading">Our Entries</h2>
+                    <h2 className="journal-entries-heading">{t('journal.ourEntries')}</h2>
                     <div className="journal-entries-grid">
                         {filteredEntries.map(function (entryObject) {
                             return (
@@ -759,30 +761,30 @@ function Journal(props) {
                             <img className="journal-back-icon" src="/images/ui/back-arrow.svg" alt="Back" />
                         </button>
                     </div>
-                    <input className="journal-title-input" value={entryTitleText} onChange={titleTextChange} placeholder="Title" type="text" />
+                    <input className="journal-title-input" value={entryTitleText} onChange={titleTextChange} placeholder={t('journal.titlePlaceholder')} type="text" />
                     <div className="journal-suggested-header">
                         <button className="journal-suggested-toggle" onClick={suggestedToggle} type="button">
-                            <span>Suggested Entries</span>
+                            <span>{t('journal.suggestedEntries')}</span>
                             <span className="journal-suggested-arrow">{suggestedTextArrow()}</span>
                         </button>
                     </div>
                     {suggestedEntriesOpen && (
                         <div className="journal-suggested-cards">
                             <button className="journal-suggested-card" onClick={handleTravelTemplateClick} type="button">
-                                <p className="journal-suggested-title">Travel Memory</p>
-                                <p className="journal-suggested-text">Share a favorite moment from your recent adventure!</p>
+                                <p className="journal-suggested-title">{t('journal.travelTitle')}</p>
+                                <p className="journal-suggested-text">{t('journal.travelText')}</p>
                             </button>
                             <button className="journal-suggested-card" onClick={handleHappyTemplateClick} type="button">
-                                <p className="journal-suggested-title">Happy Memory</p>
-                                <p className="journal-suggested-text">Write about something that made you smile today!</p>
+                                <p className="journal-suggested-title">{t('journal.happyTitle')}</p>
+                                <p className="journal-suggested-text">{t('journal.happyText')}</p>
                             </button>
                             <button className="journal-suggested-card" onClick={handleGrowthTemplateClick} type="button">
-                                <p className="journal-suggested-title">Growth Memory</p>
-                                <p className="journal-suggested-text">Reflect on something you learned recently</p>
+                                <p className="journal-suggested-title">{t('journal.growthTitle')}</p>
+                                <p className="journal-suggested-text">{t('journal.growthText')}</p>
                             </button>
                         </div>
                     )}
-                    <input className="journal-description-input" value={entryDescriptionText} onChange={descriptionChange} placeholder="Write a short description here" type="text" />
+                    <input className="journal-description-input" value={entryDescriptionText} onChange={descriptionChange} placeholder={t('journal.descriptionPlaceholder')} type="text" />
                     <div className="journal-toolbar">
                         <button className="journal-tool-button" onClick={boldClick} type="button"><b>B</b></button>
                         <button className="journal-tool-button" onClick={italicClick} type="button"><i>I</i></button>
@@ -806,10 +808,10 @@ function Journal(props) {
                         </button>
                     </div>
                     <div className="journal-editor-area">
-                        <textarea className="journal-textarea" placeholder="Write your words here..." value={entryBodyText} onChange={bodyTextChange} style={editorToolBar}></textarea>
+                        <textarea className="journal-textarea" placeholder={t('journal.bodyPlaceholder')} value={entryBodyText} onChange={bodyTextChange} style={editorToolBar}></textarea>
                     </div>
                     <div className="journal-save-row">
-                        <button className="journal-save-button" onClick={saveButtonClick} type="button">Save</button>
+                        <button className="journal-save-button" onClick={saveButtonClick} type="button">{t('journal.save')}</button>
                     </div>
                     {buildDeletePopup()}
                 </div>
@@ -831,8 +833,8 @@ function Journal(props) {
         if (commentList.length === 0) {
             return (
                 <div className="journal-comments-empty">
-                    <p>No comments yet.</p>
-                    <p>Write the first comment!</p>
+                    <p>{t('journal.noComments')}</p>
+                    <p>{t('journal.writeFirstComment')}</p>
                 </div>
             );
         }
@@ -871,7 +873,7 @@ function Journal(props) {
                                 <img className="journal-back-icon" src="/images/ui/back-arrow.svg" alt="Back" />
                             </button>
                         </div>
-                        <p>Entry not found.</p>
+                        <p>{t('journal.entryNotFound')}</p>
                         {buildDeletePopup()}
                     </div>
                 </main>
@@ -889,7 +891,7 @@ function Journal(props) {
                         </button>
                         <button className="journal-edit-button" onClick={editButtonClick} type="button">
                             <span className="journal-edit-icon">✎</span>
-                            <span>Edit</span>
+                            <span>{t('journal.edit')}</span>
                         </button>
                     </div>
                     <h1 className="journal-view-title">{activeEntry.titleText}</h1>
@@ -902,7 +904,7 @@ function Journal(props) {
                         <button className="journal-comments-header" onClick={commentsToggleClick} type="button">
                             <div className="journal-comments-header-left">
                                 <span className="journal-comments-icon"></span>
-                                <span>Comments ({getCommentsForActiveEntry().length})</span>
+                                <span>{t('journal.comments')} ({getCommentsForActiveEntry().length})</span>
                             </div>
                             <div className="journal-comments-header-right">
                                 <span>{commentsTextArrow()}</span>
@@ -911,8 +913,8 @@ function Journal(props) {
                         <div className="journal-comments-body">
                             {buildComments()}
                             <div className="journal-comments-input-row">
-                                <input className="journal-comments-input" placeholder="Add a comment..." value={commentInputText} onChange={commentInputChange} type="text" />
-                                <button className="journal-comments-send" onClick={addCommentClick} type="button" >Post</button>
+                                <input className="journal-comments-input" placeholder={t('journal.commentPlaceholder')} value={commentInputText} onChange={commentInputChange} type="text" />
+                                <button className="journal-comments-send" onClick={addCommentClick} type="button">{t('journal.post')}</button>
                             </div>
                         </div>
                     </div>

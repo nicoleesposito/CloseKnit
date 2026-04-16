@@ -5,8 +5,7 @@ import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/useAuth';
-
-const DAY_LABELS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+import { useLanguage } from '../../context/LanguageContext';
 
 // converts a date object into a YYYY-MM-DD string
 function toDateKey(dateObj) {
@@ -17,44 +16,35 @@ function toDateKey(dateObj) {
 }
 
 // returns a string for how long ago the board was created
-function getMemoryTimestamp(createdAt) {
+function getMemoryTimestamp(createdAt, t) {
     const now = Date.now();
     const then = new Date(createdAt).getTime();
     const diffDays = Math.floor((now - then) / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) {
-        return "Today";
-    }
-    if (diffDays === 1) {
-        return "1 day ago";
-    }
-    if (diffDays < 7) {
-        return diffDays + " days ago";
-    }
+    if (diffDays === 0) return t('home.today');
+    if (diffDays === 1) return t('home.oneDayAgo');
+    if (diffDays < 7) return t('home.daysAgo').replace('{n}', diffDays);
 
     const weeks = Math.floor(diffDays / 7);
-
-    if (weeks === 1) {
-        return "1 week ago";
-    }
-
-    return weeks + " weeks ago";
+    if (weeks === 1) return t('home.oneWeekAgo');
+    return t('home.weeksAgo').replace('{n}', weeks);
 }
 
 function Home(props) {
     const navigate = useNavigate();
     const { user } = useAuth();
 
+    const { t } = useLanguage();
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [memoryImages, setMemoryImages] = useState([]);
-    const [memoryTimestamp, setMemoryTimestamp] = useState("");
+    const [memoryCreatedAt, setMemoryCreatedAt] = useState(null);
 
     // fetch calendar events and the most recent memory board when the circle changes
     useEffect(function () {
         if (!props.activeCircleId) {
             setCalendarEvents([]);
             setMemoryImages([]);
-            setMemoryTimestamp("");
+            setMemoryCreatedAt(null);
             return;
         }
 
@@ -97,7 +87,7 @@ function Home(props) {
                     }
 
                     setMemoryImages(images);
-                    setMemoryTimestamp(getMemoryTimestamp(latestBoard.createdAt));
+                    setMemoryCreatedAt(latestBoard.createdAt);
                 }
             } catch {
                 console.log('Failed to fetch memory board for home');
@@ -107,6 +97,8 @@ function Home(props) {
         fetchCalendarEvents();
         fetchMemoryBoard();
     }, [props.activeCircleId]);
+
+    const DAY_LABELS = t('home.dayLabels');
 
     const today = new Date();
     const todayKey = toDateKey(today);
@@ -155,10 +147,7 @@ function Home(props) {
         photo2Src = memoryImages[1];
     }
 
-    let timestampDisplay = "No memories yet";
-    if (memoryTimestamp.length > 0) {
-        timestampDisplay = memoryTimestamp;
-    }
+    const timestampDisplay = memoryCreatedAt ? getMemoryTimestamp(memoryCreatedAt, t) : t('home.noMemoriesYet');
 
     return (
         <div>
@@ -170,13 +159,13 @@ function Home(props) {
 
                         {/* Welcome Section */}
                         <div className="welcome-header">
-                            <h1 className="greeting">Hi, {user?.firstName}</h1>
-                            <p className="welcome-text">Welcome back!</p>
+                            <h1 className="greeting">{t('home.hi')} {user?.firstName}</h1>
+                            <p className="welcome-text">{t('home.welcomeBack')}</p>
                         </div>
 
                         {/* Calendar Widget */}
                         <div className="calendar-widget">
-                            <h3 className="widget-title">This week in your circle:</h3>
+                            <h3 className="widget-title">{t('home.thisWeek')}</h3>
                             <div className="week-days">
                                 {weekDayObjects.map(function (dayObj) {
                                     let dayClass = "day";
@@ -228,14 +217,14 @@ function Home(props) {
 
                             {/* Journal Card */}
                             <div className="card journal-card">
-                                <h3 className="journal-title">Continue Collaborative Journaling</h3>
+                                <h3 className="journal-title">{t('home.journalTitle')}</h3>
                                 <div className="journal-content">
                                     <img
                                         src="/images/ui/journal.svg"
                                         alt=""
                                         className="journal-icon"
                                     />
-                                    <p className="journal-prompt">Share a memory from your latest trip and capture the moments that made it special</p>
+                                    <p className="journal-prompt">{t('home.journalPrompt')}</p>
                                 </div>
                                 <button
                                     className="widget-arrow"

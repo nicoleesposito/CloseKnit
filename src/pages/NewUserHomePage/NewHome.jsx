@@ -4,10 +4,12 @@ import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
 
 function NewHome(props) {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useLanguage();
 
     return (
         <div>
@@ -17,35 +19,31 @@ function NewHome(props) {
                 <main className='manage-main'>
                     <div className="welcome-page-content">
                         <div className="welcome-intro">
-                            <h1 className="greeting">Hi, {user?.firstName}</h1>
-                            <p className="welcome-title">Welcome to CloseKnit!</p>
+                            <h1 className="greeting">{t('home.hi')} {user?.firstName}</h1>
+                            <p className="welcome-title">{t('newHome.welcomeTitle')}</p>
 
                             <p className="welcome-description">
-                                You're just one step away from building your first circle. Circles help you stay
-                                connected to friends & family through shared calendars, journals, and memory
-                                boards, all in one place.
+                                {t('newHome.welcomeDescription')}
                             </p>
 
                             <p className="welcome-status">
-                                Your circle is already set up, but you're the only member.<br />
-                                Invite someone to start seeing updates here.
+                                {t('newHome.welcomeStatus')}
                             </p>
                         </div>
 
                         <div className="invite-section">
-                            <h2 className="invite-heading">Ready to bring your circle to life?</h2>
+                            <h2 className="invite-heading">{t('newHome.inviteHeading')}</h2>
                             <button
                                 className="send-invites-button"
                                 onClick={() => navigate('/managecircles')}
                             >
-                                Send Invites
+                                {t('newHome.sendInvites')}
                             </button>
                         </div>
 
                         <div className="circle-info-section">
                             <p className="circle-info-text">
-                                You can easily find all of your joined circles in this tab. You'll press here to
-                                switch between them!
+                                {t('newHome.circleInfoText')}
                             </p>
 
                             <div className="circle-selector welcome-circles">

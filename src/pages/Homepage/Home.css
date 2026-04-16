@@ -38,11 +38,12 @@
 
 /* Calendar Widget */
 .calendar-widget {
-    background: white;
-    border-radius: 24px;
+    border-radius: 22px;
     padding: clamp(1rem, 2vw, 1.5rem);
     position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 3px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
 }
 
 .widget-title {
@@ -70,13 +71,13 @@
 }
 
 .day.active {
-    background-color: #B8D5E8;
+    background-color: rgba(173, 210, 235, 0.85);
 }
 
 .day-label {
     font-size: clamp(0.7rem, 1.5vw, 0.8rem);
     font-weight: 500;
-    color: #666;
+    color: #8d97a7;
     text-transform: uppercase;
     letter-spacing: 0.02em;
 }
@@ -372,4 +373,36 @@
     .circle-selector {
         gap: 0.75rem;
     }
+}
+
+/* ================= DARK MODE ================= */
+
+.dark-mode .calendar-widget {
+    background: linear-gradient(#2d2d30, #2d2d30) padding-box,
+                linear-gradient(to bottom, #BCD8EC, #5245B5) border-box;
+}
+
+.dark-mode .widget-title {
+    color: #ffffff;
+}
+
+.dark-mode .day-number {
+    color: #ffffff;
+}
+
+.dark-mode .day-label {
+    color: #b3b3b3;
+}
+
+.day.active .day-number,
+.day.active .day-label {
+    color: #1a1a1a;
+}
+
+.dark-mode .greeting {
+    color: #ffffff;
+}
+
+.dark-mode .welcome-text {
+    color: #999999;
 }

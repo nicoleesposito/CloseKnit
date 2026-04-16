@@ -618,7 +618,7 @@
 /* ================= DARK MODE ================= */
 
 .dark-mode .journal-panel {
-    background: #2d2d30;
+    background: transparent;
 }
 
 .dark-mode .journal-entry-card,
@@ -691,4 +691,8 @@
 
 .dark-mode .journal-comment-text {
     color: #e5e7eb;
+}
+
+.dark-mode .journal-back-button img {
+    filter: invert(1);
 }

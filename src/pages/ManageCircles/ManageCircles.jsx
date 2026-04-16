@@ -5,10 +5,12 @@ import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../context/useAuth';
+import { useLanguage } from '../../context/LanguageContext';
 
 function ManageCircles(props) {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useLanguage();
     const [circleNameEditingEnabled, setCircleNameEditingEnabled] = useState(false);
     const [circleNameDraftText, setCircleNameDraftText] = useState(props.circleName);
     const [createCircleModeEnabled, setCreateCircleModeEnabled] = useState(false);
@@ -174,7 +176,7 @@ function ManageCircles(props) {
                 setMemberError(data.message);
             }
         } catch {
-            setMemberError('Failed to send invitation');
+            setMemberError(t('manageCircles.failedToSendInvitation'));
         }
     }
 
@@ -221,8 +223,8 @@ function ManageCircles(props) {
         }
     }
 
-    let pageCardTitleText = "Circle Management";
-    if (createCircleModeEnabled === true) pageCardTitleText = "Create A Circle";
+    let pageCardTitleText = t('manageCircles.circleManagement');
+    if (createCircleModeEnabled === true) pageCardTitleText = t('manageCircles.createACircle');
 
     let showCreateNewCircleButton = true;
     if (createCircleModeEnabled === true) showCreateNewCircleButton = false;
@@ -251,11 +253,11 @@ function ManageCircles(props) {
                             <div className="circle-card-header">
                                 <h2 className="circle-title">{pageCardTitleText}</h2>
                                 {showCreateNewCircleButton && (
-                                    <button className="primary-btn" type="button" onClick={createNewCircleButton}>Create New Circle</button>
+                                    <button className="primary-btn" type="button" onClick={createNewCircleButton}>{t('manageCircles.createNewCircle')}</button>
                                 )}
                             </div>
                             <div className="circle-form">
-                                <p className="field-label">Circle name</p>
+                                <p className="field-label">{t('manageCircles.circleName')}</p>
                                 <div className="circle-name-row">
                                     <input className="text-input" type="text" value={circleNameDraftText} onChange={circleNameDraftChange} disabled={circleNameInputDisabled} />
                                     <button className="icon-btn" type="button" onClick={editOrSaveButton}>
@@ -263,20 +265,20 @@ function ManageCircles(props) {
                                             <img className="circle-name-icon" src={editIconImagePath} alt="Edit circle name" />
                                         )}
                                         {circleNameEditingEnabled === true && (
-                                            <span className="save-text">Save</span>
+                                            <span className="save-text">{t('manageCircles.save')}</span>
                                         )}
                                     </button>
                                 </div>
-                                <p className="field-label section-space">Add member</p>
+                                <p className="field-label section-space">{t('manageCircles.addMember')}</p>
                                 <div className="invite-row">
-                                    <input className="text-input" type="text" placeholder="Email" value={addMemberEmail} onChange={addMemberEmailChange} />
-                                    <button className="primary-btn" type="button" onClick={addMemberClick}>Invite</button>
+                                    <input className="text-input" type="text" placeholder={t('manageCircles.emailPlaceholder')} value={addMemberEmail} onChange={addMemberEmailChange} />
+                                    <button className="primary-btn" type="button" onClick={addMemberClick}>{t('manageCircles.invite')}</button>
                                 </div>
                                 {memberError.length > 0 && (
                                     <p className="member-error">{memberError}</p>
                                 )}
                                 <div className="members-header section-space">
-                                    <p className="field-label">Manage members</p>
+                                    <p className="field-label">{t('manageCircles.manageMembers')}</p>
                                     <p className="member-count">({circleMembersList.length}/8)</p>
                                 </div>
                                 {showEmptyMembersPlaceholder && (
@@ -293,7 +295,7 @@ function ManageCircles(props) {
                                                 <div className="member-row" key={memberObject._id}>
                                                     <p className="member-name">{memberName}</p>
                                                     {canRemove && (
-                                                        <button className="member-remove" type="button" onClick={function () { removeMemberButton(memberUserId); }}>Remove</button>
+                                                        <button className="member-remove" type="button" onClick={function () { removeMemberButton(memberUserId); }}>{t('manageCircles.remove')}</button>
                                                     )}
                                                 </div>
                                             );
@@ -304,40 +306,40 @@ function ManageCircles(props) {
                                     {showManageBottomButtons && (
                                         <div className="bottom-actions-manage">
                                             {props.activeCircleId && props.circleName && props.circleName.trim().length > 0 && (
-                                                <button className="leave-btn" type="button" onClick={leaveCircleButton}>Leave Circle</button>
+                                                <button className="leave-btn" type="button" onClick={leaveCircleButton}>{t('manageCircles.leaveCircle')}</button>
                                             )}
                                             {circleNameEditingEnabled && (
-                                                <button className="primary-btn" type="button" onClick={saveChangesButton}>Save Changes</button>
+                                                <button className="primary-btn" type="button" onClick={saveChangesButton}>{t('manageCircles.saveChanges')}</button>
                                             )}
                                         </div>
                                     )}
                                     {showCreateBottomButtons && (
                                         <div className="bottom-actions-create">
-                                            <button className="secondary-btn" type="button" onClick={cancelCreateCircleButton}>Cancel</button>
-                                            <button className="primary-btn" type="button" onClick={finishCreateCircleButton}>Finish</button>
+                                            <button className="secondary-btn" type="button" onClick={cancelCreateCircleButton}>{t('manageCircles.cancel')}</button>
+                                            <button className="primary-btn" type="button" onClick={finishCreateCircleButton}>{t('manageCircles.finish')}</button>
                                         </div>
                                     )}
                                 </div>
                             </div>
                         </div>
                         {saveSuccess && (
-                            <div className="save-toast">✓ Changes saved!</div>
+                            <div className="save-toast">{t('manageCircles.changesSaved')}</div>
                         )}
                         {inviteSuccess && (
-                            <div className="save-toast">✓ Invitation sent!</div>
+                            <div className="save-toast">{t('manageCircles.invitationSent')}</div>
                         )}
                         {leaveSuccess && (
-                            <div className="leave-toast">You left "{props.circleName}"!</div>
+                            <div className="leave-toast">{t('manageCircles.youLeft').replace('{name}', props.circleName)}</div>
                         )}
                         {limitReached && (
                             <div className="save-toast">
-                                ⚠️ Your limit is 5 circles!
+                                {t('manageCircles.circleLimit')}
                             </div>
                         )}
                         <div className="invites-card">
-                            <h3 className="invites-title">Circle Invitations</h3>
+                            <h3 className="invites-title">{t('manageCircles.circleInvitations')}</h3>
                             {invitations.length === 0 && (
-                                <p className="invites-empty-text">No pending invitations</p>
+                                <p className="invites-empty-text">{t('manageCircles.noPendingInvitations')}</p>
                             )}
                             {invitations.length > 0 && (
                                 <div className="invites-row">
@@ -360,12 +362,12 @@ function ManageCircles(props) {
                         {selectedInvitation && (
                             <div className="inv-modal-overlay" onClick={function () { setSelectedInvitation(null); }}>
                                 <div className="inv-modal" onClick={function (e) { e.stopPropagation(); }}>
-                                    <p className="inv-modal-title">You got invited to {selectedInvitation.circleName}</p>
-                                    <p className="inv-modal-subtitle">You were invited by {selectedInvitation.invitedBy}</p>
+                                    <p className="inv-modal-title">{t('manageCircles.youGotInvited').replace('{name}', selectedInvitation.circleName)}</p>
+                                    <p className="inv-modal-subtitle">{t('manageCircles.youWereInvitedBy').replace('{name}', selectedInvitation.invitedBy)}</p>
                                     <div className="inv-modal-buttons">
-                                        <button className="secondary-btn" type="button" onClick={function () { setSelectedInvitation(null); }}>Close</button>
-                                        <button className="primary-btn" type="button" onClick={function () { respondToInvitation('accept'); }}>Accept Invite</button>
-                                        <button className="inv-decline-btn" type="button" onClick={function () { respondToInvitation('decline'); }}>Decline Invite</button>
+                                        <button className="secondary-btn" type="button" onClick={function () { setSelectedInvitation(null); }}>{t('manageCircles.close')}</button>
+                                        <button className="primary-btn" type="button" onClick={function () { respondToInvitation('accept'); }}>{t('manageCircles.acceptInvite')}</button>
+                                        <button className="inv-decline-btn" type="button" onClick={function () { respondToInvitation('decline'); }}>{t('manageCircles.declineInvite')}</button>
                                     </div>
                                 </div>
                             </div>

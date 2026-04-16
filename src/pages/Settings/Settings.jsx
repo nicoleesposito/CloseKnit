@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Settings.css";
 import Navbar from "../../components/Navbar/Navbar";
+import Header from "../../components/Header/Header";
 import { useAuth } from "../../context/useAuth";
+import { useLanguage } from "../../context/LanguageContext";
 
 
 function Settings() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
+  const { lang, setLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = useState("Account");
   const [isEditing, setIsEditing] = useState(false);
   const [saveError, setSaveError] = useState("");
@@ -176,14 +179,16 @@ function Settings() {
   }, [accessibility.largerText]);
 
   return (
+    <div>
+      <Header currentCircle="" activePage="settings" />
     <div className="settings-container">
       <Navbar activePage="settings" />
 
       <main className="settings-main">
         <div className="settings-header">
-          <h1>Settings</h1>
+          <h1>{t('settings.title')}</h1>
           <button className="logout-btn" onClick={handleLogout}>
-            Log out
+            {t('settings.logout')}
           </button>
         </div>
 
@@ -192,25 +197,25 @@ function Settings() {
             className={`tab ${activeTab === "Account" ? "tab-active" : ""}`}
             onClick={() => setActiveTab("Account")}
           >
-            Account
+            {t('settings.account')}
           </button>
           <button
             className={`tab ${activeTab === "Notifications" ? "tab-active" : ""}`}
             onClick={() => setActiveTab("Notifications")}
           >
-            Notifications
+            {t('settings.notifications')}
           </button>
           <button
             className={`tab ${activeTab === "Accessibility" ? "tab-active" : ""}`}
             onClick={() => setActiveTab("Accessibility")}
           >
-            Accessibility
+            {t('settings.accessibility')}
           </button>
           <button
             className={`tab ${activeTab === "Privacy" ? "tab-active" : ""}`}
             onClick={() => setActiveTab("Privacy")}
           >
-            Privacy
+            {t('settings.privacy')}
           </button>
         </div>
 
@@ -221,14 +226,14 @@ function Settings() {
               <div className="section-header">
                 <div>
                   <h2 className="settings-section-title">
-                    Profile Information
+                    {t('settings.profileInformation')}
                   </h2>
-                  <p className="section-subtitle">Set account details</p>
+                  <p className="section-subtitle">{t('settings.setAccountDetails')}</p>
                 </div>
                 {isEditing ? (
-                  <button className="edit-btn" onClick={handleSaveName}>Save</button>
+                  <button className="edit-btn" onClick={handleSaveName}>{t('settings.save')}</button>
                 ) : (
-                  <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
+                  <button className="edit-btn" onClick={() => setIsEditing(true)}>{t('settings.edit')}</button>
                 )}
               </div>
 
@@ -244,7 +249,7 @@ function Settings() {
                       className="profile-picture"
                     />
                     <div className="profile-pic-overlay">
-                      <span>Change Photo</span>
+                      <span>{t('settings.changePhoto')}</span>
                     </div>
                   </div>
                   <input
@@ -264,7 +269,7 @@ function Settings() {
                   {saveError && <div style={{ color: 'red', marginBottom: '10px' }}>{saveError}</div>}
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="firstName">First Name</label>
+                      <label htmlFor="firstName">{t('settings.firstName')}</label>
                       <input
                         type="text"
                         id="firstName"
@@ -275,7 +280,7 @@ function Settings() {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="lastName">Last Name</label>
+                      <label htmlFor="lastName">{t('settings.lastName')}</label>
                       <input
                         type="text"
                         id="lastName"
@@ -288,7 +293,7 @@ function Settings() {
                   </div>
 
                   <div className="form-group full-width">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">{t('settings.email')}</label>
                     <input
                       type="email"
                       id="email"
@@ -305,15 +310,15 @@ function Settings() {
             <section className="settings-section">
               <div className="section-header">
                 <div>
-                  <h2 className="settings-section-title">Password</h2>
+                  <h2 className="settings-section-title">{t('settings.passwordSection')}</h2>
                   <p className="section-subtitle">
-                    For your security, you can update your password anytime.
+                    {t('settings.passwordSubtitle')}
                   </p>
                 </div>
                 {isEditingPassword ? (
-                  <button className="edit-btn" onClick={handleSavePassword}>Save</button>
+                  <button className="edit-btn" onClick={handleSavePassword}>{t('settings.save')}</button>
                 ) : (
-                  <button className="update-password-btn" onClick={() => { setIsEditingPassword(true); setPasswordError(""); setPasswordSuccess(""); }}>Update Password</button>
+                  <button className="update-password-btn" onClick={() => { setIsEditingPassword(true); setPasswordError(""); setPasswordSuccess(""); }}>{t('settings.updatePassword')}</button>
                 )}
               </div>
               {passwordSuccess && !isEditingPassword && (
@@ -323,7 +328,7 @@ function Settings() {
                 <div className="profile-form">
                   {passwordError && <div style={{ color: 'red', marginBottom: '10px' }}>{passwordError}</div>}
                   <div className="form-group">
-                    <label htmlFor="currentPassword">Current Password</label>
+                    <label htmlFor="currentPassword">{t('settings.currentPassword')}</label>
                     <input
                       type="password"
                       id="currentPassword"
@@ -332,7 +337,7 @@ function Settings() {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="newPassword">New Password</label>
+                    <label htmlFor="newPassword">{t('settings.newPassword')}</label>
                     <input
                       type="password"
                       id="newPassword"
@@ -348,17 +353,17 @@ function Settings() {
               <div className="section-header">
                 <div>
                   <h2 className="settings-section-title">
-                    Timezone & Preferences
+                    {t('settings.timezonePrefs')}
                   </h2>
                   <p className="section-subtitle">
-                    Change your time zone and formatting
+                    {t('settings.timezoneSubtitle')}
                   </p>
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="city">City</label>
+                  <label htmlFor="city">{t('settings.city')}</label>
                   <input
                     type="text"
                     id="city"
@@ -368,7 +373,7 @@ function Settings() {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="timezone">Timezone</label>
+                  <label htmlFor="timezone">{t('settings.timezone')}</label>
                   <input
                     type="text"
                     id="timezone"
@@ -386,19 +391,18 @@ function Settings() {
         {activeTab === "Notifications" && (
           <div className="settings-content">
             <section className="notification-section">
-              <h2 className="notification-section-title">Alerts</h2>
+              <h2 className="notification-section-title">{t('settings.alerts')}</h2>
 
               <div className="notification-item">
                 <div className="notification-info">
-                  <h3>Push Notifications</h3>
+                  <h3>{t('settings.pushNotifications')}</h3>
                   <p>
-                    Sends alerts in the background when new updates are
-                    available.
+                    {t('settings.pushNotificationsDesc')}
                   </p>
                 </div>
                 <div className="toggle-container">
                   <span className="toggle-status">
-                    {notifications.pushNotifications ? "On" : "Off"}
+                    {notifications.pushNotifications ? t('settings.on') : t('settings.off')}
                   </span>
                   <label className="toggle-switch">
                     <input
@@ -415,14 +419,14 @@ function Settings() {
 
               <div className="notification-item">
                 <div className="notification-info">
-                  <h3>Sound Alerts</h3>
+                  <h3>{t('settings.soundAlerts')}</h3>
                   <p>
-                    Play a notification sound when a new update is received.
+                    {t('settings.soundAlertsDesc')}
                   </p>
                 </div>
                 <div className="toggle-container">
                   <span className="toggle-status">
-                    {notifications.soundAlerts ? "On" : "Off"}
+                    {notifications.soundAlerts ? t('settings.on') : t('settings.off')}
                   </span>
                   <label className="toggle-switch">
                     <input
@@ -437,15 +441,15 @@ function Settings() {
             </section>
 
             <section className="notification-section">
-              <h2 className="notification-section-title">Notification Types</h2>
+              <h2 className="notification-section-title">{t('settings.notificationTypes')}</h2>
 
               <div className="notification-item">
                 <div className="notification-info">
-                  <h3>Activity Updates</h3>
+                  <h3>{t('settings.activityUpdates')}</h3>
                 </div>
                 <div className="toggle-container">
                   <span className="toggle-status">
-                    {notifications.activityUpdates ? "On" : "Off"}
+                    {notifications.activityUpdates ? t('settings.on') : t('settings.off')}
                   </span>
                   <label className="toggle-switch">
                     <input
@@ -462,11 +466,11 @@ function Settings() {
 
               <div className="notification-item">
                 <div className="notification-info">
-                  <h3>CloseKnit Updates</h3>
+                  <h3>{t('settings.closeKnitUpdates')}</h3>
                 </div>
                 <div className="toggle-container">
                   <span className="toggle-status">
-                    {notifications.closeKnitUpdates ? "On" : "Off"}
+                    {notifications.closeKnitUpdates ? t('settings.on') : t('settings.off')}
                   </span>
                   <label className="toggle-switch">
                     <input
@@ -489,31 +493,29 @@ function Settings() {
           <div className="settings-content">
             <section className="settings-section">
               <div className="accessibility-header">
-                <h2 className="accessibility-section-title">Language</h2>
+                <h2 className="accessibility-section-title">{t('settings.language')}</h2>
                 <p className="accessibility-subtitle">
-                  Default language for your account
+                  {t('settings.languageDefault')}
                 </p>
               </div>
               <div className="language-select-container">
-                <select className="language-select">
-                  <option value="en-US">English (US)</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
-                  <option value="de">German</option>
+                <select className="language-select" value={lang} onChange={(e) => setLanguage(e.target.value)}>
+                  <option value="en">{t('settings.langEn')}</option>
+                  <option value="es">{t('settings.langEs')}</option>
                 </select>
               </div>
             </section>
 
             <section className="settings-section">
-              <h2 className="display-title">Display</h2>
+              <h2 className="display-title">{t('settings.display')}</h2>
 
               <div className="display-item">
                 <div className="display-info">
-                  <h3>Dark Mode</h3>
+                  <h3>{t('settings.darkMode')}</h3>
                 </div>
                 <div className="toggle-container">
                   <span className="toggle-status">
-                    {accessibility.darkMode ? "On" : "Off"}
+                    {accessibility.darkMode ? t('settings.on') : t('settings.off')}
                   </span>
                   <label className="toggle-switch">
                     <input
@@ -528,11 +530,11 @@ function Settings() {
 
               <div className="display-item">
                 <div className="display-info">
-                  <h3>Larger Text</h3>
+                  <h3>{t('settings.largerText')}</h3>
                 </div>
                 <div className="toggle-container">
                   <span className="toggle-status">
-                    {accessibility.largerText ? "On" : "Off"}
+                    {accessibility.largerText ? t('settings.on') : t('settings.off')}
                   </span>
                   <label className="toggle-switch">
                     <input
@@ -552,98 +554,63 @@ function Settings() {
         {activeTab === "Privacy" && (
           <div className="settings-content">
             <section className="privacy-section">
-              <h2 className="privacy-title">Privacy Policy</h2>
+              <h2 className="privacy-title">{t('settings.privacyPolicy')}</h2>
               <p className="privacy-intro">
-                Your privacy is important to us. This Privacy Policy explains
-                how we collect, use, and protect your information when you use
-                our website and app.
+                {t('settings.privacyIntro')}
               </p>
 
               <div className="privacy-item">
-                <h3>1. Information we collect</h3>
-                <p>
-                  We collect information to help you connect and share safely
-                  with your circles. This may include:
-                </p>
+                <h3>{t('settings.privacy1Title')}</h3>
+                <p>{t('settings.privacy1Intro')}</p>
                 <ul>
-                  <li>
-                    Account Information: Name, email address, and password when
-                    you create an account.
-                  </li>
-                  <li>
-                    Profile Details: Optional information you choose to add,
-                    such as a photo.
-                  </li>
-                  <li>
-                    Device Information: Browser type, device type, and operating
-                    system for functionality.
-                  </li>
+                  <li>{t('settings.privacy1Item1')}</li>
+                  <li>{t('settings.privacy1Item2')}</li>
+                  <li>{t('settings.privacy1Item3')}</li>
                 </ul>
               </div>
 
               <div className="privacy-item">
-                <h3>2. How we use your information</h3>
-                <p>We use the information we collect to:</p>
+                <h3>{t('settings.privacy2Title')}</h3>
+                <p>{t('settings.privacy2Intro')}</p>
                 <ul>
-                  <li>Create and maintain your CloseKnit account.</li>
-                  <li>
-                    Allow you to connect and share updates with your circles.
-                  </li>
-                  <li>Improve our features, design, and functionality.</li>
-                  <li>Provide customer support when needed.</li>
-                  <li>
-                    Send important notifications or updates about your account.
-                  </li>
+                  <li>{t('settings.privacy2Item1')}</li>
+                  <li>{t('settings.privacy2Item2')}</li>
+                  <li>{t('settings.privacy2Item3')}</li>
+                  <li>{t('settings.privacy2Item4')}</li>
+                  <li>{t('settings.privacy2Item5')}</li>
                 </ul>
-                <p>
-                  We do not sell your personal information to third parties.
-                </p>
+                <p>{t('settings.privacy2Footer')}</p>
               </div>
 
               <div className="privacy-item">
-                <h3>3. Sharing and Visibility</h3>
-                <p>
-                  Your content is only visible to the people you add to your
-                  circles and no one else. We may monitor content for safety if
-                  deemed necessary.
-                </p>
+                <h3>{t('settings.privacy3Title')}</h3>
+                <p>{t('settings.privacy3Text')}</p>
               </div>
 
               <div className="privacy-item">
-                <h3>4. Data Security</h3>
-                <p>
-                  We use encryption and other security measures to protect your
-                  data from unauthorized access, loss, or misuse. However, no
-                  online platform is 100% secure. We encourage users to protect
-                  their account by using a strong password and keeping login
-                  details private.
-                </p>
+                <h3>{t('settings.privacy4Title')}</h3>
+                <p>{t('settings.privacy4Text')}</p>
               </div>
 
               <div className="privacy-item">
-                <h3>5. Cookies</h3>
-                <p>
-                  We may use cookies or similar technologies to enhance user
-                  experience and remember preferences. You can control or
-                  disable cookies in your browser settings.
-                </p>
+                <h3>{t('settings.privacy5Title')}</h3>
+                <p>{t('settings.privacy5Text')}</p>
               </div>
 
               <div className="privacy-item">
-                <h3>6. Your Rights</h3>
-                <p>You have the right to:</p>
+                <h3>{t('settings.privacy6Title')}</h3>
+                <p>{t('settings.privacy6Intro')}</p>
                 <ul>
-                  <li>Access, edit, or delete your account information.</li>
-                  <li>Manage who can view your shared content.</li>
-                  <li>
-                    Request deletion of your data at any time by contacting us.
-                  </li>
+                  <li>{t('settings.privacy6Item1')}</li>
+                  <li>{t('settings.privacy6Item2')}</li>
+                  <li>{t('settings.privacy6Item3')}</li>
                 </ul>
               </div>
             </section>
           </div>
         )}
       </main>
+    </div>
     </div>
   );
 }

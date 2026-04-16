@@ -85,7 +85,8 @@ async function login(req, res) {
             id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email
+            email: user.email,
+            profilePicture: user.profilePicture
         });
     } catch (err) {
         console.error("Login error:", err.message);

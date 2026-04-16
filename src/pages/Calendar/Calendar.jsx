@@ -4,6 +4,7 @@ import Header from "../../components/Header/Header"
 import Navbar from '../../components/Navbar/Navbar';
 import ActivityFeed from '../../components/Activity Feed/ActivityFeed';
 import HelpButton from '../../components/HelpButton/HelpButton';
+import { useLanguage } from '../../context/LanguageContext';
 
 /*
 RESOURCES:
@@ -19,6 +20,7 @@ https://www.youtube.com/watch?v=m7OWXtbiXX8
 */
 
 function Calendar(props) {
+    const { t } = useLanguage();
     const [activeMonthDate, setActiveMonthDate] = useState(new Date());
     const [events, setEvents] = useState([]);
 
@@ -73,15 +75,8 @@ function Calendar(props) {
     };
 
 
-    const MONTHS_LONG = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    const MONTHS_SHORT = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
+    const MONTHS_LONG = t('calendar.monthsLong');
+    const MONTHS_SHORT = t('calendar.monthsShort');
 
     // these are all related in manipulation of date data to build the calendar and make it interactive.
     const today = new Date();
@@ -384,9 +379,9 @@ function Calendar(props) {
     }
 
     function getEditLayout() {
-        let headerText = "Add Event";
+        let headerText = t('calendar.addEvent');
         if (editingEventId) {
-            headerText = "Edit Event";
+            headerText = t('calendar.editEvent');
         }
 
         // renders the add event page
@@ -395,24 +390,24 @@ function Calendar(props) {
                 <div className="calendar-edit-card">
                     <div className="calendar-edit-title">{headerText}</div>
                     <div className="calendar-form-grid">
-                        <div className="calendar-label">Title</div>
+                        <div className="calendar-label">{t('calendar.title')}</div>
                         <div className="calendar-input">
-                            <input className="calendar-text-input" placeholder="Event Title" value={formTitle} onChange={handleTitleChange} />
+                            <input className="calendar-text-input" placeholder={t('calendar.eventTitlePlaceholder')} value={formTitle} onChange={handleTitleChange} />
                         </div>
-                        <div className="calendar-label">Type</div>
+                        <div className="calendar-label">{t('calendar.type')}</div>
                         <div className="calendar-input">
                             <div className="calendar-type-row">
-                                <button className={getTypeButtonClass("Birthday")} style={getTypeButtonStyle("Birthday")} onClick={chooseBirthday} type="button">Birthday</button>
-                                <button className={getTypeButtonClass("Goal")} style={getTypeButtonStyle("Goal")} onClick={chooseGoal} type="button">Goal</button>
-                                <button className={getTypeButtonClass("Event")} style={getTypeButtonStyle("Event")} onClick={chooseEvent} type="button">Event</button>
-                                <button className={getTypeButtonClass("Custom")} style={getTypeButtonStyle("Custom")} onClick={chooseCustom} type="button">Custom</button>
+                                <button className={getTypeButtonClass("Birthday")} style={getTypeButtonStyle("Birthday")} onClick={chooseBirthday} type="button">{t('calendar.birthday')}</button>
+                                <button className={getTypeButtonClass("Goal")} style={getTypeButtonStyle("Goal")} onClick={chooseGoal} type="button">{t('calendar.goal')}</button>
+                                <button className={getTypeButtonClass("Event")} style={getTypeButtonStyle("Event")} onClick={chooseEvent} type="button">{t('calendar.event')}</button>
+                                <button className={getTypeButtonClass("Custom")} style={getTypeButtonStyle("Custom")} onClick={chooseCustom} type="button">{t('calendar.custom')}</button>
                             </div>
                         </div>
-                        <div className="calendar-label">Date</div>
+                        <div className="calendar-label">{t('calendar.date')}</div>
                         <div className="calendar-input">
                             <input className="calendar-text-input" type="date" value={toDateInputValue(selectedDate)} onChange={handleDateChange} />
                         </div>
-                        <div className="calendar-label">Time</div>
+                        <div className="calendar-label">{t('calendar.time')}</div>
                         <div className="calendar-input">
                             <div className="calendar-time-row">
                                 <input className="calendar-time-input" value={formStartTime} onChange={handleStartTimeChange} />
@@ -420,14 +415,14 @@ function Calendar(props) {
                                 <input className="calendar-time-input" value={formEndTime} onChange={handleEndTimeChange} />
                             </div>
                         </div>
-                        <div className="calendar-label">Note</div>
+                        <div className="calendar-label">{t('calendar.note')}</div>
                         <div className="calendar-input">
-                            <textarea className="calendar-text-area" value={formNote} onChange={handleNoteChange} placeholder="Event Description" />
+                            <textarea className="calendar-text-area" value={formNote} onChange={handleNoteChange} placeholder={t('calendar.eventDescPlaceholder')} />
                         </div>
                         {/* Custom color select*/}
                         {formType === "Custom" && (
                             <>
-                                <div className="calendar-label">Select<br />Color</div>
+                                <div className="calendar-label">{t('calendar.selectColor').split('\n').map((line, i) => i === 0 ? line : <><br key={i} />{line}</>)}</div>
                                 <div className="calendar-input">
                                     <div className="calendar-color-square-row">
                                         <button type="button" className="calendar-color-square" style={getColorSquareStyle(typeColors.Birthday)} onClick={function () { chooseCustomColor(typeColors.Birthday); }} />
@@ -440,14 +435,14 @@ function Calendar(props) {
                         )}
                     </div>
                     <div className="calendar-button-row">
-                        <button className="calendar-secondary-btn" onClick={closeEdit}>Cancel</button>
+                        <button className="calendar-secondary-btn" onClick={closeEdit}>{t('calendar.cancel')}</button>
                         {editingEventId && (
                             <button className="calendar-delete-btn" onClick={deleteEventFromApi} type="button">
                                 <img src="/images/ui/trash.svg" alt="" className="calendar-delete-icon" />
-                                Delete Event
+                                {t('calendar.deleteEvent')}
                             </button>
                         )}
-                        <button className="calendar-primary-btn" onClick={saveEvent}>Save Changes</button>
+                        <button className="calendar-primary-btn" onClick={saveEvent}>{t('calendar.saveChanges')}</button>
                     </div>
                 </div>
             </div>
@@ -467,11 +462,11 @@ function Calendar(props) {
                 </div>
                 <div className="calendar-middle-layout">
                     <div className="calendar-timeline-card">
-                        <div className="calendar-timeline-title">Your Timeline</div>
-                        <TimelineSection title="Upcoming Events" items={timeline.upcoming} onPickEvent={openEditEventById} />
-                        <TimelineSection title="Birthdays" items={timeline.birthdays} onPickEvent={openEditEventById} />
-                        <TimelineSection title="Goals" items={timeline.goals} onPickEvent={openEditEventById} />
-                        <TimelineSection title="Custom Dates" items={timeline.custom} onPickEvent={openEditEventById} />
+                        <div className="calendar-timeline-title">{t('calendar.yourTimeline')}</div>
+                        <TimelineSection title={t('calendar.upcomingEvents')} items={timeline.upcoming} onPickEvent={openEditEventById} />
+                        <TimelineSection title={t('calendar.birthdays')} items={timeline.birthdays} onPickEvent={openEditEventById} />
+                        <TimelineSection title={t('calendar.goals')} items={timeline.goals} onPickEvent={openEditEventById} />
+                        <TimelineSection title={t('calendar.customDates')} items={timeline.custom} onPickEvent={openEditEventById} />
                     </div>
                     <div className="calendar-card">
                             <div className="calendar-topbar">
@@ -483,13 +478,9 @@ function Calendar(props) {
                                 <button className="calendar-nav-btn" onClick={goNextMonth}>{">"}</button>
                             </div>
                             <div className="calendar-dow-row">
-                                <div className="calendar-dow-cell">Mon</div>
-                                <div className="calendar-dow-cell">Tue</div>
-                                <div className="calendar-dow-cell">Wed</div>
-                                <div className="calendar-dow-cell">Thu</div>
-                                <div className="calendar-dow-cell">Fri</div>
-                                <div className="calendar-dow-cell">Sat</div>
-                                <div className="calendar-dow-cell">Sun</div>
+                                {t('calendar.dow').map(function (day) {
+                                    return <div key={day} className="calendar-dow-cell">{day}</div>;
+                                })}
                             </div>
                             <div className="calendar-day-grid">
                                 {calendarDays.map(function (dayObj) {
@@ -535,7 +526,7 @@ function Calendar(props) {
                                 })}
                             </div>
                             <div className="calendar-bottombar">
-                                <button className="calendar-primary-btn" onClick={openAddEvent}>Add Event</button>
+                                <button className="calendar-primary-btn" onClick={openAddEvent}>{t('calendar.addEvent')}</button>
                             </div>
                         </div>
                 </div>
@@ -568,10 +559,11 @@ function Calendar(props) {
 
 // timeline rendering
 function TimelineSection(props) {
+    const { t } = useLanguage();
 
     let emptyOutput = null;
     if (props.items.length === 0) {
-        emptyOutput = <div className="calendar-timeline-empty">None</div>;
+        emptyOutput = <div className="calendar-timeline-empty">{t('calendar.none')}</div>;
     }
 
     let item1 = null;

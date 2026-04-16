@@ -21,6 +21,7 @@ const journalRoutes = require('./routes/journal');
 const calendarRoutes = require('./routes/calendar');
 const memoryBoardRoutes = require('./routes/memoryboard');
 const activityRoutes = require('./routes/activity');
+const notificationRoutes = require('./routes/notifications');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +46,7 @@ app.use('/api/circles/:circleId/journal', journalRoutes);
 app.use('/api/circles/:circleId/calendar', calendarRoutes);
 app.use('/api/circles/:circleId/memoryboard', memoryBoardRoutes);
 app.use('/api/circles/:circleId/activity', activityRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 
 // error handling, important for routes and confirming everything is good

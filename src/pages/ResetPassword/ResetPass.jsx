@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import './ResetPass.css'
+import { useLanguage } from '../../context/LanguageContext'
 
 function ResetPassword() {
     const navigate = useNavigate()
+    const { t } = useLanguage()
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -21,12 +23,12 @@ function ResetPassword() {
             </div>
 
             <div className="reset-password-content">
-                <h1 className="reset-password-title">Set new password</h1>
-                <p className="reset-password-subtitle">Must be at least 8 characters.</p>
+                <h1 className="reset-password-title">{t('auth.resetTitle')}</h1>
+                <p className="reset-password-subtitle">{t('auth.resetSubtitle')}</p>
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">{t('auth.password')}</label>
                         <div className="password-input-wrapper">
                             <input 
                                 type={showPassword ? "text" : "password"}
@@ -49,7 +51,7 @@ function ResetPassword() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="confirm-password">Confirm Password</label>
+                        <label htmlFor="confirm-password">{t('auth.confirmPassword')}</label>
                         <div className="password-input-wrapper">
                             <input 
                                 type={showConfirmPassword ? "text" : "password"}
@@ -72,15 +74,15 @@ function ResetPassword() {
                     </div>
 
                     <button type="submit" className="reset-button">
-                        Reset Password
+                        {t('auth.resetPassword')}
                     </button>
                 </form>
 
-                <button 
+                <button
                     className="back-to-login"
                     onClick={() => navigate('/login')}
                 >
-                    ← Back to log in
+                    {t('auth.backToLogin')}
                 </button>
             </div>
         </div>

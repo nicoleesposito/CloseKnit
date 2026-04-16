@@ -791,8 +791,7 @@
 
 .dark-mode .privacy-section {
   background-color: transparent;
-  max-width: 720px;
-  margin: 0 auto;
+  margin: 0;
   border-radius: 0;
   padding: 40px 0;
 }

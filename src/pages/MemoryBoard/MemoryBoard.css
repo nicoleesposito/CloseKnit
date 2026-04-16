@@ -1088,3 +1088,7 @@
 .dark-mode .memoryboard-subtext {
     color: #b3b3b3;
 }
+
+.dark-mode .memoryboard-back-button img {
+    filter: invert(1);
+}

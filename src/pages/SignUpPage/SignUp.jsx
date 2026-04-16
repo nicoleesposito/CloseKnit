@@ -2,10 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
 import './SignUp.css'
 import { useAuth } from '../../context/useAuth'
+import { useLanguage } from '../../context/LanguageContext'
 
 function SignUp() {
     const navigate = useNavigate()
     const { login, updateUser } = useAuth()
+    const { t } = useLanguage()
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -71,7 +73,7 @@ function SignUp() {
 
         // check if passwords match
         if (password !== confirmPassword) {
-            setError('Passwords do not match')
+            setError(t('auth.passwordsDoNotMatch'))
             return
         }
 
@@ -115,9 +117,9 @@ function SignUp() {
                             <img src="/images/ui/journaling-1.svg" alt="Journal" />
                         </div>
                         <div className="feature-text">
-                            <p>Write together, reflect together.</p>
-                            <p>Build a shared journal that</p>
-                            <p>keeps your stories connected.</p>
+                            <p>{t('auth.feature1Line1')}</p>
+                            <p>{t('auth.feature1Line2')}</p>
+                            <p>{t('auth.feature1Line3')}</p>
                         </div>
                     </div>
 
@@ -126,9 +128,9 @@ function SignUp() {
                             <img src="/images/ui/diary-1.svg" alt="Memory Board" />
                         </div>
                         <div className="feature-text">
-                            <p>Keep your memories close and</p>
-                            <p>your connections closer with a</p>
-                            <p>collaborative Memory Board.</p>
+                            <p>{t('auth.feature2Line1')}</p>
+                            <p>{t('auth.feature2Line2')}</p>
+                            <p>{t('auth.feature2Line3')}</p>
                         </div>
                     </div>
 
@@ -137,9 +139,9 @@ function SignUp() {
                             <img src="/images/ui/wedding-1.svg" alt="Wedding" />
                         </div>
                         <div className="feature-text">
-                            <p>Celebrate life together. Track</p>
-                            <p>birthdays, goals, and plans</p>
-                            <p>with the people who matter.</p>
+                            <p>{t('auth.feature3Line1')}</p>
+                            <p>{t('auth.feature3Line2')}</p>
+                            <p>{t('auth.feature3Line3')}</p>
                         </div>
                     </div>
                 </div>
@@ -148,7 +150,7 @@ function SignUp() {
             {/* Right Side - Sign Up Form */}
             <div className="right-section">
                 <div className="signup-form">
-                    <h1 className="signup-title">Sign up and make every connection count.</h1>
+                    <h1 className="signup-title">{t('auth.signupTitle')}</h1>
 
                     <form onSubmit={handleSubmit}>
                         {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
@@ -156,7 +158,7 @@ function SignUp() {
                         {/* Right Side - Sign Up Form */}
                         <div className="form-row">
                             <div className="form-group">
-                                <label htmlFor="firstName">First Name</label>
+                                <label htmlFor="firstName">{t('auth.firstName')}</label>
                                 <input
                                     type="text"
                                     id="firstName"
@@ -168,7 +170,7 @@ function SignUp() {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="lastName">Last Name</label>
+                                <label htmlFor="lastName">{t('auth.lastName')}</label>
                                 <input
                                     type="text"
                                     id="lastName"
@@ -181,7 +183,7 @@ function SignUp() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="email">{t('auth.email')}</label>
                             <input
                                 type="email"
                                 id="email"
@@ -194,7 +196,7 @@ function SignUp() {
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">{t('auth.password')}</label>
                                 <div className="password-input-wrapper">
                                     <input
                                         type="password"
@@ -214,7 +216,7 @@ function SignUp() {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="confirmPassword">Confirm Password</label>
+                                <label htmlFor="confirmPassword">{t('auth.confirmPassword')}</label>
                                 <div className="password-input-wrapper">
                                     <input
                                         type="password"
@@ -235,30 +237,30 @@ function SignUp() {
                         </div>
 
                         <button type="submit" className="signup-button" disabled={loading}>
-                            {loading ? 'Signing up...' : 'Sign Up'}
+                            {loading ? t('auth.signingUp') : t('auth.signUp')}
                         </button>
                     </form>
 
                     <div className="divider">
-                        <span>or</span>
+                        <span>{t('auth.or')}</span>
                     </div>
 
                     <div className="social-buttons">
                         <button className="social-button google" onClick={handleGoogleClick}>
                             <img src="/images/ui/google.svg" alt="Google" />
-                            Continue with Google
+                            {t('auth.continueWithGoogle')}
                         </button>
                     </div>
 
                     <p className="login-link">
-                        Already have an account? <a
+                        {t('auth.alreadyHaveAccount')} <a
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault()
                                 navigate('/login')
                             }}
                         >
-                            Log in!
+                            {t('auth.logInLink')}
                         </a>
                     </p>
                 </div>
