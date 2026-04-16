@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './NotifBell.css';
 // Worked on by Michelle
 function NotifBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+  const [isDark, setIsDark] = useState(localStorage.getItem('darkMode') === 'true');
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark-mode'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   function toggleNotifications() {
     setIsOpen(!isOpen);
@@ -17,7 +26,11 @@ function NotifBell() {
   return (
     <div className="notif-bell-container">
       <img
-        src={hasUnread ? "/images/ui/notification-bell-true.svg" : "/images/ui/notification-bell-false.svg"}
+        src={
+          isDark
+            ? (hasUnread ? "/images/ui/notification-bell-true-darktheme.svg" : "/images/ui/notification-bell-false-darktheme.svg")
+            : (hasUnread ? "/images/ui/notification-bell-true.svg" : "/images/ui/notification-bell-false.svg")
+        }
         alt="notification bell"
         className="notif-bell-icon"
         onClick={toggleNotifications}

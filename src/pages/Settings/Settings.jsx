@@ -9,6 +9,12 @@ function Settings() {
   const navigate = useNavigate();
   const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState("Account");
+  const [isEditing, setIsEditing] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({ currentPassword: "", newPassword: "" });
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
@@ -20,16 +26,16 @@ function Settings() {
 
   // Notification toggles
   const [notifications, setNotifications] = useState({
-    pushNotifications: false,
-    soundAlerts: false,
-    activityUpdates: false,
-    closeKnitUpdates: false,
+    pushNotifications: localStorage.getItem('notif_pushNotifications') !== 'false',
+    soundAlerts: localStorage.getItem('notif_soundAlerts') !== 'false',
+    activityUpdates: localStorage.getItem('notif_activityUpdates') !== 'false',
+    closeKnitUpdates: localStorage.getItem('notif_closeKnitUpdates') !== 'false',
   });
 
   // Accessibility toggles
   const [accessibility, setAccessibility] = useState({
-    darkMode: false,
-    largerText: false,
+    darkMode: localStorage.getItem('darkMode') === 'true',
+    largerText: localStorage.getItem('largerText') === 'true',
   });
 
   const [profilePic, setProfilePic] = useState(user?.profilePicture || "/images/profile-picture.jpg");
@@ -83,15 +89,54 @@ function Settings() {
     }
   };
 
+  const handleSaveName = async () => {
+    setSaveError("");
+    try {
+      const res = await fetch('/api/users/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ firstName: formData.firstName, lastName: formData.lastName, email: formData.email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      updateUser({ ...user, firstName: data.firstName, lastName: data.lastName, email: data.email });
+      setIsEditing(false);
+    } catch (err) {
+      setSaveError(err.message);
+    }
+  };
+
+  const handleSavePassword = async () => {
+    setPasswordError("");
+    setPasswordSuccess("");
+    try {
+      const res = await fetch('/api/users/password', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(passwordData),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      setPasswordData({ currentPassword: "", newPassword: "" });
+      setIsEditingPassword(false);
+      setPasswordSuccess("Password updated successfully.");
+    } catch (err) {
+      setPasswordError(err.message);
+    }
+  };
+
   const triggerFileInput = () => {
     document.getElementById("profile-pic-input").click();
   };
 
   const handleNotificationToggle = (name) => {
-    setNotifications((prev) => ({
-      ...prev,
-      [name]: !prev[name],
-    }));
+    setNotifications((prev) => {
+      const next = !prev[name];
+      localStorage.setItem(`notif_${name}`, String(next));
+      return { ...prev, [name]: next };
+    });
   };
 
   const handleAccessibilityToggle = (name) => {
@@ -112,8 +157,10 @@ function Settings() {
   useEffect(() => {
     if (accessibility.darkMode) {
       document.documentElement.classList.add("dark-mode");
+      localStorage.setItem('darkMode', 'true');
     } else {
       document.documentElement.classList.remove("dark-mode");
+      localStorage.setItem('darkMode', 'false');
     }
   }, [accessibility.darkMode]);
 
@@ -121,8 +168,10 @@ function Settings() {
   useEffect(() => {
     if (accessibility.largerText) {
       document.documentElement.classList.add("larger-text");
+      localStorage.setItem('largerText', 'true');
     } else {
       document.documentElement.classList.remove("larger-text");
+      localStorage.setItem('largerText', 'false');
     }
   }, [accessibility.largerText]);
 
@@ -176,7 +225,11 @@ function Settings() {
                   </h2>
                   <p className="section-subtitle">Set account details</p>
                 </div>
-                <button className="edit-btn">Edit</button>
+                {isEditing ? (
+                  <button className="edit-btn" onClick={handleSaveName}>Save</button>
+                ) : (
+                  <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
+                )}
               </div>
 
               <div className="profile-container">
@@ -208,6 +261,7 @@ function Settings() {
                 </div>
 
                 <div className="profile-form">
+                  {saveError && <div style={{ color: 'red', marginBottom: '10px' }}>{saveError}</div>}
                   <div className="form-row">
                     <div className="form-group">
                       <label htmlFor="firstName">First Name</label>
@@ -217,6 +271,7 @@ function Settings() {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
+                        disabled={!isEditing}
                       />
                     </div>
                     <div className="form-group">
@@ -227,6 +282,7 @@ function Settings() {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
+                        disabled={!isEditing}
                       />
                     </div>
                   </div>
@@ -239,6 +295,7 @@ function Settings() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
+                      disabled={!isEditing}
                     />
                   </div>
                 </div>
@@ -253,8 +310,38 @@ function Settings() {
                     For your security, you can update your password anytime.
                   </p>
                 </div>
-                <button className="update-password-btn">Update Password</button>
+                {isEditingPassword ? (
+                  <button className="edit-btn" onClick={handleSavePassword}>Save</button>
+                ) : (
+                  <button className="update-password-btn" onClick={() => { setIsEditingPassword(true); setPasswordError(""); setPasswordSuccess(""); }}>Update Password</button>
+                )}
               </div>
+              {passwordSuccess && !isEditingPassword && (
+                <div style={{ color: 'green', marginTop: '8px' }}>{passwordSuccess}</div>
+              )}
+              {isEditingPassword && (
+                <div className="profile-form">
+                  {passwordError && <div style={{ color: 'red', marginBottom: '10px' }}>{passwordError}</div>}
+                  <div className="form-group">
+                    <label htmlFor="currentPassword">Current Password</label>
+                    <input
+                      type="password"
+                      id="currentPassword"
+                      value={passwordData.currentPassword}
+                      onChange={(e) => setPasswordData((prev) => ({ ...prev, currentPassword: e.target.value }))}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="newPassword">New Password</label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData((prev) => ({ ...prev, newPassword: e.target.value }))}
+                    />
+                  </div>
+                </div>
+              )}
             </section>
 
             <section className="settings-section">

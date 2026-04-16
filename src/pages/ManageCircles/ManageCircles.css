@@ -269,8 +269,114 @@
     font-weight: 600;
 }
 
-.invites-empty {
-    min-height: 80px;
+.invites-empty-text {
+    color: #888;
+    font-size: 14px;
+    margin: 14px 0 6px 0;
+}
+
+.invites-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    padding: 4px 0;
+}
+
+.invite-card-btn {
+    width: clamp(46px, 8.5vw, 62px);
+    height: clamp(46px, 8.5vw, 62px);
+    border-radius: 50%;
+    border: none;
+    background-color: #5245B5;
+    color: #ffffff;
+    font-size: clamp(0.6rem, 1.5vw, 0.775rem);
+    font-weight: 700;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    word-break: break-word;
+    padding: 4px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(82, 69, 181, 0.3);
+}
+
+.invite-card-btn:hover {
+    background-color: #6356c7;
+    transform: scale(1.06);
+    box-shadow: 0 6px 16px rgba(82, 69, 181, 0.4);
+}
+
+.inv-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.inv-modal {
+    background: white;
+    border-radius: 22px;
+    padding: 36px 36px;
+    width: 460px;
+    max-width: calc(100vw - 40px);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.inv-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.inv-modal-subtitle {
+    font-size: 15px;
+    color: #555;
+    margin: 0;
+}
+
+.inv-modal-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.inv-modal-buttons .secondary-btn,
+.inv-modal-buttons .primary-btn {
+    width: 130px;
+}
+
+.inv-decline-btn {
+    width: 130px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid #c0392b;
+    background: #ffffff;
+    color: #c0392b;
+    font-weight: 500;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inv-decline-btn:hover {
+    background: #fff5f5;
 }
 
 @media (max-width: 720px) {
@@ -291,6 +397,32 @@ button {
     font-weight: 500;
 }
 /* ================= DARK MODE ================= */
+
+.dark-mode .invites-empty-text {
+    color: #888;
+}
+
+.dark-mode .inv-modal {
+    background: #2d2d30;
+}
+
+.dark-mode .inv-modal-title {
+    color: #ffffff;
+}
+
+.dark-mode .inv-modal-subtitle {
+    color: #b3b3b3;
+}
+
+.dark-mode .inv-decline-btn {
+    background: #1a1a1a;
+    border-color: #c0392b;
+    color: #ff6b6b;
+}
+
+.dark-mode .inv-decline-btn:hover {
+    background: #2a1a1a;
+}
 
 .dark-mode .circle-card,
 .dark-mode .invites-card {

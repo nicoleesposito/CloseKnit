@@ -731,7 +731,7 @@ function Journal(props) {
                                     <p className="journal-card-description">{entryObject.shortDescriptionText}</p>
                                     <div className="journal-card-bottom-row">
                                         <div className="journal-card-author">
-                                            <span className="journal-card-avatar"><img src="/images/ui/user-pfp.svg" /></span>
+                                            <span className="journal-card-avatar"><img src={entryObject.author?.profilePicture || "/images/ui/user-pfp.svg"} /></span>
                                             <span>{getAuthorName(entryObject)}</span>
                                         </div>
                                         <span className="journal-card-date">
@@ -843,8 +843,15 @@ function Journal(props) {
                 {commentList.map(function (commentObject) {
                     return (
                         <div key={commentObject._id} className="journal-comment">
-                            <p className="journal-comment-text">{commentObject.text}</p>
-                            <p className="journal-comment-meta">{getCommentAuthorName(commentObject)}</p>
+                            <img
+                                className="journal-comment-avatar"
+                                src={commentObject.author?.profilePicture || "/images/ui/user-pfp.svg"}
+                                alt=""
+                            />
+                            <div className="journal-comment-content">
+                                <p className="journal-comment-author">{getCommentAuthorName(commentObject)}</p>
+                                <p className="journal-comment-text">{commentObject.text}</p>
+                            </div>
                         </div>
                     );
                 })}
@@ -895,7 +902,7 @@ function Journal(props) {
                         <button className="journal-comments-header" onClick={commentsToggleClick} type="button">
                             <div className="journal-comments-header-left">
                                 <span className="journal-comments-icon"></span>
-                                <span>Comments</span>
+                                <span>Comments ({getCommentsForActiveEntry().length})</span>
                             </div>
                             <div className="journal-comments-header-right">
                                 <span>{commentsTextArrow()}</span>

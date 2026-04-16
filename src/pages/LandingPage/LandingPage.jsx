@@ -105,7 +105,7 @@ const LandingPage = () => {
 {/* footer */}
             <div className="landing-gradient-top">
                 <footer className="landing-footer">
-                    <div className="landing-footer-left">
+                    <div className="landing-footer-logo-block">
                         <img
                             src="/images/branding/logo.svg"
                             alt="CloseKnit Logo"

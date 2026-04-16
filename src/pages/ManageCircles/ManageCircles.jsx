@@ -18,6 +18,9 @@ function ManageCircles(props) {
     const [saveSuccess, setSaveSuccess] = useState(false);
     const [leaveSuccess, setLeaveSuccess] = useState(false);
     const [limitReached, setLimitReached] = useState(false);
+    const [invitations, setInvitations] = useState([]);
+    const [selectedInvitation, setSelectedInvitation] = useState(null);
+    const [inviteSuccess, setInviteSuccess] = useState(false);
     const editIconImagePath = "/images/ui/edit-button-purple.svg";
 
     // find the active circle to check if the current user is the owner
@@ -48,6 +51,24 @@ function ManageCircles(props) {
 
         fetchMembers();
     }, [props.activeCircleId]);
+
+    // fetch pending invitations for the logged-in user
+    useEffect(function () {
+        async function fetchInvitations() {
+            try {
+                const response = await fetch('/api/circles/invitations', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setInvitations(data);
+                }
+            } catch {
+                console.log('Failed to fetch invitations');
+            }
+        }
+        fetchInvitations();
+    }, []);
 
     function circleNameDraftChange(changeEvent) {
         setCircleNameDraftText(changeEvent.target.value);
@@ -121,7 +142,7 @@ function ManageCircles(props) {
         }, 2000);
     }
 
-    // looks up the email in the database and adds them to the circle if found
+    // sends a circle invitation to the entered email
     async function addMemberClick() {
         const email = addMemberEmail.trim();
 
@@ -136,7 +157,7 @@ function ManageCircles(props) {
         setMemberError("");
 
         try {
-            const response = await fetch('/api/circles/' + props.activeCircleId + '/members', {
+            const response = await fetch('/api/circles/' + props.activeCircleId + '/invitations', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -146,13 +167,40 @@ function ManageCircles(props) {
             const data = await response.json();
 
             if (response.ok) {
-                setCircleMembersList(data);
                 setAddMemberEmail("");
+                setInviteSuccess(true);
+                setTimeout(() => setInviteSuccess(false), 3000);
             } else {
                 setMemberError(data.message);
             }
         } catch {
-            setMemberError('Failed to add member');
+            setMemberError('Failed to send invitation');
+        }
+    }
+
+    async function respondToInvitation(action) {
+        if (!selectedInvitation) return;
+        try {
+            const response = await fetch('/api/circles/' + selectedInvitation.circleId + '/invitations/' + selectedInvitation.invitationId, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ action })
+            });
+
+            if (response.ok) {
+                setInvitations(function (prev) {
+                    return prev.filter(function (inv) { return inv.invitationId !== selectedInvitation.invitationId; });
+                });
+                setSelectedInvitation(null);
+
+                // if accepted, refresh circles so the new circle appears
+                if (action === 'accept' && props.refreshCircles) {
+                    props.refreshCircles();
+                }
+            }
+        } catch {
+            console.log('Failed to respond to invitation');
         }
     }
 
@@ -222,7 +270,7 @@ function ManageCircles(props) {
                                 <p className="field-label section-space">Add member</p>
                                 <div className="invite-row">
                                     <input className="text-input" type="text" placeholder="Email" value={addMemberEmail} onChange={addMemberEmailChange} />
-                                    <button className="primary-btn" type="button" onClick={addMemberClick}>Add</button>
+                                    <button className="primary-btn" type="button" onClick={addMemberClick}>Invite</button>
                                 </div>
                                 {memberError.length > 0 && (
                                     <p className="member-error">{memberError}</p>
@@ -275,6 +323,9 @@ function ManageCircles(props) {
                         {saveSuccess && (
                             <div className="save-toast">✓ Changes saved!</div>
                         )}
+                        {inviteSuccess && (
+                            <div className="save-toast">✓ Invitation sent!</div>
+                        )}
                         {leaveSuccess && (
                             <div className="leave-toast">You left "{props.circleName}"!</div>
                         )}
@@ -285,8 +336,40 @@ function ManageCircles(props) {
                         )}
                         <div className="invites-card">
                             <h3 className="invites-title">Circle Invitations</h3>
-                            <div className="invites-empty"></div>
+                            {invitations.length === 0 && (
+                                <p className="invites-empty-text">No pending invitations</p>
+                            )}
+                            {invitations.length > 0 && (
+                                <div className="invites-row">
+                                    {invitations.map(function (inv) {
+                                        return (
+                                            <button
+                                                key={inv.invitationId}
+                                                className="invite-card-btn"
+                                                type="button"
+                                                onClick={function () { setSelectedInvitation(inv); }}
+                                            >
+                                                {inv.circleName}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
+
+                        {selectedInvitation && (
+                            <div className="inv-modal-overlay" onClick={function () { setSelectedInvitation(null); }}>
+                                <div className="inv-modal" onClick={function (e) { e.stopPropagation(); }}>
+                                    <p className="inv-modal-title">You got invited to {selectedInvitation.circleName}</p>
+                                    <p className="inv-modal-subtitle">You were invited by {selectedInvitation.invitedBy}</p>
+                                    <div className="inv-modal-buttons">
+                                        <button className="secondary-btn" type="button" onClick={function () { setSelectedInvitation(null); }}>Close</button>
+                                        <button className="primary-btn" type="button" onClick={function () { respondToInvitation('accept'); }}>Accept Invite</button>
+                                        <button className="inv-decline-btn" type="button" onClick={function () { respondToInvitation('decline'); }}>Decline Invite</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </main>
                 <ActivityFeed activeCircleId={props.activeCircleId} />

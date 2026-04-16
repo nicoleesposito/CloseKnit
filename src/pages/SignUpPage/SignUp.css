@@ -38,6 +38,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .logo {
@@ -281,6 +282,14 @@ form {
 @media (max-width: 1024px) {
     .signup-container {
         flex-direction: column;
+    }
+
+    .signup-container::before {
+        display: none;
+    }
+
+    .right-section {
+        border-top: 1px solid #e5e7eb;
     }
 
     .left-section {

@@ -277,9 +277,14 @@ Some of the svgs and images weren't showing as interactive so I use cursor point
 }
 
 /* Active state - keep your light blue background */
-.dark-mode .navrow-active {
+.dark-mode .navrow.navrow-active {
   background-color: #BCD8EC !important;
   color: #000000 !important;
+}
+
+/* Unselected icons: invert to white in dark mode */
+.dark-mode .navrow:not(.navrow-active) img {
+  filter: invert(1);
 }
 
 /* Icons in active state should be dark */

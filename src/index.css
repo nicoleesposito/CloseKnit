@@ -12,3 +12,7 @@
   font-family: "Poppins", sans-serif;
   background-color: #F5F5F5;
 }
+
+html.larger-text body {
+  zoom: 1.12;
+}

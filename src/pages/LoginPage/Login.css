@@ -37,6 +37,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .logo {
@@ -280,6 +281,14 @@ form {
 @media (max-width: 1024px) {
     .login-container {
         flex-direction: column;
+    }
+
+    .login-container::before {
+        display: none;
+    }
+
+    .right-section {
+        border-top: 1px solid #e5e7eb;
     }
 
     .left-section {

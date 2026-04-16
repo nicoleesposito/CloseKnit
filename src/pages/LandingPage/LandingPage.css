@@ -296,18 +296,19 @@
   background: #F9F9FB;
 }
 
-.landing-footer-left {
+.landing-footer-logo-block {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 1rem;
 }
 
-.landing-footer-left img {
+.landing-footer-logo-block img {
   height: 50px;
   width: auto;
 }
 
-.landing-footer-left .landing-p {
+.landing-footer-logo-block .landing-p {
   text-align: left;
   color: #666;
   font-size: 14px;
@@ -401,10 +402,15 @@
     text-align: center;
   }
 
-  .landing-footer-left .landing-p {
+  .landing-footer-logo-block {
+    align-items: center;
+  }
+
+  .landing-footer-logo-block .landing-p {
     text-align: center;
     margin: 0 auto;
   }
+
 
   .landing-footer-center {
     justify-content: center;

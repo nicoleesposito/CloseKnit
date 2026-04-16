@@ -5,6 +5,14 @@ import { BrowserRouter } from 'react-router-dom'; // react router to navigate be
 import './index.css';
 import App from './App.jsx';
 
+if (localStorage.getItem('largerText') === 'true') {
+  document.documentElement.classList.add('larger-text');
+}
+
+if (localStorage.getItem('darkMode') === 'true') {
+  document.documentElement.classList.add('dark-mode');
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>

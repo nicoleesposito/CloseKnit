@@ -359,6 +359,46 @@
     border-radius: 0 0 30px 30px;
 }
 
+.journal-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.journal-comment {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.journal-comment-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.journal-comment-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.journal-comment-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.journal-comment-text {
+    font-size: 14px;
+    color: #444;
+    margin: 0;
+}
+
 .journal-comments-empty {
     text-align: center;
     color: #666;
@@ -448,10 +488,8 @@
 }
 
 .journal-comments-body {
-    height: 0px;
-    overflow: hidden;
+    display: none;
     background-color: white;
-    transition: height 0.25s ease;
 }
 
 .journal-comments-panel-open .journal-comments-body {
@@ -463,6 +501,7 @@
 }
 
 .journal-comments-panel-open .journal-comments-body {
+    display: block;
     border-radius: 0 0 30px 30px;
     padding: 14px 20px 20px 20px;
 }

@@ -237,4 +237,189 @@ async function removeMember(request, response) {
     }
 }
 
-module.exports = { getCircles, createCircle, updateCircle, leaveCircle, getMembers, addMember, removeMember };
+// POST /api/circles/:id/invitations - send a circle invitation by email
+async function sendInvitation(request, response) {
+    try {
+        const circleId = request.params.id;
+        const userId = request.user.id;
+        const { email } = request.body;
+
+        if (!email || email.trim().length === 0) {
+            return response.status(400).json({ message: 'Email is required' });
+        }
+
+        const circle = await Circle.findById(circleId);
+
+        if (!circle) {
+            return response.status(404).json({ message: 'Circle not found' });
+        }
+
+        // check requesting user is a member of this circle
+        let isMember = false;
+        let index = 0;
+        while (index < circle.members.length) {
+            if (circle.members[index].user.toString() === userId) {
+                isMember = true;
+            }
+            index = index + 1;
+        }
+
+        if (!isMember) {
+            return response.status(403).json({ message: 'Not a member of this circle' });
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
+
+        // check the invited user has an account
+        const userToInvite = await User.findOne({ email: normalizedEmail });
+        if (!userToInvite) {
+            return response.status(404).json({ message: 'No account found with that email' });
+        }
+
+        // check not already a member
+        let alreadyMember = false;
+        index = 0;
+        while (index < circle.members.length) {
+            if (circle.members[index].user.toString() === userToInvite._id.toString()) {
+                alreadyMember = true;
+            }
+            index = index + 1;
+        }
+
+        if (alreadyMember) {
+            return response.status(400).json({ message: 'That user is already in this circle' });
+        }
+
+        // check not already pending
+        let alreadyInvited = false;
+        index = 0;
+        while (index < circle.invitations.length) {
+            if (circle.invitations[index].email === normalizedEmail && circle.invitations[index].status === 'pending') {
+                alreadyInvited = true;
+            }
+            index = index + 1;
+        }
+
+        if (alreadyInvited) {
+            return response.status(400).json({ message: 'That user has already been invited' });
+        }
+
+        circle.invitations.push({ email: normalizedEmail, invitedBy: userId, status: 'pending' });
+        await circle.save();
+
+        response.json({ message: 'Invitation sent' });
+    } catch {
+        response.status(500).json({ message: 'Failed to send invitation' });
+    }
+}
+
+// GET /api/circles/invitations - get all pending invitations for the logged-in user
+async function getInvitations(request, response) {
+    try {
+        const userId = request.user.id;
+        const currentUser = await User.findById(userId).select('email');
+
+        if (!currentUser) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        const email = currentUser.email.toLowerCase();
+
+        const circles = await Circle.find({
+            'invitations.email': email,
+            'invitations.status': 'pending'
+        }).populate('invitations.invitedBy', 'firstName');
+
+        const invitations = [];
+
+        let circleIndex = 0;
+        while (circleIndex < circles.length) {
+            const circle = circles[circleIndex];
+            let invIndex = 0;
+            while (invIndex < circle.invitations.length) {
+                const inv = circle.invitations[invIndex];
+                if (inv.email === email && inv.status === 'pending') {
+                    invitations.push({
+                        invitationId: inv._id,
+                        circleId: circle._id,
+                        circleName: circle.name,
+                        invitedBy: inv.invitedBy ? inv.invitedBy.firstName : 'Someone',
+                        createdAt: inv.createdAt
+                    });
+                }
+                invIndex = invIndex + 1;
+            }
+            circleIndex = circleIndex + 1;
+        }
+
+        response.json(invitations);
+    } catch {
+        response.status(500).json({ message: 'Failed to get invitations' });
+    }
+}
+
+// PATCH /api/circles/:id/invitations/:invitationId - accept or decline an invitation
+async function respondToInvitation(request, response) {
+    try {
+        const { id: circleId, invitationId } = request.params;
+        const userId = request.user.id;
+        const { action } = request.body;
+
+        if (action !== 'accept' && action !== 'decline') {
+            return response.status(400).json({ message: 'Action must be accept or decline' });
+        }
+
+        const circle = await Circle.findById(circleId);
+
+        if (!circle) {
+            return response.status(404).json({ message: 'Circle not found' });
+        }
+
+        const currentUser = await User.findById(userId).select('email');
+        if (!currentUser) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        // find the invitation belonging to this user
+        const invitation = circle.invitations.id(invitationId);
+
+        if (!invitation || invitation.email !== currentUser.email.toLowerCase()) {
+            return response.status(404).json({ message: 'Invitation not found' });
+        }
+
+        if (invitation.status !== 'pending') {
+            return response.status(400).json({ message: 'Invitation is no longer pending' });
+        }
+
+        if (action === 'accept') {
+            if (circle.members.length >= 8) {
+                return response.status(400).json({ message: 'This circle is full (8 member limit)' });
+            }
+
+            // check not already a member
+            let alreadyMember = false;
+            let index = 0;
+            while (index < circle.members.length) {
+                if (circle.members[index].user.toString() === userId) {
+                    alreadyMember = true;
+                }
+                index = index + 1;
+            }
+
+            if (!alreadyMember) {
+                circle.members.push({ user: userId, role: 'member' });
+            }
+
+            invitation.status = 'accepted';
+        } else {
+            invitation.status = 'rejected';
+        }
+
+        await circle.save();
+        response.json({ message: action === 'accept' ? 'Invitation accepted' : 'Invitation declined' });
+    } catch {
+        response.status(500).json({ message: 'Failed to respond to invitation' });
+    }
+}
+
+module.exports = { getCircles, createCircle, updateCircle, leaveCircle, getMembers, addMember, removeMember, sendInvitation, getInvitations, respondToInvitation };

@@ -1,6 +1,6 @@
 import './Header.css'
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from '../Navbar/Navbar';
 import ActivityFeed from '../Activity Feed/ActivityFeed';
 import NotifBell from '../Notification/NotifBell';
@@ -30,6 +30,18 @@ function Header(props) {
     }
 
     // I made booleans to flag for if the menu is open or closed. This is important for when we incorporate the sidebar component as an overlay in the mobile view. There is also the toggle for when the svg is clicked again.
+    const [isDark, setIsDark] = useState(
+        localStorage.getItem('darkMode') === 'true'
+    );
+
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDark(document.documentElement.classList.contains('dark-mode'));
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
+    }, []);
+
     const [menuOpen, setMenuOpen] = useState(false);
     const [activityOpen, setActivityOpen] = useState(false);
 
@@ -74,7 +86,7 @@ function Header(props) {
     return (
         <header className="header">
             <div className="header-left">
-                <img src="/images/branding/logo.svg" alt="CloseKnit logo" className="logo-header" onClick={logoHome} />
+                <img src={isDark ? "/images/branding/logo-darktheme.svg" : "/images/branding/logo.svg"} alt="CloseKnit logo" className="logo-header" onClick={logoHome} />
 
           {/* hides the hamburger icon when the activity feed is open */}
           {activityOpen === false && (
@@ -106,6 +118,7 @@ function Header(props) {
             src={profilePicSrc}
             alt="Profile"
             className="profile-pic"
+            onClick={() => navigate('/settings')}
           />
 
           {/* hide the activity icon when the hamburger menu is open */}

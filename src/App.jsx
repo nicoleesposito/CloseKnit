@@ -32,22 +32,23 @@ const setCircleName = (name) => {
     if (circle) setActiveCircleId(circle._id);
 };
 
-useEffect(() => {
-    async function fetchCircles() {
-        try {
-            const response = await fetch('/api/circles', {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setCircles(data);
-                if (data.length > 0) setActiveCircleId(data[0]._id);
-            }
-        } catch {
-            console.log('Failed to fetch circles');
+async function fetchCircles() {
+    try {
+        const response = await fetch('/api/circles', {
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setCircles(data);
+            if (data.length > 0) setActiveCircleId(prev => prev || data[0]._id);
         }
-        setCirclesLoaded(true);
+    } catch {
+        console.log('Failed to fetch circles');
     }
+    setCirclesLoaded(true);
+}
+
+useEffect(() => {
     fetchCircles();
 }, []);
 
@@ -133,7 +134,7 @@ async function removeCircle(circleId) {
   </ProtectedRoute>
 } />
 
-        <Route path="/managecircles" element={<ProtectedRoute><ManageCircles circleName={circleName} setCircleName={setCircleName} addCircle={addCircle} updateCircleName={updateCircleName} removeCircle={removeCircle} activeCircleId={activeCircleId} circles={circles} /></ProtectedRoute>} />
+        <Route path="/managecircles" element={<ProtectedRoute><ManageCircles circleName={circleName} setCircleName={setCircleName} addCircle={addCircle} updateCircleName={updateCircleName} removeCircle={removeCircle} activeCircleId={activeCircleId} circles={circles} refreshCircles={fetchCircles} /></ProtectedRoute>} />
         <Route path="/newhome" element={<ProtectedRoute><NewHome circleName={circleName} setCircleName={setCircleName} /></ProtectedRoute>} />
         <Route path="/calendar" element={<ProtectedRoute><Calendar circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
         <Route path="/journal" element={<ProtectedRoute><Journal circleName={circleName} setCircleName={setCircleName} activeCircleId={activeCircleId} /></ProtectedRoute>} />
